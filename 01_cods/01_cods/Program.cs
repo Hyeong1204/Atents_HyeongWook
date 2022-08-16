@@ -10,6 +10,8 @@ namespace _01_cods
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Hello World!");  // "Hellp World"를 출력하는 코드
+            Console.ReadKey();                  // 키 입력 대기하는 코드
         }
     }
 }
