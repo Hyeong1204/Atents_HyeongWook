@@ -147,6 +147,18 @@ namespace _01_cods
 
             // 실습 : exp의값과 추가로 입력받은 경험치의 합이 1이상이면 "레벨업" 이라고 출력하고 1미만이면 합계를 출력하는 코드 작성하기
 
+            float tempexp;
+            float.TryParse(temp, out tempexp);
+            if ((exp + tempexp) > 1.0f)
+            {
+                Console.WriteLine("레벨업!");
+            }
+            else
+            {
+                Console.WriteLine($"현재 경험치 : {exp + tempexp} ");
+            }
+
+
             Console.ReadKey();                  // 키 입력 대기하는 코드
         }
     }
