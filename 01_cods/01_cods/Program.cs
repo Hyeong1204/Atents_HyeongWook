@@ -112,52 +112,86 @@ namespace _01_cods
 
             // 변수 끝 ------------------------------------------------------------------------
 
-            // 제어문(Control state)
+            // 제어문(Control state) - 조건문(if, switch), 반복문
             // 실행되는 코드 라인을 변경할 수 있는 코드
+
+            // 조건문 실습
+            //hp = 10;
+            //if (hp < 3)     // hp가 2이기 때문에 참이다. 따라서 중괄호 사이에 코드가 실행된다.
+            //{
+            //    Console.WriteLine("hp가 부족합니다.");    // 참일 때 실행되는 코드
+            //}
+            //else if(hp < 10)
+            //{
+            //    Console.WriteLine("hp가 적당합니다.");    // (hp < 3)는 거짓이고 (hp < 10)이 참일때
+            //}
+            //else
+            //{
+            //    Console.WriteLine("hp가 충분합니다.");    // 둘다 거짓일 때 실행되는 코드
+            //}
+
+            //switch (hp)
+            //{
+            //    case 0:
+            //        Console.WriteLine("hp가 0입니다.");
+            //        break;
+            //    case 5:
+            //        Console.WriteLine("hp가 5입니다.");
+            //        break;
+            //    default:
+            //        Console.WriteLine("hp가 0과 5가 아닙니다.");
+            //        break;
+            //}
+
+            //Console.WriteLine("경험치를 추가합니다.");
+            //Console.Write("추가할 경험치 : ");
+            //string temp = Console.ReadLine();
+
+            //// 실습 : exp의값과 추가로 입력받은 경험치의 합이 1이상이면 "레벨업" 이라고 출력하고 1미만이면 합계를 출력하는 코드 작성하기
+
+            //float tempexp;
+            //float.TryParse(temp, out tempexp);
+            //if ((exp + tempexp) > 1.0f)
+            //{
+            //    Console.WriteLine("레벨업!");
+            //}
+            //else
+            //{
+            //    Console.WriteLine($"현재 경험치 : {exp + tempexp} ");
+            //}
+
+            level = 1;
+            while(level < 3)    // 소괄호() 안의 조건이 참이면 중괄호{} 사이의 코드를 실해하는 statement
+            {
+                Console.WriteLine($"현재 레벨 : {level}");
+                level++;    //level = level + 1;,   level += 1;
+            //level += 2;
+            }
+
+            // i는 0에서 시작해서 3보다 작으면 계속 {}사이의 코드를 실행한다. i는 [}사이의 코들 실행할 때마다 i을 1씩 증가한다.
             hp = 10;
-            if (hp < 3)     // hp가 2이기 때문에 참이다. 따라서 중괄호 사이에 코드가 실행된다.
+            for(int i = 0; i < 3; i++) 
             {
-                Console.WriteLine("hp가 부족합니다.");    // 참일 때 실행되는 코드
+                Console.WriteLine($"현재 hp : {hp}");
+                hp += 10;
             }
-            else if(hp < 10)
-            {
-                Console.WriteLine("hp가 적당합니다.");    // (hp < 3)는 거짓이고 (hp < 10)이 참일때
-            }
-            else
-            {
-                Console.WriteLine("hp가 충분합니다.");    // 둘다 거짓일 때 실행되는 코드
-            }
+            Console.WriteLine($"최종 hp : {hp}");
 
-            switch (hp)
+            level = 1;
+            do
             {
-                case 0:
-                    Console.WriteLine("hp가 0입니다.");
+                Console.WriteLine($"현재 레벨 : {level}");
+                if (level == 2)     // == 은 양쪽이 같다라는 의미
                     break;
-                case 5:
-                    Console.WriteLine("hp가 5입니다.");
-                    break;
-                default:
-                    Console.WriteLine("hp가 0과 5가 아닙니다.");
-                    break;
-            }
+                level++;
+            } while(level < 10);
+            Console.WriteLine($"최종 level : {level}");
 
+            // 실습 : exp가 1을 넘어 레벨업을 할 때까지 계속 추가 경험치를 입력하도록 하는 코드를 작성하기
+            exp = 0.0f;
             Console.WriteLine("경험치를 추가합니다.");
             Console.Write("추가할 경험치 : ");
             string temp = Console.ReadLine();
-
-            // 실습 : exp의값과 추가로 입력받은 경험치의 합이 1이상이면 "레벨업" 이라고 출력하고 1미만이면 합계를 출력하는 코드 작성하기
-
-            float tempexp;
-            float.TryParse(temp, out tempexp);
-            if ((exp + tempexp) > 1.0f)
-            {
-                Console.WriteLine("레벨업!");
-            }
-            else
-            {
-                Console.WriteLine($"현재 경험치 : {exp + tempexp} ");
-            }
-
 
             Console.ReadKey();                  // 키 입력 대기하는 코드
         }
