@@ -188,31 +188,48 @@ namespace _01_cods
             Console.WriteLine($"최종 level : {level}");
 
             // 실습 : exp가 1을 넘어 레벨업을 할 때까지 계속 추가 경험치를 입력하도록 하는 코드를 작성하기
-            int STR = 0;
-            int DEX = 0;
-            int LUK = 0;
-            int INT = 0;
+
             exp = 0.0f;
-            
-            while (exp < 1.0f)
+            Console.WriteLine($"현재 경험치 : {exp}");
+
+            while (1.0f > exp) // exp 값이 1보다 작으면 계속 반복한다.
             {
-                Console.WriteLine($"경험치를 추가합니다. (현재 경험치 : {exp * 100:f2}%).");
+                Console.WriteLine($"경험치를 추가 해야합니다.");
                 Console.Write("추가할 경험치 : ");
-                string temp = Console.ReadLine();
-                float exp_1;
-                float.TryParse(temp, out exp_1);
-                exp += exp_1;
+                string temp = Console.ReadLine();   // 입력 받기
+                float exp_1 = 0.0f;
+                float.TryParse(temp, out exp_1);    // 입력 받은 문자열을 float으로 변환
+
+                exp += exp_1;   // 입력 받은 값을 exp에 추가
             }
-            Console.WriteLine("레벨업!");
-            exp -= 1;
-            level++;
-            hp += 10;
-            STR += 2;
-            DEX += 2;
-            LUK += 2;
-            INT += 2;
-            Console.WriteLine($"현재 레벨 : {level}\n 추가 스텟 \n STR + 2\n DEX + 2\n LUK + 2\n INT + 2");
-            
+            // while이 끝났다라는 이야기는 exp가 1보다 크거나 같아 졌다라는 의미
+            Console.WriteLine("레벨업");
+
+            //int STR = 0;
+            //int DEX = 0;
+            //int LUK = 0;
+            //int INT = 0;
+            //exp = 0.0f;
+
+            //while (exp < 1.0f)
+            //{
+            //    Console.WriteLine($"경험치를 추가합니다. (현재 경험치 : {exp * 100:f2}%).");
+            //    Console.Write("추가할 경험치 : ");
+            //    string temp = Console.ReadLine();
+            //    float exp_1;
+            //    float.TryParse(temp, out exp_1);
+            //    exp += exp_1;
+            //}
+            //Console.WriteLine("레벨업!");
+            //exp -= 1;
+            //level++;
+            //hp += 10;
+            //STR += 2;
+            //DEX += 2;
+            //LUK += 2;
+            //INT += 2;
+            //Console.WriteLine($"현재 레벨 : {level}\n 추가 스텟 \n STR + 2\n DEX + 2\n LUK + 2\n INT + 2");
+
 
             Console.ReadKey();                  // 키 입력 대기하는 코드
         }
