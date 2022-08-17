@@ -21,68 +21,127 @@ namespace _01_cods
             // string : 스트링, 문자열, 글자들을 저장
             // bool : 불, 참 또는 거짓를 저장
 
-            int a = 10; // a라는 인티저 변수에 10이라는 데이터를 넣는다.
-            long b = 5000000000;    // 50억은 int에 넣을 수 없다. =>int는 32비트이고 32비트로
-                                    // 표현가능한 숫자의 갯수는 2^32(42억)개 이기 때문이다.
-            int c = -100;
-            int d = 2000000000;
-            int e = 2000000000;
-            int f = d + e;
+            //int a = 10; // a라는 인티저 변수에 10이라는 데이터를 넣는다.
+            //long b = 5000000000;    // 50억은 int에 넣을 수 없다. =>int는 32비트이고 32비트로
+            //                        // 표현가능한 숫자의 갯수는 2^32(42억)개 이기 때문이다.
+            //int c = -100;
+            //int d = 2000000000;
+            //int e = 2000000000;
+            //int f = d + e;
 
-            Console.WriteLine(f);
+            //Console.WriteLine(f);
 
 
-            // float의 단점 : 태생적으로 오차가 있을 수 밖에 없다.
-            float aa = 0.000123f;
-            float ab = 0.99999999999f;
-            float ac = 0.00000000001f;
+            //// float의 단점 : 태생적으로 오차가 있을 수 밖에 없다.
+            //float aa = 0.000123f;
+            //float ab = 0.99999999999f;
+            //float ac = 0.00000000001f;
 
-            Console.WriteLine(ab + ac); // 결과가 1이 아닐 수도 있다.
+            //Console.WriteLine(ab + ac); // 결과가 1이 아닐 수도 있다.
 
-            string str1 = "Hello";
-            string str2 = "안녕!";
-            string str3 = $"Hello {a}"; // "Hello 10"
-            Console.WriteLine(str3);
-            string str4 = str1 + str2;  // "Hello안녕!"
-            Console.WriteLine(str4);
+            //string str1 = "Hello";
+            //string str2 = "안녕!";
+            //string str3 = $"Hello {a}"; // "Hello 10"
+            //Console.WriteLine(str3);
+            //string str4 = str1 + str2;  // "Hello안녕!"
+            //Console.WriteLine(str4);
 
-            bool b1 = true;
-            bool b2 = false;
+            //bool b1 = true;
+            //bool b2 = false;
 
-            int level = 1;
-            int hp = 10;
-            float exp = 0.9f;
+            //int level = 1;
+            //int hp = 10;
+            //float exp = 0.9f;
+            //string name = "황꾸릉";
+
+            //// 황꾸릉의 레벨은 1이고 HP는 10이고 exp는 0.9다.
+
+            //Console.Write(name);
+            //Console.Write("의 레벨은 ");
+            //Console.Write(level);
+            //Console.Write("이고 HP는 ");
+            //Console.Write(hp);
+            //Console.Write("이고 exp는 ");
+            //Console.Write(exp);
+            //Console.Write("다.");
+            //Console.WriteLine();
+
+            //Console.WriteLine($"{name}의 레벨은 {level}이고 HP는 {hp}이고 exp는 {exp}다.\n");
+
+            //Console.WriteLine("이름을 입력하세요 :");
+            //name = Console.ReadLine();
+            //Console.WriteLine($"{name}의 레벨을 입력하세요 : ");
+            //string temp = Console.ReadLine();   // ReadLine은 문자열만 가능하다.
+            ////level = int.Parse(temp);    // string을 int로 변겨해주는 코드(숫자로 바꿀 수 있을때만 가능) 간단하지만 위험함
+            //int.TryParse(temp, out level); // string을 int로 변경해주는 코드(숫자로 바꿀 수 없을 때는 0으로 만든다.)
+            //                               //level = Convert.ToInt32(temp);  // string을 int로 변겨해주는 코드(숫자로 바꿀 수 있을때만 가능) 더 새새하게 가능 간단하지만 위험함
+            //Console.WriteLine("HP를 입력하세요 : ");
+            //string temp2 = Console.ReadLine();
+            //int.TryParse(temp2, out hp);
+            //Console.WriteLine("경험치를 입력하세요 : ");
+            //string temp3 = Console.ReadLine();
+            //float.TryParse(temp3, out exp);
+            //Console.WriteLine($"{name}의 레벨은 {level}이고 HP는 {hp}이고 exp는 {exp*100:f2}%다.\n");
+            //// exp*100:f2는 exp에 100을 곱하고 소수 두번째 자리까지 표시
+
+            string result;
             string name = "황꾸릉";
+            int level = 3;
+            int hp = 2;
+            float exp = 0.5f;
 
-            // 황꾸릉의 레벨은 1이고 HP는 10이고 exp는 0.9다.
+            //Console.Write("이름을 입력하세요 : ");
+            //name = Console.ReadLine();
 
-            Console.Write(name);
-            Console.Write("의 레벨은 ");
-            Console.Write(level);
-            Console.Write("이고 HP는 ");
-            Console.Write(hp);
-            Console.Write("이고 exp는 ");
-            Console.Write(exp);
-            Console.Write("다.");
-            Console.WriteLine();
+            //string temp;
+            //Console.Write("레벨을 입력하세요 : ");
+            //temp = Console.ReadLine();
+            //int.TryParse(temp, out level);
 
-            Console.WriteLine($"{name}의 레벨은 {level}이고 HP는 {hp}이고 exp는 {exp}다.\n");
+            //string temp2;
+            //Console.Write("hp를 입력하세요 : ");
+            //temp = Console.ReadLine();
+            //int.TryParse(temp, out hp);
 
-            Console.WriteLine("이름을 입력하세요 :");
-            name = Console.ReadLine();
-            Console.WriteLine($"{name}의 레벨을 입력하세요 : ");
-            string temp = Console.ReadLine();   // ReadLine은 문자열만 가능하다.
-            //level = int.Parse(temp);    // string을 int로 변겨해주는 코드(숫자로 바꿀 수 있을때만 가능) 간단하지만 위험함
-            int.TryParse(temp, out level); // string을 int로 변경해주는 코드(숫자로 바꿀 수 없을 때는 0으로 만든다.)
-                                           //level = Convert.ToInt32(temp);  // string을 int로 변겨해주는 코드(숫자로 바꿀 수 있을때만 가능) 더 새새하게 가능 간단하지만 위험함
-            Console.WriteLine("HP를 입력하세요 : ");
-            string temp2 = Console.ReadLine();
-            int.TryParse(temp2, out hp);
-            Console.WriteLine("경험치를 입력하세요 : ");
-            string temp3 = Console.ReadLine();
-            float.TryParse(temp3, out exp);
-            Console.WriteLine($"{name}의 레벨은 {level}이고 HP는 {hp}이고 exp는 {exp*100:f2}%다.\n");
-            // exp*100:f2는 exp에 100을 곱하고 소수 두번째 자리까지 표시
+            //string temp3;
+            //Console.Write("exp를 입력하세요 : ");
+            //temp = Console.ReadLine();
+            //float.TryParse(temp, out exp);
+
+            //Console.WriteLine($"{name}의 레벨은 {level}이고 HP는 {hp}이고 exp는 {exp * 100:f2}%다.\n");
+
+            // 변수 끝 ------------------------------------------------------------------------
+
+            // 제어문(Control state)
+            // 실행되는 코드 라인을 변경할 수 있는 코드
+            hp = 10;
+            if (hp < 3)     // hp가 2이기 때문에 참이다. 따라서 중괄호 사이에 코드가 실행된다.
+            {
+                Console.WriteLine("hp가 부족합니다.");    // 참일 때 실행되는 코드
+            }
+            else if(hp < 10)
+            {
+                Console.WriteLine("hp가 적당합니다.");    // (hp < 3)는 거짓이고 (hp < 10)이 참일때
+            }
+            else
+            {
+                Console.WriteLine("hp가 충분합니다.");    // 둘다 거짓일 때 실행되는 코드
+            }
+
+            switch (hp)
+            {
+                case 0:
+                    Console.WriteLine("hp가 0입니다.");
+                    break;
+                case 5:
+                    Console.WriteLine("hp가 5입니다.");
+                    break;
+                default:
+                    Console.WriteLine("hp가 0과 5가 아닙니다.");
+                    break;
+            }
+
+
 
             Console.ReadKey();                  // 키 입력 대기하는 코드
         }
