@@ -10,6 +10,55 @@ namespace _01_cods
     {
         static void Main(string[] args)
         {
+            int sumResult = Sum(10, 20);    // break point (단축기 F9)
+            Console.WriteLine($"SumResult : {sumResult}");
+            Print();
+
+            string name = "황꾸릉";
+            int level = 2;
+            int hp = 10;
+            int maxHP = 20;
+            float exp = 0.1f;
+            float maxExp = 1.0f;
+
+            PrintCharacter(name, level, hp, maxHP, exp, maxExp);
+            
+            Console.ReadKey();                  // 키 입력 대기하는 코드
+        }   // Main 함수의 끝
+
+        private static void PrintCharacter(string name, int level, int hp, int maxHP, float exp, float maxExp)
+        {
+            // 실습 : 파라메터로 받은 데이터를 적당한 양식으로 출력해주는 함수 완성하기
+            Console.WriteLine("┏━━━━━━━━━━━━━━━━┓");
+            Console.WriteLine($"┃이름 : {name}                  ┃");
+            Console.WriteLine($"┃레벨 : {level}                 ┃");
+            Console.WriteLine($"┃체력 : {hp}                    ┃");
+            Console.WriteLine($"┃최대 체력 : {maxHP}            ┃");
+            Console.WriteLine($"┃경험치 : {exp}                 ┃");
+            Console.WriteLine($"┃최대 경험치 : {maxExp}         ┃");
+            Console.WriteLine("┗━━━━━━━━━━━━━━━━┛");
+        }
+
+        // 함수의 구성요소
+        // 이름 : 함수들을 구분하기 위한 이름(예제의 Sum)
+        // 리턴타입 : 함수의 실행 결과로 돌려주는 데이터의 타입(int, 함수의 이름앞에 표시된다.)
+        // 파라메터(매개변수) : 함수가 실행될 때 외부에서 받는 값(int a, int b 두개의 파라메터가 있다. 함수 이름 뒤에 표시)
+        // 함수 바디 : 함수가 호출될 때 실행될 코드들(예제의 243~246라인)
+
+        // 함수의 이름, 리턴타입, 파라메터를 합쳐서 함수 프로토타입이라고 함(절대로 하나의 프로그램안에서 겹치지 않는다.)
+        static int Sum(int a, int b)
+        {
+            int result = a + b;
+            return result;
+        }
+
+        static void Print()    // 리턴해주는 값이 없고, 파라메터도 없는 경우
+        {
+            Console.WriteLine("Print");
+        }
+
+        void Test()
+        {
             Console.WriteLine("Hello World!");  // "Hellp World"를 출력하는 코드
             Console.WriteLine("임형욱");        // 출력 
             //string str = Console.ReadLine();    // 키보드 입력을 받아서 str이라는 string 변수에 저장한다.
@@ -161,16 +210,16 @@ namespace _01_cods
             //}
 
             level = 1;
-            while(level < 3)    // 소괄호() 안의 조건이 참이면 중괄호{} 사이의 코드를 실해하는 statement
+            while (level < 3)    // 소괄호() 안의 조건이 참이면 중괄호{} 사이의 코드를 실해하는 statement
             {
                 Console.WriteLine($"현재 레벨 : {level}");
                 level++;    //level = level + 1;,   level += 1;
-            //level += 2;
+                            //level += 2;
             }
 
             // i는 0에서 시작해서 3보다 작으면 계속 {}사이의 코드를 실행한다. i는 [}사이의 코들 실행할 때마다 i을 1씩 증가한다.
             hp = 10;
-            for(int i = 0; i < 3; i++) 
+            for (int i = 0; i < 3; i++)
             {
                 Console.WriteLine($"현재 hp : {hp}");
                 hp += 10;
@@ -184,7 +233,7 @@ namespace _01_cods
                 if (level == 2)     // == 은 양쪽이 같다라는 의미
                     break;
                 level++;
-            } while(level < 10);
+            } while (level < 10);
             Console.WriteLine($"최종 level : {level}");
 
             // 실습 : exp가 1을 넘어 레벨업을 할 때까지 계속 추가 경험치를 입력하도록 하는 코드를 작성하기
@@ -230,8 +279,7 @@ namespace _01_cods
             //INT += 2;
             //Console.WriteLine($"현재 레벨 : {level}\n 추가 스텟 \n STR + 2\n DEX + 2\n LUK + 2\n INT + 2");
 
-
-            Console.ReadKey();                  // 키 입력 대기하는 코드
         }
+
     }
 }
