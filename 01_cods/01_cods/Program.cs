@@ -141,7 +141,11 @@ namespace _01_cods
                     break;
             }
 
+            Console.WriteLine("경험치를 추가합니다.");
+            Console.Write("추가할 경험치 : ");
+            string temp = Console.ReadLine();
 
+            // 실습 : exp의값과 추가로 입력받은 경험치의 합이 1이상이면 "레벨업" 이라고 출력하고 1미만이면 합계를 출력하는 코드 작성하기
 
             Console.ReadKey();                  // 키 입력 대기하는 코드
         }
