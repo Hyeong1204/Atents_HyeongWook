@@ -89,6 +89,7 @@ namespace _01_cods
             int level = 3;
             int hp = 2;
             float exp = 0.5f;
+            float exp_1;
 
             //Console.Write("이름을 입력하세요 : ");
             //name = Console.ReadLine();
@@ -141,8 +142,24 @@ namespace _01_cods
                     break;
             }
 
+            Console.WriteLine("경험치를 추가합니다.");
+            Console.Write("추가할 경험치 : ");
+            string temp = Console.ReadLine();
 
+            // 실습 : exp의값과 추가로 입력받은 경험치의 합이 1이상이면 "레벨업" 이라고 출력하고 1미만이면 합계를 출력하는 코드 작성하기
 
+            float.TryParse(temp, out exp_1);
+            exp = exp + exp_1;
+            if(exp >= 1)
+            {
+                Console.WriteLine("\"레벨업\"");
+                exp = exp - 1;
+                Console.WriteLine($"현재 경험치 : {exp * 100:f2}%");
+            }
+            else if(exp < 1)
+            {
+                Console.WriteLine($"현재 경험치 : {exp * 100:f2}%");
+            }
             Console.ReadKey();                  // 키 입력 대기하는 코드
         }
     }
