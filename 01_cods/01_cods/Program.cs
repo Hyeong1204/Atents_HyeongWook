@@ -153,6 +153,7 @@ namespace _01_cods
             if(exp >= 1)
             {
                 Console.WriteLine("\"레벨업\"");
+                level++;
                 exp = exp - 1;
                 Console.WriteLine($"현재 경험치 : {exp * 100:f2}%");
             }
