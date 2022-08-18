@@ -8,13 +8,86 @@ namespace _01_cods
 {
     internal class Program
     {
+        // 스코프(scope) : 변수나 함수를 사용할 수 있는 범위. 변수를 선어한 시점에서 해당 변수가 포한된 중괄호가 끝나는 구간까지
         static void Main(string[] args)
         {
-            int sumResult = Sum(10, 20);    // break point (단축기 F9)
-            Console.WriteLine($"SumResult : {sumResult}");
-            Print();
+            //Test_Gugudan();
 
-            string name = "황꾸릉";
+            Console.ReadKey();                  // 키 입력 대기하는 코드
+        }   // Main 함수의 끝
+
+        private static void Test_Gugudan()
+        {
+            //int sumResult = Sum(10, 20);    // break point (단축기 F9)
+            //Console.WriteLine($"SumResult : {sumResult}");
+            //Print();
+            //Test_Function();
+
+            // 실습
+            // 1. int 타입의 파라메터를 하나 받아서 그 숫자에 해당하는 구구단을 출력해주는 함수 만들기
+            // 2. 1번에서 만드는 함수는 2~9가지 입력이 들어오면 해당 구구단 출력, 그 외의 숫자는 "잘못된 입력입니다." 라고 출력
+            // 3. 메인 함수에서 숫자를 하나 입력받는 코드가 있어야 한다.
+
+            // 논리 연산자
+            // && (and) - 둘 다 참일 때만 참이다.
+            // || (or) - 둘 중 하나만 참이면 참이다.
+            // ~ (not) - true는 false, false는 true로 만든다
+
+            int n;
+
+            Console.WriteLine("출력할 구구단을 입력하세요(2~9) : ");
+            string temp = Console.ReadLine();
+            int.TryParse(temp, out n);
+            Gugudan(n);
+
+            //for(int i = 0; i < 1;)
+            //{
+            //Console.WriteLine("단을 입력해주세요. (2~9)");
+            //string temp = Console.ReadLine();
+            //int.TryParse(temp, out n);
+            //    if ((1 < n)&&(n<10))
+            //    {
+            //        i++;
+            //        mul(n);
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("잘못된 입력입니다.");
+            //    }
+            //}
+        }
+
+
+        private static void mul(int n)
+        {
+            for (int j = 1; j < 10; j++)
+            {
+                Console.WriteLine($"{n} x {j} = {n * j}");
+            }
+        }
+
+        static void Gugudan(int dan)
+        {
+            // <= 나 >= 는 두개의 조건이 결합된 것이므로 피하는 것이 좋다.
+            //if(2 <= dan && dan <=9)   // 2 <= dan         2 < and && 2 == dan
+            if(1 <dan && dan< 10)
+            {
+                // 구구단 출력
+                Console.WriteLine($"{dan}단 출력");
+                for (int i = 1; i < 10; i++)
+                {
+                    Console.WriteLine($"{dan} * {i} = {dan * i}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("잘못된 입력입니다.");
+            }
+        }
+
+        private static void Test_Function()
+        {
+            string name = "황꾸릉";    // 함수로 만들고 싶은 영역을 선택후 ctrl + . 후 매서드 추출
             int level = 2;
             int hp = 10;
             int maxHP = 20;
@@ -22,20 +95,16 @@ namespace _01_cods
             float maxExp = 1.0f;
 
             PrintCharacter(name, level, hp, maxHP, exp, maxExp);
-            
-            Console.ReadKey();                  // 키 입력 대기하는 코드
-        }   // Main 함수의 끝
+        }
 
         private static void PrintCharacter(string name, int level, int hp, int maxHP, float exp, float maxExp)
         {
             // 실습 : 파라메터로 받은 데이터를 적당한 양식으로 출력해주는 함수 완성하기
             Console.WriteLine("┏━━━━━━━━━━━━━━━━┓");
-            Console.WriteLine($"┃이름 : {name}                  ┃");
-            Console.WriteLine($"┃레벨 : {level}                 ┃");
-            Console.WriteLine($"┃체력 : {hp}                    ┃");
-            Console.WriteLine($"┃최대 체력 : {maxHP}            ┃");
-            Console.WriteLine($"┃경험치 : {exp}                 ┃");
-            Console.WriteLine($"┃최대 경험치 : {maxExp}         ┃");
+            Console.WriteLine($"┃이름 : {name}                  \t┃");
+            Console.WriteLine($"┃레벨 : {level}                 \t┃");
+            Console.WriteLine($"┃체력 : {hp} / {maxHP}          \t┃");
+            Console.WriteLine($"┃경험치 : {exp*100:f2}% / {maxExp*100:f2}%      \t┃");
             Console.WriteLine("┗━━━━━━━━━━━━━━━━┛");
         }
 
