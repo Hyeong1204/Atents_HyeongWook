@@ -24,11 +24,52 @@ namespace _01_cods
         int STR = 10;
         int DEX = 5;
         int intellegence = 7;
-        
+
+
+        //Random random = new Random();
+        //for(int i = 1; i < 101; i++)
+        //{
+        //int randNum = random.Next();
+        //    // % : 앞에 숫자를 뒤의 숫자로 나눈 나머지값을 돌려주는 연산자. (모듈레이트 연산, 나머지 연산)
+        //    // 10 % 3 하면 결과는 0~2
+        //    // % 연산의 결과는 항상 0~(뒤 숫자 -1)로 나온다.
+        //Console.WriteLine($"랜덤 넘버: {randNum}");
+        //}
+
+
+
+
+        // 배열 : 같은 종류(데이터 타입)의 데이터를 한번에 여러개 가지는 유형의 변수
+        // int[] arr;  // 인터지러를 여러개 가질 수 있는 배열
+        // arr = new int[5];       // 인티저를 5개 가질 수 있도록 할당
+
+        string[] nameArray = { "너굴맨", "개굴맨", "ㅁㅁㅁ", "ㄹㄹㄹ", "ㄱㄱㄱ" };
+        // nameArray에 기본값 설정(선언과 할당을 동시해 함)
+
+        Random rand;
+
         public Character()
         {
             Console.WriteLine("생서자 호출");
-            name = "황꾸릉";
+
+            // 실습
+            // 1. 이름이 nameArray에 들어있는 것 중 하나로 랜덤하게 선택된다.
+            // 2. maxHp는 100~200로 랜덤하게 선택된다.
+            // 3, hp는 maxHp와 같은 값이다.
+            // 4. STR, DEX, INT은 1~20 사이로 랜덤하게 정해진다.
+            // 5. TestPrintStatus 함수를 이용해서 초죙 상태를 출력한다.
+
+            rand = new Random();
+            int randNum = rand.Next();      // 랜덤 클래스 이용해서 0~21억 사이의 숫자를 랜덤으로 선택
+            name = nameArray[randNum % 5];  // 랜덤으로 고른 숫자를 0~4로 변경
+
+            maxHP = rand.Next(100, 201);    // 100에서 200중에 랜덤으로 선택
+            hp = maxHP;
+
+            STR = rand.Next(20) +1;         // 1~20 사이를 랜덤하게 선택
+            DEX = rand.Next(20) + 1;
+            intellegence = rand.Next(20) + 1;
+
         }
 
         public Character(string newName)
@@ -50,7 +91,13 @@ namespace _01_cods
 
         public void TestPrintStatus()
         {
-
+            Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            Console.WriteLine($"┃이름\t : {name}");
+            Console.WriteLine($"┃체력\t : {hp} / {maxHP}");
+            Console.WriteLine($"┃STR\t : {STR}");
+            Console.WriteLine($"┃DEX\t : {DEX}");
+            Console.WriteLine($"┃INT\t : {intellegence}");
+            Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━┛");
         }
     }
 }
