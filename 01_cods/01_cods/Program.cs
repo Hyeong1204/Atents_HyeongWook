@@ -13,6 +13,15 @@ namespace _01_cods
         {
             //Test_Gugudan();
 
+            Character human1 = new Character();  // 메모리 할당 완료(Instance화).  객체(Object) 생성 완료(객체의 인스턴스를 만들었다.)
+            Character human2 = new Character("탸탸탸");  // new : 메모리를 Character 만큼 달라고 요청
+            // Character 타입으로 하나 더 만든 것. human1가 human2는 서로 다른 개체이다.
+
+           // human1.name = "황꾸릉";
+            
+            //human1.TestPrintStatus();
+            //human2.Attack();
+
             Console.ReadKey();                  // 키 입력 대기하는 코드
         }   // Main 함수의 끝
 
