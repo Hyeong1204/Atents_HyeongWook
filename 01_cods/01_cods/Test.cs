@@ -48,6 +48,24 @@ namespace _01_cods
 
         Random rand;
 
+        public int HP
+        {
+            get // 이 privat를 읽을 때 호출되는 부분. get만 만들면 읽기 전용 같은 효과가 있다.
+            {
+                return hp;
+            }
+            private set // 이 privat를 값을 넣을 때 호출되는 부분. set에 private을 붙이면 쓰는 것은 나만 가능하다.
+            {
+                hp = value;
+                if (hp > maxHP)
+                    hp = maxHP;
+                if(hp <= 0)
+                {
+                    // 사망 처리용 함수 호출
+                }
+            }
+        }
+
         public Character()
         {
             Console.WriteLine("생서자 호출");
