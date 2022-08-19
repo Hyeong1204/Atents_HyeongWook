@@ -42,15 +42,14 @@ namespace _01_cods
                 Console.WriteLine("크리티컬!");
                 damage *= 2;
             }
-            if (target.barrier)
+            if (target.Barrier)
             {
                 Console.WriteLine($"{target.Name}이 방어를 합니다.");
                 damage -= damage;
-                barrier = false;
+                target.Barrier = false;
             }
             Console.WriteLine($"{name}이(가) {target.Name}에게 공격을 합니다.(공격력 : {damage})");
             target.TakeDamge(damage);
-
         }
 
         public int OrcSkill(int damage)

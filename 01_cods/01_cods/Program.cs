@@ -40,7 +40,7 @@ namespace _01_cods
                         player.HumanSkill();
                         break;
                     case 3:
-                        player.barrier = true;
+                        player.Barrier = true;
                         break;
                     default:
                         Console.WriteLine("다시 입력해주세요");

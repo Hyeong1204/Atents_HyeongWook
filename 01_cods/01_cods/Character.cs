@@ -27,7 +27,18 @@ namespace _01_cods
         protected int intellegence = 7;
 
         bool isDead = false;
-        public bool barrier { get; set; }
+        bool barrier = false;
+        public bool Barrier
+        {
+            get
+            {
+                return barrier;
+            }
+            set
+            {
+                barrier = value;
+            }
+        }
 
 
         public string Name => name;
