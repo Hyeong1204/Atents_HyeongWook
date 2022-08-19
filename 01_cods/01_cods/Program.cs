@@ -12,20 +12,45 @@ namespace _01_cods
         static void Main(string[] args)
         {
             //Test_Gugudan();
+            //Tset_Character();
+            //Test_human();
 
+            Human player = new Human();
+            Orc ememy = new Orc();
+
+            Console.ReadKey();                  // 키 입력 대기하는 코드
+        }   // Main 함수의 끝
+
+        private static void Test_human()
+        {
+            Human h1 = new Human();
+            Character c1 = new Character("형욱");      // 상속받은 클래스는 부모 클래스 타입으로 저장할 수 있다.
+            //c1.TestPrintStatus();   // character의 TesPrintStatus가 호출이 된다.(가상함수가 아니라서)
+            //c1.GenerateStatus();    // Human의 GenerateStatus가 호출이 된다. (가상함수이기 때문에)
+
+            // 1. Human의 TestPrintStatus 함수를 오버라이드(운래 함수의 기능을 다른 기능으로 변경하는 것) 하라(mp출력할 것) 
+            // 2. Human의 Attack 함수를 오버라이드 하라
+            //      2.1 Attackd을 할 때 30%의 확률로 치명타가 터지게 만들어라(치명타는 대미지 2배)
+
+            h1.Attack(c1);
+            c1.TestPrintStatus();
+        }
+
+        private static void Tset_Character()
+        {
             Character human = new Character();
-            
+
 
             //Character human1 = new Character();  // 메모리 할당 완료(Instance화).  객체(Object) 생성 완료(객체의 인스턴스를 만들었다.)
             Character human2 = new Character("형욱");  // new : 메모리를 Character 만큼 달라고 요청
-                                                      // Character 타입으로 하나 더 만든 것. human1가 human2는 서로 다른 개체이다.
+                                                     // Character 타입으로 하나 더 만든 것. human1가 human2는 서로 다른 개체이다.
 
             // human1.name = "황꾸릉";
 
             //human1.TestPrintStatus();
             //human2.Attack();
 
-            while(!human.IsDead && !human2.IsDead)  // human이 살아있고 human2도 살아있다.
+            while (!human.IsDead && !human2.IsDead)  // human이 살아있고 human2도 살아있다.
             {
                 human.Attack(human2);
                 human.TestPrintStatus();
@@ -64,9 +89,7 @@ namespace _01_cods
             }
             */
             // 28번 라인~31번 라인까지를 한쪽이 죽을 때까지 공격한다.
-
-            Console.ReadKey();                  // 키 입력 대기하는 코드
-        }   // Main 함수의 끝
+        }
 
         private static void Test_Gugudan()
         {

@@ -18,14 +18,16 @@ namespace _01_cods
    public class Character    // Character 클래스를 public으로 선언한다.
     {
         // 맴버 변수 -> 이 클래스에서 사용되는 데이터.
-        private string name;
-        int hp = 100;
-        int maxHP = 100;
-        int STR = 10;
-        int DEX = 5;
-        int intellegence = 7;
+        protected string name;
+        protected int hp = 100;
+        protected int maxHP = 100;
+        protected int STR = 10;
+        protected int DEX = 5;
+        protected int intellegence = 7;
 
         bool isDead = false;
+
+        public string Name => name;
 
         public bool IsDead => isDead;   // 간단하게 읽기전용 프로퍼티 만드는 방법
 
@@ -49,7 +51,7 @@ namespace _01_cods
         string[] nameArray = { "현진", "준형", "사빈", "원빈", "상현" };
         // nameArray에 기본값 설정(선언과 할당을 동시해 함)
 
-        Random rand;
+        protected Random rand;
 
         public int HP
         {
@@ -64,9 +66,9 @@ namespace _01_cods
                     hp = maxHP;
                 if(hp <= 0)
                 {
+                    // 사망 처리용 함수 호출
                     hp = 0;
                     isDead = true;
-                    // 사망 처리용 함수 호출
                     Console.WriteLine($"{name}이 사망하였습니다.");
                 }
             }
@@ -83,7 +85,7 @@ namespace _01_cods
             // 4. STR, DEX, INT은 1~20 사이로 랜덤하게 정해진다.
             // 5. TestPrintStatus 함수를 이용해서 초죙 상태를 출력한다.
 
-            rand = new Random();
+            rand = new Random(DateTime.Now.Millisecond);
             int randNum = rand.Next();      // 랜덤 클래스 이용해서 0~21억 사이의 숫자를 랜덤으로 선택
             name = nameArray[randNum % 5];  // 랜덤으로 고른 숫자를 0~4로 변경
 
@@ -102,7 +104,7 @@ namespace _01_cods
             TestPrintStatus();
         }
 
-        private void GenerateStatus()
+        public virtual void GenerateStatus()
         {
             maxHP = rand.Next(100, 201);    // 100에서 200중에 랜덤으로 선택
             hp = maxHP;
@@ -113,11 +115,9 @@ namespace _01_cods
         }
 
         // 맴버 함수 -> 이 클래스가 가지는 기능
-        public void Attack(Character target)
+        public virtual void Attack(Character target)
         {
-            int damage = STR;
-            Console.WriteLine($"{name}이 {target.name}에게 공격을 합니다.(공격력 : {damage})");
-            target.TakeDamge(damage);
+            
         }
 
         public void TakeDamge(int damage)
@@ -126,15 +126,9 @@ namespace _01_cods
             HP -= damage;
         }
 
-        public void TestPrintStatus()
+        public virtual void TestPrintStatus()
         {
-            Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━┓");
-            Console.WriteLine($"┃이름\t : {name}");
-            Console.WriteLine($"┃체력\t : {hp} / {maxHP}");
-            Console.WriteLine($"┃STR\t : {STR}");
-            Console.WriteLine($"┃DEX\t : {DEX}");
-            Console.WriteLine($"┃INT\t : {intellegence}");
-            Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━┛");
+            
         }
     }
 }
