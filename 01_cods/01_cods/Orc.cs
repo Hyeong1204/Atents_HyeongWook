@@ -16,6 +16,35 @@ namespace _01_cods
 {
     public class Orc : Character
     {
+        private string skill = "분노";
 
+        public Orc() : base()
+        {
+
+        }
+
+        public override void Attack(Character target)
+        {
+            base.Attack(target);
+            int damage = STR;
+
+            if (rand.NextDouble() < 0.3)   // 이 조건이 참이면 30% 안쪽으로 들어왔다.
+            {
+                Console.WriteLine("크리티컬!");
+                damage *= 2;
+            }
+            Console.WriteLine($"{name}이 {target.Name}에게 공격을 합니다.(공격력 : {damage})");
+            target.TakeDamge(damage);
+
+        }
+
+        public void OrcSkill()
+        {
+            int damage = STR;
+            Console.WriteLine($"{name}이 {skill}를 사용하여 타격합니다.");
+            damage *= 3;
+        }
     }
+
+
 }

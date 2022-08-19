@@ -49,9 +49,11 @@ namespace _01_cods
             target.TakeDamge(damage);
         }
 
-        public void Skill(Human player)
+        public void HumanSkill(int player)
         {
-
+            int damage = STR;
+            Console.WriteLine($"{name}이 분노를 사용하여 타격합니다.");
+            damage *= 3;
         }
 
     }

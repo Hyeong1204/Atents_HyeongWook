@@ -28,7 +28,7 @@ namespace _01_cods
             //c1.TestPrintStatus();   // character의 TesPrintStatus가 호출이 된다.(가상함수가 아니라서)
             //c1.GenerateStatus();    // Human의 GenerateStatus가 호출이 된다. (가상함수이기 때문에)
 
-            // 1. Human의 TestPrintStatus 함수를 오버라이드(운래 함수의 기능을 다른 기능으로 변경하는 것) 하라(mp출력할 것) 
+            // 1. Human의 TestPrintStatus 함수를 오버라이드(원래 함수의 기능을 다른 기능으로 변경하는 것) 하라(mp출력할 것) 
             // 2. Human의 Attack 함수를 오버라이드 하라
             //      2.1 Attackd을 할 때 30%의 확률로 치명타가 터지게 만들어라(치명타는 대미지 2배)
 
