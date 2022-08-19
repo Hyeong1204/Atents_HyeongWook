@@ -25,6 +25,9 @@ namespace _01_cods
         int DEX = 5;
         int intellegence = 7;
 
+        bool isDead = false;
+
+        public bool IsDead => isDead;   // 간단하게 읽기전용 프로퍼티 만드는 방법
 
         //Random random = new Random();
         //for(int i = 1; i < 101; i++)
@@ -43,7 +46,7 @@ namespace _01_cods
         // int[] arr;  // 인터지러를 여러개 가질 수 있는 배열
         // arr = new int[5];       // 인티저를 5개 가질 수 있도록 할당
 
-        string[] nameArray = { "너굴맨", "개굴맨", "ㅁㅁㅁ", "ㄹㄹㄹ", "ㄱㄱㄱ" };
+        string[] nameArray = { "현진", "준형", "사빈", "원빈", "상현" };
         // nameArray에 기본값 설정(선언과 할당을 동시해 함)
 
         Random rand;
@@ -62,6 +65,7 @@ namespace _01_cods
                 if(hp <= 0)
                 {
                     hp = 0;
+                    isDead = true;
                     // 사망 처리용 함수 호출
                     Console.WriteLine($"{name}이 사망하였습니다.");
                 }
@@ -118,8 +122,8 @@ namespace _01_cods
 
         public void TakeDamge(int damage)
         {
-            HP -= damage;
             Console.WriteLine($"{name}님이 {damage}데미지를 받았습니다.");
+            HP -= damage;
         }
 
         public void TestPrintStatus()

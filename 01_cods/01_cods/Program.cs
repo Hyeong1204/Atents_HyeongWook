@@ -17,7 +17,7 @@ namespace _01_cods
             
 
             //Character human1 = new Character();  // 메모리 할당 완료(Instance화).  객체(Object) 생성 완료(객체의 인스턴스를 만들었다.)
-            Character human2 = new Character("탸탸탸");  // new : 메모리를 Character 만큼 달라고 요청
+            Character human2 = new Character("형욱");  // new : 메모리를 Character 만큼 달라고 요청
                                                       // Character 타입으로 하나 더 만든 것. human1가 human2는 서로 다른 개체이다.
 
             // human1.name = "황꾸릉";
@@ -25,6 +25,20 @@ namespace _01_cods
             //human1.TestPrintStatus();
             //human2.Attack();
 
+            while(!human.IsDead && !human2.IsDead)  // human이 살아있고 human2도 살아있다.
+            {
+                human.Attack(human2);
+                human.TestPrintStatus();
+                human2.TestPrintStatus();
+                if (human2.IsDead)      // human2가 죽으면 공격을 안함
+                {
+                    break;
+                }
+                human2.Attack(human);
+                human.TestPrintStatus();
+                human2.TestPrintStatus();
+            }
+            /*
             while(true)
             {
                 if (0 == human2.HP || 0 == human.HP)
@@ -48,7 +62,7 @@ namespace _01_cods
                     human2.TestPrintStatus();
                 }
             }
-
+            */
             // 28번 라인~31번 라인까지를 한쪽이 죽을 때까지 공격한다.
 
             Console.ReadKey();                  // 키 입력 대기하는 코드
