@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 // namespace : 이름이 겹치는 것을 방자하기 위해 구분지어 놓는 용도
@@ -26,6 +27,8 @@ namespace _01_cods
         protected int intellegence = 7;
 
         bool isDead = false;
+        public bool barrier { get; set; }
+
 
         public string Name => name;
 
@@ -97,9 +100,8 @@ namespace _01_cods
         public Character(string newName)
         {
             //Console.WriteLine($"생성자 호출 - {newName}");
-            rand = new Random();
             name = newName;
-
+            rand = new Random(DateTime.Now.Millisecond);
             GenerateStatus();
             TestPrintStatus();
         }
@@ -130,5 +132,7 @@ namespace _01_cods
         {
             
         }
+
+        
     }
 }

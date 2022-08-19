@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace _01_cods
@@ -10,6 +12,9 @@ namespace _01_cods
     {
         int mp = 100;
         int maxMP = 100;
+
+        bool IsSkill = false;
+
         public Human() : base() // 상속받은 부모의 생성자도 같이 실행
         {
             
@@ -39,19 +44,27 @@ namespace _01_cods
         {
             base.Attack(target);
             int damage = STR;
-            
+
+            if (IsSkill == true)
+            {
+                damage *= 3;
+                IsSkill = false;
+            }
+
             if(rand.NextDouble() < 0.3)   // 이 조건이 참이면 30% 안쪽으로 들어왔다.
             {
                 Console.WriteLine("크리티컬!");
                 damage *= 2;
             }
-            Console.WriteLine($"{name}이 {target.Name}에게 공격을 합니다.(공격력 : {damage})");
+
+            Console.WriteLine($"{name}이(가) {target.Name}에게 공격을 합니다.(공격력 : {damage})");
             target.TakeDamge(damage);
         }
 
-        public void HumanSkill(int player)
+        public void HumanSkill()
         {
-            
+            Console.WriteLine($"{name}이 휘두르기를 사용합니다.");
+            IsSkill = true;
         }
 
     }

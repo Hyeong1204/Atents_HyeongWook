@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace _01_cods
@@ -16,12 +17,36 @@ namespace _01_cods
             //Test_human();
 
             Human player = new Human();
-            Orc ememy = new Orc();
+            Orc ememy = new Orc("오크");
 
-
+            int n;
 
             while(!player.IsDead && !ememy.IsDead)
             {
+                Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+                Console.WriteLine("┃ \t   커맨드를 입력하세요.\t\t┃");
+                Console.WriteLine("┃ 1. 공격\t2. 휘두르기\t3. 방어 ┃");
+                Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+
+                string temp = Console.ReadLine();
+                int.TryParse(temp, out n);
+
+
+                switch (n)
+                {
+                    case 1:
+                        break;
+                    case 2:
+                        player.HumanSkill();
+                        break;
+                    case 3:
+                        player.barrier = true;
+                        break;
+                    default:
+                        Console.WriteLine("다시 입력해주세요");
+                        break;
+                }
+
                 player.Attack(ememy);
                 player.TestPrintStatus();
                 ememy.TestPrintStatus();

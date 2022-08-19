@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 // 1. Orc 클래스 완성하기
@@ -23,6 +24,11 @@ namespace _01_cods
 
         }
 
+        public Orc(string newName) : base(newName)
+        {
+            
+        }
+
         public override void Attack(Character target)
         {
             base.Attack(target);
@@ -36,14 +42,20 @@ namespace _01_cods
                 Console.WriteLine("크리티컬!");
                 damage *= 2;
             }
-            Console.WriteLine($"{name}이 {target.Name}에게 공격을 합니다.(공격력 : {damage})");
+            if (target.barrier)
+            {
+                Console.WriteLine($"{target.Name}이 방어를 합니다.");
+                damage -= damage;
+                barrier = false;
+            }
+            Console.WriteLine($"{name}이(가) {target.Name}에게 공격을 합니다.(공격력 : {damage})");
             target.TakeDamge(damage);
 
         }
 
         public int OrcSkill(int damage)
         {
-            Console.WriteLine($"{name}이 {skill}를 사용하여 타격합니다.");
+            Console.WriteLine($"{name}이(가) {skill}를 사용하여 타격합니다.");
             return damage * 3;
         }
 
