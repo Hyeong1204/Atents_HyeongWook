@@ -18,6 +18,22 @@ namespace _01_cods
             Human player = new Human();
             Orc ememy = new Orc();
 
+
+
+            while(!player.IsDead && !ememy.IsDead)
+            {
+                player.Attack(ememy);
+                player.TestPrintStatus();
+                ememy.TestPrintStatus();
+                if (ememy.IsDead)
+                {
+                    break;
+                }
+                ememy.Attack(player);
+                player.TestPrintStatus();
+                ememy.TestPrintStatus();
+            }
+
             Console.ReadKey();                  // 키 입력 대기하는 코드
         }   // Main 함수의 끝
 

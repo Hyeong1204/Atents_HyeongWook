@@ -27,8 +27,11 @@ namespace _01_cods
         {
             base.Attack(target);
             int damage = STR;
-
-            if (rand.NextDouble() < 0.3)   // 이 조건이 참이면 30% 안쪽으로 들어왔다.
+            if(rand.NextDouble() < 0.3)
+            {
+               damage = OrcSkill(damage);
+            }
+            if(rand.NextDouble() < 0.3)   // 이 조건이 참이면 30% 안쪽으로 들어왔다.
             {
                 Console.WriteLine("크리티컬!");
                 damage *= 2;
@@ -38,13 +41,31 @@ namespace _01_cods
 
         }
 
-        public void OrcSkill()
+        public int OrcSkill(int damage)
         {
-            int damage = STR;
             Console.WriteLine($"{name}이 {skill}를 사용하여 타격합니다.");
-            damage *= 3;
+            return damage * 3;
         }
+
+        public override void GenerateStatus()
+        {
+            base.GenerateStatus();
+        }
+
+        public override void TestPrintStatus()
+        {
+            base.TestPrintStatus();
+            Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            Console.WriteLine($"┃이름\t : {name}");
+            Console.WriteLine($"┃체력\t : {hp} / {maxHP}");
+            Console.WriteLine($"┃STR\t : {STR}");
+            Console.WriteLine($"┃DEX\t : {DEX}");
+            Console.WriteLine($"┃INT\t : {intellegence}");
+            Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━┛");
+        }
+
     }
+
 
 
 }
