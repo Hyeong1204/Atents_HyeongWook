@@ -33,6 +33,12 @@ namespace _01_cods
         {
             base.Attack(target);
             int damage = STR;
+            if (target.Barrier)
+            {
+                Console.WriteLine($"{target.Name}이 방어를 합니다.");
+                damage -= damage;
+                target.Barrier = false;
+            }
             if(rand.NextDouble() < 0.3)
             {
                damage = OrcSkill(damage);
@@ -41,12 +47,6 @@ namespace _01_cods
             {
                 Console.WriteLine("크리티컬!");
                 damage *= 2;
-            }
-            if (target.Barrier)
-            {
-                Console.WriteLine($"{target.Name}이 방어를 합니다.");
-                damage -= damage;
-                target.Barrier = false;
             }
             Console.WriteLine($"{name}이(가) {target.Name}에게 공격을 합니다.(공격력 : {damage})");
             target.TakeDamge(damage);
