@@ -36,7 +36,7 @@ namespace _01_cods
             if (target.Barrier)
             {
                 Console.WriteLine($"{target.Name}이 방어를 합니다.");
-                damage -= damage;
+                damage *= 0;
                 target.Barrier = false;
             }
             if(rand.NextDouble() < 0.3)
