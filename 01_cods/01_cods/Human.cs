@@ -61,10 +61,11 @@ namespace _01_cods
             target.TakeDamge(damage);
         }
 
-        public void HumanSkill()
+        public void HumanSkill(Character target)
         {
             Console.WriteLine($"{name}이 휘두르기를 사용합니다.");
             IsSkill = true;
+            Attack(target);
         }
 
     }

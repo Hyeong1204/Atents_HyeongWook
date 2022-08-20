@@ -20,6 +20,7 @@ namespace _01_cods
             Orc ememy = new Orc("오크");
 
             int n;
+            
 
             while(!player.IsDead && !ememy.IsDead)
             {
@@ -35,9 +36,10 @@ namespace _01_cods
                 switch (n)
                 {
                     case 1:
+                        player.Attack(ememy);
                         break;
                     case 2:
-                        player.HumanSkill();
+                        player.HumanSkill(ememy);
                         break;
                     case 3:
                         player.Barrier = true;
@@ -46,8 +48,6 @@ namespace _01_cods
                         Console.WriteLine("다시 입력해주세요");
                         break;
                 }
-
-                player.Attack(ememy);
                 player.TestPrintStatus();
                 ememy.TestPrintStatus();
                 if (ememy.IsDead)
