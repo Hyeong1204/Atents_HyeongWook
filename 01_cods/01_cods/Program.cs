@@ -22,35 +22,35 @@ namespace _01_cods
             int n;
             
 
-            while(!player.IsDead && !ememy.IsDead)
+            while(!player.IsDead && !ememy.IsDead)      // 둘중에 한명이 죽을때 까지 반복
             {
                 Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
                 Console.WriteLine("┃ \t   커맨드를 입력하세요.\t\t┃");
                 Console.WriteLine("┃ 1. 공격\t2. 휘두르기\t3. 방어 ┃");
                 Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 
-                string temp = Console.ReadLine();
-                int.TryParse(temp, out n);
+                string temp = Console.ReadLine();       // 입력
+                int.TryParse(temp, out n);              // temp변수를 정수형으로 바꿈
 
 
                 switch (n)
                 {
                     case 1:
-                        player.Attack(ememy);
+                        player.Attack(ememy);           // player에 Attack 함수를 호출
                         break;
                     case 2:
-                        player.HumanSkill(ememy);
+                        player.HumanSkill(ememy);       // palyer에 HumanSkill 함수를 호출
                         break;
                     case 3:
-                        player.Barrier = true;
+                        player.Barrier = true;          // palyer에 Barrier를 false에서 true로 변경
                         break;
                     default:
-                        Console.WriteLine("다시 입력해주세요");
-                        break;
+                        Console.WriteLine("다시 입력해주세요. ");
+                        continue;           // 다시 while문 시작점으로 이동
                 }
                 player.TestPrintStatus();
                 ememy.TestPrintStatus();
-                if (ememy.IsDead)
+                if (ememy.IsDead)           // ememy가 죽었는지 한번더 검출
                 {
                     break;
                 }

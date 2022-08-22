@@ -40,9 +40,9 @@ namespace _01_cods
             Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━┛");
         }
 
-        public override void Attack(Character target)
+        public override void Attack(Character target)       // 부모 클래스의 함수를 씀
         {
-            base.Attack(target);
+            base.Attack(target);        // 부모의 Attack 함수를 쓰겠다.
             int damage = STR;
 
             if (IsSkill == true)

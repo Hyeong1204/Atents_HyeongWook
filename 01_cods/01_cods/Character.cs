@@ -41,7 +41,7 @@ namespace _01_cods
         }
 
 
-        public string Name => name;
+        public string Name => name;     // 간단하게 읽기전용 프로퍼티 만드는 방법
 
         public bool IsDead => isDead;   // 간단하게 읽기전용 프로퍼티 만드는 방법
 
@@ -65,7 +65,7 @@ namespace _01_cods
         string[] nameArray = { "현진", "준형", "사빈", "원빈", "상현" };
         // nameArray에 기본값 설정(선언과 할당을 동시해 함)
 
-        protected Random rand;
+        protected Random rand;      // 랜덤 클래스의 변수 선언
 
         public int HP
         {
@@ -99,7 +99,7 @@ namespace _01_cods
             // 4. STR, DEX, INT은 1~20 사이로 랜덤하게 정해진다.
             // 5. TestPrintStatus 함수를 이용해서 초죙 상태를 출력한다.
 
-            rand = new Random(DateTime.Now.Millisecond);
+            rand = new Random(DateTime.Now.Millisecond);    // 랜덤 타입의 rand를 선언(시간마다 바뀜)
             int randNum = rand.Next();      // 랜덤 클래스 이용해서 0~21억 사이의 숫자를 랜덤으로 선택
             name = nameArray[randNum % 5];  // 랜덤으로 고른 숫자를 0~4로 변경
 
@@ -119,7 +119,7 @@ namespace _01_cods
 
         public virtual void GenerateStatus()
         {
-            maxHP = rand.Next(100, 201);    // 100에서 200중에 랜덤으로 선택
+            maxHP = rand.Next(100, 201);     // 100에서 200중에 랜덤으로 선택
             hp = maxHP;
 
             STR = rand.Next(20) + 1;         // 1~20 사이를 랜덤하게 선택
@@ -128,7 +128,7 @@ namespace _01_cods
         }
 
         // 맴버 함수 -> 이 클래스가 가지는 기능
-        public virtual void Attack(Character target)
+        public virtual void Attack(Character target)        // 버추얼 : 자식클래스에 오버라이드를할 수 있게 해줌
         {
             
         }

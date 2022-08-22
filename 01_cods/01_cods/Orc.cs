@@ -24,7 +24,7 @@ namespace _01_cods
 
         }
 
-        public Orc(string newName) : base(newName)
+        public Orc(string newName) : base(newName)          // 매개변수를 받아 Character의 생성자를 실행
         {
             
         }
