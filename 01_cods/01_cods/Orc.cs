@@ -73,6 +73,10 @@ namespace _01_cods
             base.GenerateStatus();
         }
 
+
+        /// <summary>
+        /// 스테이터스 창 출력
+        /// </summary>
         public override void PrintStatus()
         {
             base.PrintStatus();

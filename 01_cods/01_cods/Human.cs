@@ -35,6 +35,9 @@ namespace _01_cods
 
         }
 
+        /// <summary>
+        /// 스테이터스 생성용(Mp도 생성)
+        /// </summary>
         public override void GenerateStatus()
         {
             base.GenerateStatus();  // Character의 GenerateStatus 함수 실행
@@ -42,6 +45,9 @@ namespace _01_cods
             mp = maxMP;
         }
 
+        /// <summary>
+        /// 스테이터스 창 출력
+        /// </summary>
         public override void PrintStatus()
         {
             base.PrintStatus();
@@ -55,10 +61,14 @@ namespace _01_cods
             Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━┛");
         }
 
+        /// <summary>
+        /// 공격 함수
+        /// </summary>
+        /// <param name="target">공격 대상</param>
         public override void Attack(Character target)       // 부모 클래스의 어택 함수를 씀
         {
             base.Attack(target);        // 부모의 Attack 함수를 쓰겠다.
-            int damage = STR;
+            int damage = STR;       // 힘을 기바능로 데미지 계산
 
             if (IsSkill == true)        // IsSkill 이 참이면 실행
             {
@@ -73,7 +83,7 @@ namespace _01_cods
             }
 
             Console.WriteLine($"{name}이(가) {target.Name}에게 공격을 합니다.(공격력 : {damage})");
-            target.TakeDamge(damage);
+            target.TakeDamge(damage);   // 최종 데미지를 대상에게 전달
         }
 
         public void HumanSkill(Character target)        // 휴면 스킬 함수
@@ -83,14 +93,22 @@ namespace _01_cods
             Attack(target);
         }
 
+        /// <summary>
+        /// 방어 함수
+        /// </summary>
         public void Defaense()          // 방어 함수
         {
             Console.WriteLine("3턴간 방어를 합니다.");
             remainsDefenseCount += DefenseCount;    // 상수인 DefenseCount에 값을 remainsDefenseCount에 대입한다.
         }
 
+        /// <summary>
+        /// 받은 피해 처리 함수
+        /// </summary>
+        /// <param name="damage">받은 데미지</param>
         public override void TakeDamge(int damage)      // 부모클래스에 TakeDamge를 오버라이브 
         {
+            // 방어 횟수가 남아 있으면
             if(remainsDefenseCount > 0)
             {
                 Console.WriteLine("방어 발동! 받는 데미지가 절반 감소합니다. ");
