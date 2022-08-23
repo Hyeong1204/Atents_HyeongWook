@@ -47,12 +47,12 @@ namespace _01_cods
             Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━┛");
         }
 
-        public override void Attack(Character target)       // 부모 클래스의 함수를 씀
+        public override void Attack(Character target)       // 부모 클래스의 어택 함수를 씀
         {
             base.Attack(target);        // 부모의 Attack 함수를 쓰겠다.
             int damage = STR;
 
-            if (IsSkill == true)
+            if (IsSkill == true)        // IsSkill 이 참이면 실행
             {
                 damage *= 3;
                 IsSkill = false;
@@ -68,28 +68,28 @@ namespace _01_cods
             target.TakeDamge(damage);
         }
 
-        public void HumanSkill(Character target)
+        public void HumanSkill(Character target)        // 휴면 스킬 함수
         {
             Console.WriteLine($"{name}이 휘두르기를 사용합니다.");
             IsSkill = true;
             Attack(target);
         }
 
-        public void Defaense()
+        public void Defaense()          // 방어 함수
         {
             Console.WriteLine("3턴간 방어를 합니다.");
-            remainsDefenseCount += DefenseCount;
+            remainsDefenseCount += DefenseCount;    // 상수인 DefenseCount에 값을 remainsDefenseCount에 대입한다.
         }
 
-        public override void TakeDamge(int damage)
+        public override void TakeDamge(int damage)      // 부모클래스에 TakeDamge를 오버라이브 
         {
             if(remainsDefenseCount > 0)
             {
                 Console.WriteLine("방어 발동! 받는 데미지가 절반 감소합니다. ");
-                remainsDefenseCount--;
-                damage = damage >> 1;
+                remainsDefenseCount--;      // 실행 할때마다 -1 시킨다.
+                damage = damage >> 1;       // damage 값을 반절로 만든다.
             }
-            base.TakeDamge(damage);
+            base.TakeDamge(damage);         //부모클래스에 TakeDamge를 실행
         }
 
     }

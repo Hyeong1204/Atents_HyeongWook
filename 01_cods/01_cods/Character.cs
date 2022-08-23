@@ -76,9 +76,9 @@ namespace _01_cods
             private set // 이 privat를 값을 넣을 때 호출되는 부분. set에 private을 붙이면 쓰는 것은 나만 가능하다.
             {
                 hp = value;
-                if (hp > maxHP)
+                if (hp > maxHP)     // hp에 값이 들어갈때 최대치가 넘으면 최대치로 설정
                     hp = maxHP;
-                if(hp <= 0)
+                if(hp <= 0)         // hp가 0보다 작으면 사망처리
                 {
                     // 사망 처리용 함수 호출
                     hp = 0;
