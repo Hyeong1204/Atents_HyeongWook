@@ -133,7 +133,7 @@ namespace _01_cods
             
         }
 
-        public void TakeDamge(int damage)
+        public virtual void TakeDamge(int damage)
         {
             Console.WriteLine($"{name}님이 {damage}데미지를 받았습니다.");
             HP -= damage;

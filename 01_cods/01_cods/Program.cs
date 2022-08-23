@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,49 +16,105 @@ namespace _01_cods
             //Test_Gugudan();
             //Tset_Character();
             //Test_human();
+            string selc;
+            Human player;
+            do
+            {
+                Console.WriteLine("당신의 이름을 입력해주세요 : ");
+                string NewName = Console.ReadLine();
+                player = new Human(NewName);
+                Console.WriteLine("이대로 진행하겠습니까? (yes/no) : ");
+                selc = Console.ReadLine();
+            } while (selc != "yes" && selc != "Yes" && selc != "y" && selc != "Y");
 
-            Human player = new Human();
             Orc ememy = new Orc("오크");
 
-            int n;
-            
+            Console.WriteLine($"{ememy.Name}가 나타났다.");
+            Console.WriteLine("\n\n--------------------------------전투시작--------------------------------\n\n");
 
-            while(!player.IsDead && !ememy.IsDead)      // 둘중에 한명이 죽을때 까지 반복
+
+            while (true)
             {
-                Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
-                Console.WriteLine("┃ \t   커맨드를 입력하세요.\t\t┃");
-                Console.WriteLine("┃ 1. 공격\t2. 휘두르기\t3. 방어 ┃");
-                Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+                int n;
 
-                string temp = Console.ReadLine();       // 입력
-                int.TryParse(temp, out n);              // temp변수를 정수형으로 바꿈
-
+                do
+                {
+                    Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+                    Console.WriteLine("┃ \t   커맨드를 입력하세요.\t\t┃");
+                    Console.WriteLine("┃ 1. 공격\t2. 휘두르기\t3. 방어 ┃");
+                    Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+                    string temp = Console.ReadLine();       // 입력
+                    int.TryParse(temp, out n);              // temp변수를 정수형으로 바꿈
+                } while (n < 1 || n > 3);
 
                 switch (n)
                 {
                     case 1:
-                        player.Attack(ememy);           // player에 Attack 함수를 호출
+                        player.Attack(ememy);
                         break;
                     case 2:
-                        player.HumanSkill(ememy);       // palyer에 HumanSkill 함수를 호출
+                        player.HumanSkill(ememy);
                         break;
                     case 3:
-                        player.Barrier = true;          // palyer에 Barrier를 false에서 true로 변경
+                        player.Defaense();
                         break;
                     default:
-                        Console.WriteLine("다시 입력해주세요. ");
-                        continue;           // 다시 while문 시작점으로 이동
+                        break;
                 }
+
                 player.TestPrintStatus();
                 ememy.TestPrintStatus();
-                if (ememy.IsDead)           // ememy가 죽었는지 한번더 검출
+                if (ememy.IsDead)
                 {
+                    Console.WriteLine("승리!");
                     break;
                 }
                 ememy.Attack(player);
                 player.TestPrintStatus();
                 ememy.TestPrintStatus();
+                if (player.IsDead)
+                {
+                    Console.WriteLine("패배!");
+                    break;
+                }
             }
+            
+            //while(!player.IsDead && !ememy.IsDead)      // 둘중에 한명이 죽을때 까지 반복
+            //{
+            //    Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            //    Console.WriteLine("┃ \t   커맨드를 입력하세요.\t\t┃");
+            //    Console.WriteLine("┃ 1. 공격\t2. 휘두르기\t3. 방어 ┃");
+            //    Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+
+            //    string temp = Console.ReadLine();       // 입력
+            //    int.TryParse(temp, out n);              // temp변수를 정수형으로 바꿈
+
+
+            //    switch (n)
+            //    {
+            //        case 1:
+            //            player.Attack(ememy);           // player에 Attack 함수를 호출
+            //            break;
+            //        case 2:
+            //            player.HumanSkill(ememy);       // palyer에 HumanSkill 함수를 호출
+            //            break;
+            //        case 3:
+            //            player.Barrier = true;          // palyer에 Barrier를 false에서 true로 변경
+            //            break;
+            //        default:
+            //            Console.WriteLine("다시 입력해주세요. ");
+            //            continue;           // 다시 while문 시작점으로 이동
+            //    }
+            //    player.TestPrintStatus();
+            //    ememy.TestPrintStatus();
+            //    if (ememy.IsDead)           // ememy가 죽었는지 한번더 검출
+            //    {
+            //        break;
+            //    }
+            //    ememy.Attack(player);
+            //    player.TestPrintStatus();
+            //    ememy.TestPrintStatus();
+            //}
 
             Console.ReadKey();                  // 키 입력 대기하는 코드
         }   // Main 함수의 끝

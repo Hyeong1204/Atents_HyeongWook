@@ -12,12 +12,19 @@ namespace _01_cods
     {
         int mp = 100;
         int maxMP = 100;
+        const int DefenseCount = 3;
+        int remainsDefenseCount = 0;
 
         bool IsSkill = false;
 
         public Human() : base() // 상속받은 부모의 생성자도 같이 실행
         {
             
+        }
+
+        public Human(string newname) : base(newname)
+        {
+
         }
 
         public override void GenerateStatus()
@@ -66,6 +73,23 @@ namespace _01_cods
             Console.WriteLine($"{name}이 휘두르기를 사용합니다.");
             IsSkill = true;
             Attack(target);
+        }
+
+        public void Defaense()
+        {
+            Console.WriteLine("3턴간 방어를 합니다.");
+            remainsDefenseCount += DefenseCount;
+        }
+
+        public override void TakeDamge(int damage)
+        {
+            if(remainsDefenseCount > 0)
+            {
+                Console.WriteLine("방어 발동! 받는 데미지가 절반 감소합니다. ");
+                remainsDefenseCount--;
+                damage = damage >> 1;
+            }
+            base.TakeDamge(damage);
         }
 
     }
