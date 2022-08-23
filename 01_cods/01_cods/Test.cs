@@ -21,7 +21,7 @@ namespace _01_cods
             //      2.1 Attackd을 할 때 30%의 확률로 치명타가 터지게 만들어라(치명타는 대미지 2배)
 
             h1.Attack(c1);
-            c1.TestPrintStatus();
+            c1.PrintStatus();
         }
 
         private static void Tset_Character()
@@ -41,15 +41,15 @@ namespace _01_cods
             while (!human.IsDead && !human2.IsDead)  // human이 살아있고 human2도 살아있다.
             {
                 human.Attack(human2);
-                human.TestPrintStatus();
-                human2.TestPrintStatus();
+                human.PrintStatus();
+                human2.PrintStatus();
                 if (human2.IsDead)      // human2가 죽으면 공격을 안함
                 {
                     break;
                 }
                 human2.Attack(human);
-                human.TestPrintStatus();
-                human2.TestPrintStatus();
+                human.PrintStatus();
+                human2.PrintStatus();
             }
             /*
             while(true)

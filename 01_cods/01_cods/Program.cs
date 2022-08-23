@@ -61,16 +61,16 @@ namespace _01_cods
                         break;
                 }
 
-                player.TestPrintStatus();       // player에 TesPrintStatus 함수를 호출
-                ememy.TestPrintStatus();        // ememy에 TesPrintStatus 함수를 호출
+                player.PrintStatus();       // player에 TesPrintStatus 함수를 호출
+                ememy.PrintStatus();        // ememy에 TesPrintStatus 함수를 호출
                 if (ememy.IsDead)               // ememy가 죽으면
                 {
                     Console.WriteLine("승리!");   
                     break;             // while문 탈출
                 }
                 ememy.Attack(player);           // ememy에 Attack함수를 호출하고 (player의 인자값을 넣는다)
-                player.TestPrintStatus();       // player에 TesPrintStatus 함수를 호출
-                ememy.TestPrintStatus();        // ememy에 TesPrintStatus 함수를 호출
+                player.PrintStatus();       // player에 TesPrintStatus 함수를 호출
+                ememy.PrintStatus();        // ememy에 TesPrintStatus 함수를 호출
                 if (player.IsDead)              // player가 죽으면
                 {
                     Console.WriteLine("패배!");

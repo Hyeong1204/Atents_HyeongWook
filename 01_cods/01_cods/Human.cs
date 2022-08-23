@@ -10,19 +10,27 @@ namespace _01_cods
 {
     public class Human : Character  // Human 클래스는 Character 클래스를 상속 받았다.
     {
-        int mp = 100;
+        int mp = 100;           // Human은 추가로 mp를 가지고 있음.
         int maxMP = 100;
-        const int DefenseCount = 3;
-        int remainsDefenseCount = 0;
+        const int DefenseCount = 3;     // 방어태세용 변수(한번 방어을 선택할 때 몇번까지 데미지가 감소하는지)
+        int remainsDefenseCount = 0;    // 남아 있는 방어 횟수
 
         bool IsSkill = false;
 
-        public Human() : base() // 상속받은 부모의 생성자도 같이 실행
+        /// <summary>
+        /// 기본 생성자
+        /// </summary>
+        public Human() : base() 
         {
-            
+            // 이게 없으면 Human(string newname) : base(newname)만 존재하게 되기 때문에
+            // 상속받은 부모의 생성자도 같이 실행
         }
 
-        public Human(string newname) : base(newname)
+        /// <summary>
+        /// 이름을 받는 생성자
+        /// </summary>
+        /// <param name="newname"></param>
+        public Human(string newname) : base(newname)    // base(newname) == Character(string newName) 실행
         {
 
         }
@@ -34,9 +42,9 @@ namespace _01_cods
             mp = maxMP;
         }
 
-        public override void TestPrintStatus()
+        public override void PrintStatus()
         {
-            base.TestPrintStatus();
+            base.PrintStatus();
             Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━┓");
             Console.WriteLine($"┃이름\t : {name}");
             Console.WriteLine($"┃체력\t : {hp} / {maxHP}");

@@ -16,6 +16,8 @@ namespace _01_cods
     // internal : 같은 어셈블리안에서는 public 다른 어셈블리면 private
 
     // 클래스 : 특정한 오브젝트를 표현하기 위해 그 오브젝트가 가져야 할 데이터와 기능을 모아 놓은 것
+
+    
    public class Character    // Character 클래스를 public으로 선언한다.
     {
         // 맴버 변수 -> 이 클래스에서 사용되는 데이터.
@@ -25,6 +27,18 @@ namespace _01_cods
         protected int STR = 10;
         protected int DEX = 5;
         protected int intellegence = 7;
+
+        protected Random rand;      // 랜덤 클래스의 변수 선언
+        //Random random = new Random();
+        //for(int i = 1; i < 101; i++)
+        //{
+        //int randNum = random.Next();
+        //    // % : 앞에 숫자를 뒤의 숫자로 나눈 나머지값을 돌려주는 연산자. (모듈레이트 연산, 나머지 연산)
+        //    // 10 % 3 하면 결과는 0~2
+        //    // % 연산의 결과는 항상 0~(뒤 숫자 -1)로 나온다.
+        //Console.WriteLine($"랜덤 넘버: {randNum}");
+        //}
+
 
         bool isDead = false;
         bool barrier = false;
@@ -45,15 +59,7 @@ namespace _01_cods
 
         public bool IsDead => isDead;   // 간단하게 읽기전용 프로퍼티 만드는 방법
 
-        //Random random = new Random();
-        //for(int i = 1; i < 101; i++)
-        //{
-        //int randNum = random.Next();
-        //    // % : 앞에 숫자를 뒤의 숫자로 나눈 나머지값을 돌려주는 연산자. (모듈레이트 연산, 나머지 연산)
-        //    // 10 % 3 하면 결과는 0~2
-        //    // % 연산의 결과는 항상 0~(뒤 숫자 -1)로 나온다.
-        //Console.WriteLine($"랜덤 넘버: {randNum}");
-        //}
+        
 
 
 
@@ -65,7 +71,6 @@ namespace _01_cods
         string[] nameArray = { "현진", "준형", "사빈", "원빈", "상현" };
         // nameArray에 기본값 설정(선언과 할당을 동시해 함)
 
-        protected Random rand;      // 랜덤 클래스의 변수 선언
 
         public int HP
         {
@@ -88,6 +93,7 @@ namespace _01_cods
             }
         }
 
+        // 기본 생성자
         public Character()
         {
             //Console.WriteLine("생성자 호출");
@@ -99,24 +105,28 @@ namespace _01_cods
             // 4. STR, DEX, INT은 1~20 사이로 랜덤하게 정해진다.
             // 5. TestPrintStatus 함수를 이용해서 초죙 상태를 출력한다.
 
-            rand = new Random(DateTime.Now.Millisecond);    // 랜덤 타입의 rand를 선언(시간마다 바뀜)
+            rand = new Random(DateTime.Now.Millisecond);    // 랜덤 클래스 시드값 설정
             int randNum = rand.Next();      // 랜덤 클래스 이용해서 0~21억 사이의 숫자를 랜덤으로 선택
             name = nameArray[randNum % 5];  // 랜덤으로 고른 숫자를 0~4로 변경
 
-            GenerateStatus();
-            TestPrintStatus();
+            GenerateStatus();      // 스테이터스 랜덤으로 설정
+            PrintStatus();     // 설정한 내용 출력하기
 
         }
-
+        // 생성자
+        // param name = "newName" > Character의 이름
         public Character(string newName)
         {
             //Console.WriteLine($"생성자 호출 - {newName}");
-            name = newName;
+            name = newName; // 이름은 파라메터로 입력 받은 것을 사용.
             rand = new Random(DateTime.Now.Millisecond);
-            GenerateStatus();
-            TestPrintStatus();
+            GenerateStatus();   // 스테이터스 랜덤으로 설정
+            PrintStatus();  // 설정하 내용 출력하기
         }
 
+        // 맴버 함수 -> 이 클래스가 가지는 기능
+
+        /// 스테이터스를 랜덤으로 설정해주는 함수
         public virtual void GenerateStatus()
         {
             maxHP = rand.Next(100, 201);     // 100에서 200중에 랜덤으로 선택
@@ -127,23 +137,41 @@ namespace _01_cods
             intellegence = rand.Next(20) + 1;
         }
 
-        // 맴버 함수 -> 이 클래스가 가지는 기능
+        /// <summary>
+        /// target을 공격하는 함수
+        /// </summary>
+        /// <param name="target">공격 대상</param>
         public virtual void Attack(Character target)        // 버추얼 : 자식클래스에 오버라이드를할 수 있게 해줌
         {
             
         }
 
+        /// <summary>
+        /// 데미지를 받는 함수
+        /// </summary>
+        /// <param name="damage">받는 순수 데미지</param>
         public virtual void TakeDamge(int damage)
         {
             Console.WriteLine($"{name}님이 {damage}데미지를 받았습니다.");
-            HP -= damage;
+            HP -= damage; // 데미지 만큼 HP 감소, 추가 로직 없음.
         }
 
-        public virtual void TestPrintStatus()
+        /// <summary>
+        /// 스테이터창 출력
+        /// </summary>
+        public virtual void PrintStatus()
         {
             
         }
 
-        
+        /// <summary>
+        /// 사망 처리용 함수
+        /// </summary>
+        private void Dead()
+        {
+            
+            isDead = true;      // isDead에 축었다고 표시
+        }
+
     }
 }

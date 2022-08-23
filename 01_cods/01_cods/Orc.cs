@@ -19,11 +19,18 @@ namespace _01_cods
     {
         private string skill = "분노";
 
+        /// <summary>
+        /// 기본 생성자
+        /// </summary>
         public Orc() : base()
         {
 
         }
 
+        /// <summary>
+        /// 이름을 입력받는 생성자(생성자는 상속이 안되기 때문에 항상 새로 만들어 줘야 한다.)
+        /// </summary>
+        /// <param name="newName">새로운 이름</param>
         public Orc(string newName) : base(newName)          // 매개변수를 받아 Character의 생성자를 실행
         {
             
@@ -58,14 +65,17 @@ namespace _01_cods
             return damage * 3;
         }
 
+        /// <summary>
+        /// 스테이터스 생성
+        /// </summary>
         public override void GenerateStatus()
         {
             base.GenerateStatus();
         }
 
-        public override void TestPrintStatus()
+        public override void PrintStatus()
         {
-            base.TestPrintStatus();
+            base.PrintStatus();
             Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━┓");
             Console.WriteLine($"┃이름\t : {name}");
             Console.WriteLine($"┃체력\t : {hp} / {maxHP}");
