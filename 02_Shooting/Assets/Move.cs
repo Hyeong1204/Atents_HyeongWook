@@ -32,6 +32,27 @@ public class Move : MonoBehaviour
         //new Vector3(0, -1, 0);   // 아래쪽
 
         //  Time.deltaTime : 이전 프레임에서 지금 프레임까지 걸린 시간
-        transform.position += (speed * Time.deltaTime * Vector3.left);  // 아래쪽 방향으로 speed 만큼 움직여라(매 초마다)
+        //transform.position += (speed * Time.deltaTime * Vector3.up);  // 아래쪽 방향으로 speed 만큼 움직여라(매 초마다)
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {           
+            transform.position += (speed * Vector3.up);
+            Debug.Log("W가눌러졌따.");
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            transform.position += (speed * Vector3.left);
+            Debug.Log("A가눌러졌따.");
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            transform.position += (speed * Vector3.down);
+            Debug.Log("S가눌러졌따.");
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            transform.position += (speed * Vector3.right);
+            Debug.Log("D가눌러졌따.");
+        }
     }
 }
