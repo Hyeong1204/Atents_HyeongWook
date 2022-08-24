@@ -217,7 +217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1428763275}
   - component: {fileID: 1428763274}
-  - component: {fileID: 1428763273}
+  - component: {fileID: 1428763276}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -225,18 +225,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1428763273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1428763272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6b0e800df5b8ec40811d9b2c81746bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &1428763274
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -304,3 +292,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1428763276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428763272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9caa38f7d49f8d240baebd8b3eb3b9bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1

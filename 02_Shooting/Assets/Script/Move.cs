@@ -35,10 +35,22 @@ public class Move : MonoBehaviour
         //  Time.deltaTime : 이전 프레임에서 지금 프레임까지 걸린 시간
         //transform.position += (speed * Time.deltaTime * Vector3.up);  // 아래쪽 방향으로 speed 만큼 움직여라(매 초마다)
 
+        //Test_OldInputManager();
+        transform.position += (speed * Time.deltaTime * dir);
+
+        // Big - Little 
+        // sleep
+
+        // input system
+        // Enent-driven(이벤트 드리븐) 방식으로 구현 -> 일이 있을 때만 동작한다. (전력을 아끼기에 적합한 구조)
+    }
+
+    private void Test_OldInputManager()
+    {
         //  input Manger를 이용한 입력처리
         //  Busy wait이 발생. (하는 일은 없지만 사용되고 있는 상태 => 전력 세이빙을 방해 => 전력소비 커짐)
         if (Input.GetKeyDown(KeyCode.W))
-        {           
+        {
             Debug.Log("W가눌러졌따.");
             dir = Vector3.up;
         }
@@ -57,12 +69,5 @@ public class Move : MonoBehaviour
             Debug.Log("D가눌러졌따.");
             dir = Vector3.right;
         }
-        transform.position += (speed * Time.deltaTime * dir);
-
-        // Big - Little 
-        // sleep
-
-        // input system
-        // Enent-driven(이벤트 드리븐) 방식으로 구현 -> 일이 있을 때만 동작한다. (전력을 아끼기에 적합한 구조)
     }
 }
