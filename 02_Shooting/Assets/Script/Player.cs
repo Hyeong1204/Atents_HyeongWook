@@ -18,7 +18,9 @@ public class Player : MonoBehaviour
     PlayerinputAction inputActions;
     Vector3 dir;                // 이동 방향(입력에 따라 변경됨)
     public float Speed = 1.0f;  // 플레이어의 이동 속도(초당 이동 속도)
+    float boost = 1.0f;
     // Awake > OnEnble > Start : 대체적으로 이 순서
+    Rigidbody2D rigid;
 
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 생성된 직후에 호출
@@ -26,6 +28,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         inputActions = new PlayerinputAction();
+        rigid = GetComponent<Rigidbody2D>();        // 한번만 찾고 저장해서 계속 쓰기(메모리 더 쓰고 성능 아끼기)
     }
 
     /// <summary>
@@ -37,9 +40,21 @@ public class Player : MonoBehaviour
         inputActions.Player.Move.performed += OnMove;   // performed일 때 Onmove 함수 실행하도록 연결
         inputActions.Player.Move.canceled += OnMove;    // canceled일 때 Onmove 함수 실행하도록 연결
         inputActions.Player.Fire.performed += OnFire;
+        inputActions.Player.Booster.performed += OnBooster;
+        inputActions.Player.Booster.canceled += OffBooster;
     }
 
-    
+    private void OffBooster(InputAction.CallbackContext context)
+    {
+        boost = 1.0f;
+    }
+
+    private void OnBooster(InputAction.CallbackContext context)
+    {
+        boost *= 2.0f;
+    }
+
+
 
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 비활성화 되었을 때 호출
@@ -49,6 +64,8 @@ public class Player : MonoBehaviour
         inputActions.Player.Move.performed -= OnMove;   // 연결해 놓은 함수 해제(안전을 위해)
         inputActions.Player.Move.canceled -= OnMove;
         inputActions.Player.Fire.performed -= OnFire;
+        inputActions.Player.Booster.performed -= OnBooster;
+        inputActions.Player.Booster.canceled -= OffBooster;
         inputActions.Player.Disable();  // 오브젝트가 사라질때 더 이상 입력을 받지 않도록 비활성화
     }
 
@@ -57,17 +74,23 @@ public class Player : MonoBehaviour
         
     }
 
-    private void Update()
-    {
-        //transform.position += (Speed * Time.deltaTime * dir);
-    }
+    //private void Update()
+    //{
+    //    //transform.position += (Speed * Time.deltaTime * dir);
+    //}
 
     /// <summary>
     /// 일정 시간 간격(물리 업데이트 시간 간격)으로 호출
     /// </summary>
     private void FixedUpdate()
     {
-        transform.position += (Speed * Time.fixedDeltaTime * dir);
+        //transform.position += (Speed * Time.fixedDeltaTime * dir);
+        // 이 스크립트 파일이 들어 있는 게임 오브젝트에서 Rigiboody2D 컴포넌트를 찾아 리턴.(없으면 null)
+        // 그런데 GetComponent는 무거운 함수 => (Update나 FixedUpdate처럼 주기적 또는 자주 호촐되는 함수 안에서는 안쓰는 것이 좋다
+        //rigid = GetComponent<Rigidbody2D>();
+
+        // rigid.AddForce(Speed * Time.fixedDeltaTime * dir); // 관성이 있는 움직임을 할 때 유용
+        rigid.MovePosition(transform.position + boost * Speed * Time.fixedDeltaTime * dir);     // 관성없는 움직임을 처리할 때 유용
     }
 
 
