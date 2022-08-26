@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     float boost = 1.0f;
     // Awake > OnEnble > Start : 대체적으로 이 순서
     Rigidbody2D rigid;
+    Animator anim;
 
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 생성된 직후에 호출
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
     {
         inputActions = new PlayerinputAction();
         rigid = GetComponent<Rigidbody2D>();        // 한번만 찾고 저장해서 계속 쓰기(메모리 더 쓰고 성능 아끼기)
+        anim = GetComponent<Animator>();
     }
 
     /// <summary>
@@ -101,6 +103,11 @@ public class Player : MonoBehaviour
         Vector2 inputdir = context.ReadValue<Vector2>();
         dir = inputdir;
         //Debug.Log("이동 입력");
+
+        //dir.y > 0     // W를 눌렀다
+        //dir.y == 0 // w,s 중 아무것도 안눌렀다,
+        //dir.y < 0 // s를 눌렀다,
+        anim.SetFloat("InputY", dir.y);
     }
 
     private void OnFire(InputAction.CallbackContext context)
