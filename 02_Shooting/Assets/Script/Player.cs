@@ -1,4 +1,4 @@
-using System;
+
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     // Awake > OnEnble > Start : 대체적으로 이 순서
     Rigidbody2D rigid;
     Animator anim;
+    public GameObject Bullet;
 
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 생성된 직후에 호출
@@ -113,36 +114,41 @@ public class Player : MonoBehaviour
     private void OnFire(InputAction.CallbackContext context)
     {
         Debug.Log("발사");
+        //float value = Random.Range(0.0f, 10.0f);      // value에는 0.0 ~ 10.0 의 랜덤값이 들어간다.
+        Instantiate(Bullet, transform.position, Quaternion.identity);
     }
+
 
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("OnCollisionEnter2D");
+        Debug.Log("OnCollisionEnter2D");        // Collider와 부딪쳤을 때 실행
+        
+        
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        Debug.Log("OnCollisionStay2D");
+        Debug.Log("OnCollisionStay2D");      // Collider와 계속 접촉하고 있을 때 (매 프레임마다 호출)
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Debug.Log("OnCollisionExit2D");
+        Debug.Log("OnCollisionExit2D");     // Collider와 접촉이 떨어지는 순간 실행
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("OnTriggerEnter2D");
+        Debug.Log("OnTriggerEnter2D");      // 트리거와 부딪쳤을 때 실행
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.Log("OnTriggerStay2D");
+        Debug.Log("OnTriggerStay2D");       // 트리거와 계속 겹쳤을 떄(매 프레임마다 호출)
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("OnTriggerExit2D");
+        Debug.Log("OnTriggerExit2D");       // 트리거와 좁촉이 끝난 순간 실행
     }
 }
