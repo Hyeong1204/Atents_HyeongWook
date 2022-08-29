@@ -154,9 +154,9 @@ public class Player : MonoBehaviour
 
     IEnumerator Fire()
     {
-        yield return null;      // 다음 프레임에 이어서 시작해라
+        //yield return null;      // 다음 프레임에 이어서 시작해라
 
-        yield return new WaitForSeconds(1.0f);      // 1초 후에 이어서 시작해라
+        //yield return new WaitForSeconds(1.0f);      // 1초 후에 이어서 시작해라
 
         while (true)
         {

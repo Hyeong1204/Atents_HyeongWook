@@ -36,4 +36,19 @@ public class EnemySpawner : MonoBehaviour
             yield return new WaitForSeconds(SpawnTime);     // SpawnTime 만큼 대기
         }
     }
+
+
+    
+    private void OnDrawGizmos()         // 개발용 정보를 항상 그리는 함수
+    {
+        //Gizmos.color = new Color(1, 0, 0);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(transform.position, new(1, Mathf.Abs(minY) + Mathf.Abs(maxY) + 2, 1));
+    }
+
+    //private void OnDrawGizmosSelected()     // 개발자 영역에서만 보이는 영역
+    //{
+        
+    //}
+
 }
