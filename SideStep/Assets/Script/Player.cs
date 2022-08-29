@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     Rigidbody2D rigid;
     Animator anim;
 
+
     Vector3 dir;
 
     public float speed = 1.0f;
@@ -34,6 +35,7 @@ public class Player : MonoBehaviour
     {
         playerinput.Player.Move.performed -= OnMove;
         playerinput.Player.Move.canceled -= OnMove;
+        playerinput.Player.Enable();
     }
 
     private void FixedUpdate()
