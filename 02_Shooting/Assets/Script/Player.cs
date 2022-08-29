@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -15,14 +16,21 @@ public class Player : MonoBehaviour
     //Action<int> del3;           // 리턴타입이 void, 파라메터는 int 하나인 델리게이트 del3를 만듬
     //Func<int, float> del4;      // 리턴타입이 int고 파라메터는 float 하나인 델리게이트 del4를 만듬
 
-    PlayerinputAction inputActions;
-    Vector3 dir;                // 이동 방향(입력에 따라 변경됨)
-    public float Speed = 1.0f;  // 플레이어의 이동 속도(초당 이동 속도)
-    float boost = 1.0f;
     // Awake > OnEnble > Start : 대체적으로 이 순서
+    PlayerinputAction inputActions;
     Rigidbody2D rigid;
     Animator anim;
     public GameObject Bullet;
+
+    Vector3 dir;                // 이동 방향(입력에 따라 변경됨)
+    IEnumerator fireCoroutine;
+
+
+    public float Speed = 1.0f;  // 플레이어의 이동 속도(초당 이동 속도)
+    float boost = 1.0f;
+    //bool isFire = false;
+    public float fireInterval = 0.5f;
+    //float fireTimeCount = 0.0f;
 
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 생성된 직후에 호출
@@ -32,6 +40,7 @@ public class Player : MonoBehaviour
         inputActions = new PlayerinputAction();
         rigid = GetComponent<Rigidbody2D>();        // 한번만 찾고 저장해서 계속 쓰기(메모리 더 쓰고 성능 아끼기)
         anim = GetComponent<Animator>();
+        fireCoroutine = Fire();
     }
 
     /// <summary>
@@ -42,10 +51,13 @@ public class Player : MonoBehaviour
         inputActions.Player.Enable();   // 오브젝트가 생성되면 입력을 받도록 활성화
         inputActions.Player.Move.performed += OnMove;   // performed일 때 Onmove 함수 실행하도록 연결
         inputActions.Player.Move.canceled += OnMove;    // canceled일 때 Onmove 함수 실행하도록 연결
-        inputActions.Player.Fire.performed += OnFire;
+        inputActions.Player.Fire.performed += OnFireStart;
+        inputActions.Player.Fire.canceled += OnFireStop;
         inputActions.Player.Booster.performed += OnBooster;
         inputActions.Player.Booster.canceled += OffBooster;
     }
+
+    
 
     private void OffBooster(InputAction.CallbackContext context)
     {
@@ -66,9 +78,10 @@ public class Player : MonoBehaviour
     {
         inputActions.Player.Move.performed -= OnMove;   // 연결해 놓은 함수 해제(안전을 위해)
         inputActions.Player.Move.canceled -= OnMove;
-        inputActions.Player.Fire.performed -= OnFire;
+        inputActions.Player.Fire.performed -= OnFireStart;
         inputActions.Player.Booster.performed -= OnBooster;
         inputActions.Player.Booster.canceled -= OffBooster;
+        inputActions.Player.Fire.canceled -= OnFireStop;
         inputActions.Player.Disable();  // 오브젝트가 사라질때 더 이상 입력을 받지 않도록 비활성화
     }
 
@@ -76,6 +89,12 @@ public class Player : MonoBehaviour
     {
         
     }
+
+    private void Update()
+    {
+        
+    }
+
 
     //private void Update()
     //{
@@ -94,6 +113,12 @@ public class Player : MonoBehaviour
 
         // rigid.AddForce(Speed * Time.fixedDeltaTime * dir); // 관성이 있는 움직임을 할 때 유용
         rigid.MovePosition(transform.position + boost * Speed * Time.fixedDeltaTime * dir);     // 관성없는 움직임을 처리할 때 유용
+        //fireTimeCount += Time.fixedDeltaTime;
+        //if(isFire && fireTimeCount > fireInterval)
+        //{
+        //    Instantiate(Bullet, transform.position, Quaternion.identity);
+        //    fireTimeCount = 0.0f;
+        //}
     }
 
 
@@ -111,26 +136,45 @@ public class Player : MonoBehaviour
         anim.SetFloat("InputY", dir.y);
     }
 
-    private void OnFire(InputAction.CallbackContext context)
+    private void OnFireStart(InputAction.CallbackContext context)
     {
-        Debug.Log("발사");
+        //Debug.Log("발사");
         //float value = Random.Range(0.0f, 10.0f);      // value에는 0.0 ~ 10.0 의 랜덤값이 들어간다.
-        Instantiate(Bullet, transform.position, Quaternion.identity);
+        //Instantiate(Bullet, transform.position, Quaternion.identity);
+        //isFire = true;
+        StartCoroutine(fireCoroutine);
     }
 
+    private void OnFireStop(InputAction.CallbackContext context)
+    {
+        //isFire = false;
+        //StopAllCoroutines();
+        StopCoroutine(fireCoroutine);
+    }
+
+    IEnumerator Fire()
+    {
+        yield return null;      // 다음 프레임에 이어서 시작해라
+
+        yield return new WaitForSeconds(1.0f);      // 1초 후에 이어서 시작해라
+
+        while (true)
+        {
+            Instantiate(Bullet, transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(fireInterval);
+        }
+    }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("OnCollisionEnter2D");        // Collider와 부딪쳤을 때 실행
-        
-        
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        Debug.Log("OnCollisionStay2D");      // Collider와 계속 접촉하고 있을 때 (매 프레임마다 호출)
-    }
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    Debug.Log("OnCollisionStay2D");      // Collider와 계속 접촉하고 있을 때 (매 프레임마다 호출)
+    //}
 
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -142,10 +186,10 @@ public class Player : MonoBehaviour
         Debug.Log("OnTriggerEnter2D");      // 트리거와 부딪쳤을 때 실행
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        Debug.Log("OnTriggerStay2D");       // 트리거와 계속 겹쳤을 떄(매 프레임마다 호출)
-    }
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+    //    Debug.Log("OnTriggerStay2D");       // 트리거와 계속 겹쳤을 떄(매 프레임마다 호출)
+    //}
 
     private void OnTriggerExit2D(Collider2D collision)
     {

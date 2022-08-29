@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour
     
 
 
-    float speed = 7.0f;
+    float speed = 12.0f;
 
 
 
