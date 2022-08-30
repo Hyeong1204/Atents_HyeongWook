@@ -35,6 +35,7 @@ public class AsteroidSpawner : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(transform.position, new(2, 10, 1));
+        Gizmos.DrawLine(new(-13,  -5, 1), new(-13, 5, 1));
     }
 
 }

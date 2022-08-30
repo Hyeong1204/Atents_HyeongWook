@@ -37,6 +37,5 @@ public class Asteroid : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position);
-        Gizmos.DrawLine(new(X-1, minY, 1), new(X-1, maxY, 1));
     }
 }
