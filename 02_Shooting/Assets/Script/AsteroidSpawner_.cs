@@ -23,17 +23,17 @@ public class AsteroidSpawner_ : EnemySpawner
 
 
     // Start is called before the first frame update
-    void Start()
-    {
-        // 첫번째 업데이트 실행 직전 호출
-        // 나와 다른 오브젝트를 가져와야 할 때 사용
-    }
+    //void Start()
+    //{
+    //    // 첫번째 업데이트 실행 직전 호출
+    //    // 나와 다른 오브젝트를 가져와야 할 때 사용
+    //}
 
     // Update is called once per frame
-    void Update()
-    {
+    //void Update()
+    //{
         
-    }
+    //}
 
     protected override IEnumerator EnemySpawn()
     {

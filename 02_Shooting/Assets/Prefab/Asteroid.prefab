@@ -97,5 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a7c9ca7747d1b346b8ed4c0259e9bdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AsteriodSpeed: 3
+  AsteriodSpeed: 1
   rotateSpeed: 45
+  direction: {x: -1, y: 0, z: 0}

@@ -26,7 +26,7 @@ public class Asteroid : MonoBehaviour
         //transform.rotation *= Quaternion.Euler(new(0, 0, rotateSpped * Time.deltaTime));        // 1초에 360도씩 회전
         transform.Rotate(rotateSpeed * Time.deltaTime * Vector3.forward);   // forward 축을 기주능로 1초에 rotateSpeed도씩 회전
 
-        transform.Translate(Time.deltaTime * AsteriodSpeed * Vector3.left, Space.World);
+        transform.Translate(Time.deltaTime * AsteriodSpeed * direction, Space.World);
 
         if(transform.position.x < X || transform.position.y > maxY || transform.position.y < minY)
         {
@@ -38,6 +38,6 @@ public class Asteroid : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position);
+        Gizmos.DrawLine(transform.position, transform.position + direction * 1.5f);
     }
 }
