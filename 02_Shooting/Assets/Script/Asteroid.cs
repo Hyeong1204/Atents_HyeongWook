@@ -10,6 +10,8 @@ public class Asteroid : MonoBehaviour
     float maxY = 6.0f;
     float minY = -6.0f;
 
+    public Vector3 direction = Vector3.left;
+
 
     // Start is called before the first frame update
     void Start()
