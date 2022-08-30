@@ -6,9 +6,9 @@ public class Asteroid : MonoBehaviour
 {
     public float AsteriodSpeed = 3.0f;
     public float rotateSpeed = 360.0f;
-    float X = -11.0f;
-    float maxY = 6.0f;
-    float minY = -6.0f;
+    //float X = -11.0f;
+    //float maxY = 6.0f;
+    //float minY = -6.0f;
 
     public Vector3 direction = Vector3.left;
 
@@ -28,10 +28,10 @@ public class Asteroid : MonoBehaviour
 
         transform.Translate(Time.deltaTime * AsteriodSpeed * direction, Space.World);
 
-        if(transform.position.x < X || transform.position.y > maxY || transform.position.y < minY)
-        {
-            Destroy(gameObject);
-        }
+        //if(transform.position.x < X || transform.position.y > maxY || transform.position.y < minY)
+        //{
+        //    Destroy(gameObject);
+        //}
     }
 
 
