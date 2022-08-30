@@ -44,8 +44,8 @@ public class AsteroidSpawner_ : EnemySpawner
 
             Vector3 destPossiton = destination.position + new Vector3(0.0f, Random.Range(minY, maxY), 0);       // 목적지 위치
 
-            Asteroid asteroid = obj.GetComponent<Asteroid>();
-            if(asteroid != null)
+            Asteroid asteroid = obj.GetComponent<Asteroid>();               // obj에 있는 컴퍼먼트(Asteroid)을 가져온다. 만약 Asteroid가 없다면 null값이 들어간다.
+            if (asteroid != null)       // 값이 null이 아니면 
             {
                 asteroid.direction = (destPossiton - asteroid.transform.position).normalized;       // normalized 크기를 항상 1로 만들어줌
                                       // destPossiton - asteroid.transform.position 이렇게만 쓰면 힘과 크기가 같이 있기 때문에 이동속도가 빠르다
@@ -60,7 +60,7 @@ public class AsteroidSpawner_ : EnemySpawner
     protected override void OnDrawGizmos()         // 개발용 정보를 항상 그리는 함수
     {
         //Gizmos.color = new Color(1, 0, 0);
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.red;           // 기지모 색 바꾸기
         Gizmos.DrawWireCube(transform.position, new(1, Mathf.Abs(minY) + Mathf.Abs(maxY) + 2, 1));
 
         if (destination == null)

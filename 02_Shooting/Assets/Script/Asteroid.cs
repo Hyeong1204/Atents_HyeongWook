@@ -6,7 +6,7 @@ public class Asteroid : MonoBehaviour
 {
     public float AsteriodSpeed = 3.0f;
     public float rotateSpeed = 360.0f;
-    float X = -12.0f;
+    float X = -11.0f;
     float maxY = 6.0f;
     float minY = -6.0f;
 
