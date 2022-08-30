@@ -21,8 +21,9 @@ public class Player : MonoBehaviour
     Rigidbody2D rigid;
     Animator anim;
     public GameObject Bullet;
-    Transform firePosition;
-    
+
+    Transform[] firePosition;   // 트랜스폼을 여러개 가지는 배열
+    Vector3[] fireRot;
 
     Vector3 dir;                // 이동 방향(입력에 따라 변경됨)
     IEnumerator fireCoroutine;
@@ -43,7 +44,15 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();        // 한번만 찾고 저장해서 계속 쓰기(메모리 더 쓰고 성능 아끼기)
         anim = GetComponent<Animator>();
         fireCoroutine = Fire();
-        firePosition = transform.GetChild(0);
+        firePosition = new Transform[transform.childCount];
+        for (int i = 0;i < transform.childCount; i++)
+        {
+            firePosition[i] = transform.GetChild(i);
+        }
+        fireRot = new Vector3[3];
+        fireRot[0] = new Vector3(0, 0, 0);
+        fireRot[1] = new Vector3(0, 0, 30);
+        fireRot[2] = new Vector3(0, 0, -30);
     }
 
     /// <summary>
@@ -163,7 +172,11 @@ public class Player : MonoBehaviour
 
         while (true)
         {
-            Instantiate(Bullet, firePosition.position, Quaternion.identity);
+            for(int i = 0; i < firePosition.Length; i++)
+            {
+                GameObject obj = Instantiate(Bullet, firePosition[i].position, Quaternion.identity);
+                obj.transform.Rotate(fireRot[i]);
+            }
             yield return new WaitForSeconds(fireInterval);
         }
     }
