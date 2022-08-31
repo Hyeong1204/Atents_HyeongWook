@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     public GameObject Bullet;
 
     Transform[] firePosition;   // 트랜스폼을 여러개 가지는 배열
-    Vector3[] fireRot;
+    //Vector3[] fireRot;
 
     Vector3 dir;                // 이동 방향(입력에 따라 변경됨)
     IEnumerator fireCoroutine;
@@ -49,10 +49,10 @@ public class Player : MonoBehaviour
         {
             firePosition[i] = transform.GetChild(i);
         }
-        fireRot = new Vector3[3];
-        fireRot[0] = new Vector3(0, 0, 0);
-        fireRot[1] = new Vector3(0, 0, 30);
-        fireRot[2] = new Vector3(0, 0, -30);
+       //fireRot = new Vector3[3];
+       //fireRot[0] = new Vector3(0, 0, 0);
+       //fireRot[1] = new Vector3(0, 0, 30);
+       //fireRot[2] = new Vector3(0, 0, -30);
     }
 
     /// <summary>
@@ -174,8 +174,16 @@ public class Player : MonoBehaviour
         {
             for(int i = 0; i < firePosition.Length; i++)
             {
-                GameObject obj = Instantiate(Bullet, firePosition[i].position, Quaternion.identity);
-                obj.transform.Rotate(fireRot[i]);
+                // Bullet이라는 프리팹을 firePosition[i]의 위치에 (0,0,0) 회전으로 만들어라
+                GameObject obj = Instantiate(Bullet, firePosition[i].position, firePosition[i].rotation);
+
+                // Instantiate(생성할 프리팹);        // 프리팹이 (0,0,0) 위치에 (0,0,0) 회전에 (1,1,1) 스케일로 만드러짐
+                // Instantiate(생성할 프리팹, 생성할 위치, 생성될 때의 회전);
+
+                //obj.transform.Rotate(fireRot[i]);
+                //obj.transform.rotation = firePosition[i].rotation;  // 총알의 회전 값으로 firePosition[i]의 회전값을 그래도 사용한다.
+
+                //Vector3 angle = firePosition[i].rotation.eulerAngles; // 현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
             }
             yield return new WaitForSeconds(fireInterval);
         }
@@ -184,7 +192,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("OnCollisionEnter2D");        // Collider와 부딪쳤을 때 실행
+        //Debug.Log("OnCollisionEnter2D");        // Collider와 부딪쳤을 때 실행
     }
 
     //private void OnCollisionStay2D(Collision2D collision)
@@ -194,12 +202,12 @@ public class Player : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Debug.Log("OnCollisionExit2D");     // Collider와 접촉이 떨어지는 순간 실행
+        //Debug.Log("OnCollisionExit2D");     // Collider와 접촉이 떨어지는 순간 실행
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("OnTriggerEnter2D");      // 트리거와 부딪쳤을 때 실행
+        //Debug.Log("OnTriggerEnter2D");      // 트리거와 부딪쳤을 때 실행
     }
 
     //private void OnTriggerStay2D(Collider2D collision)
@@ -209,6 +217,6 @@ public class Player : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("OnTriggerExit2D");       // 트리거와 좁촉이 끝난 순간 실행
+        //Debug.Log("OnTriggerExit2D");       // 트리거와 좁촉이 끝난 순간 실행
     }
 }

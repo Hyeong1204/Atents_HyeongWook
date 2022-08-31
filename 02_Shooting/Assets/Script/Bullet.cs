@@ -24,4 +24,15 @@ public class Bullet : MonoBehaviour
     {
         transform.Translate(speed * Time.deltaTime * Vector3.right, Space.Self);        // Space.Self : 자기 기준, Space.World : 씬 기준
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log($"on : {collision.gameObject.name}");
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log($"ontrigger : {collision.gameObject.name}");
+    }
+
 }
