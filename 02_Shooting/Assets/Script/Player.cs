@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     Rigidbody2D rigid;
     Animator anim;
     public GameObject Bullet;
+    GameObject flash;
 
     Transform[] firePosition;   // 트랜스폼을 여러개 가지는 배열
     //Vector3[] fireRot;
@@ -44,11 +45,12 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();        // 한번만 찾고 저장해서 계속 쓰기(메모리 더 쓰고 성능 아끼기)
         anim = GetComponent<Animator>();
         fireCoroutine = Fire();
-        firePosition = new Transform[transform.childCount];
-        for (int i = 0;i < transform.childCount; i++)
+        firePosition = new Transform[transform.childCount-1];
+        for (int i = 0;i < transform.childCount-1; i++)
         {
             firePosition[i] = transform.GetChild(i);
         }
+        flash = transform.GetChild(transform.childCount-1).gameObject;
        //fireRot = new Vector3[3];
        //fireRot[0] = new Vector3(0, 0, 0);
        //fireRot[1] = new Vector3(0, 0, 30);
@@ -184,11 +186,19 @@ public class Player : MonoBehaviour
                 //obj.transform.rotation = firePosition[i].rotation;  // 총알의 회전 값으로 firePosition[i]의 회전값을 그래도 사용한다.
 
                 //Vector3 angle = firePosition[i].rotation.eulerAngles; // 현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
+                flash.SetActive(true);
+                StartCoroutine(Flashoff());
             }
             yield return new WaitForSeconds(fireInterval);
         }
     }
 
+
+    IEnumerator Flashoff()
+    {
+        yield return new WaitForSeconds(0.1f);
+        flash.SetActive(false);
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

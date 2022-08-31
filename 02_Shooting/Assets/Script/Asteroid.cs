@@ -44,7 +44,7 @@ public class Asteroid : MonoBehaviour
         if (collision.transform.CompareTag("Bullet"))
         {
             Hp--;
-            if (Hp == 0)
+            if (Hp <= 0)
             {
             explosion.SetActive(true);
             explosion.transform.parent = null;
