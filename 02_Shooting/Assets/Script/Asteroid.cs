@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
+    GameObject explosion;
+
     public float AsteriodSpeed = 3.0f;
     public float rotateSpeed = 360.0f;
     //float X = -11.0f;
@@ -13,10 +15,9 @@ public class Asteroid : MonoBehaviour
     public Vector3 direction = Vector3.left;
 
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
+        explosion = transform.GetChild(0).gameObject;
     }
 
     // Update is called once per frame
@@ -34,6 +35,16 @@ public class Asteroid : MonoBehaviour
         //}
     }
 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.CompareTag("Bullet"))
+        {
+            explosion.SetActive(true);
+            explosion.transform.parent = null;
+            Destroy(this.gameObject);
+        }
+    }
 
     private void OnDrawGizmos()
     {
