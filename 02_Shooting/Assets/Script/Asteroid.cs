@@ -8,14 +8,17 @@ public class Asteroid : MonoBehaviour
 
     public float AsteriodSpeed = 3.0f;
     public float rotateSpeed = 360.0f;
+
+    public int Hp = 3;
+
     //float X = -11.0f;
     //float maxY = 6.0f;
     //float minY = -6.0f;
 
     public Vector3 direction = Vector3.left;
 
-
-    private void Awake()
+    
+    private void Start()
     {
         explosion = transform.GetChild(0).gameObject;
     }
@@ -40,9 +43,13 @@ public class Asteroid : MonoBehaviour
     {
         if (collision.transform.CompareTag("Bullet"))
         {
+            Hp--;
+            if (Hp == 0)
+            {
             explosion.SetActive(true);
             explosion.transform.parent = null;
             Destroy(this.gameObject);
+            }
         }
     }
 
