@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,9 +6,18 @@ using UnityEngine;
 public class Asteroid : MonoBehaviour
 {
     GameObject explosion;
+    public GameObject small;
+    //[Range(1,16)]
 
+    int splitCount = 3;
     public float AsteriodSpeed = 3.0f;
     public float rotateSpeed = 360.0f;
+    public float minMoveSpeed = 2.0f;
+    public float maxMoveSpeed = 4.0f;
+    public float minRotateSpeed = 30.0f;
+    public float maxRotateSpeed = 360.0f;
+    public float lifeTime = 3.0f;
+    float timeset = 0.0f;
 
     public int Hp = 3;
 
@@ -16,11 +26,29 @@ public class Asteroid : MonoBehaviour
     //float minY = -6.0f;
 
     public Vector3 direction = Vector3.left;
+    SpriteRenderer sprite;
 
-    
+    private void Awake()
+    {
+        sprite = GetComponent<SpriteRenderer>();
+        timeset = Random.Range(3.0f, 5.0f);
+    }
+
     private void Start()
     {
         explosion = transform.GetChild(0).gameObject;
+        AsteriodSpeed = Random.Range(minMoveSpeed, maxMoveSpeed);                                   // 운석속도 = 최소값 ~ 최대값 사이에 값을 랜덤으로 넣어라
+        float ratio = (AsteriodSpeed - minMoveSpeed) / (maxMoveSpeed - minMoveSpeed);               // ratio = (운석 속도 - 최소 운석속도) / (최대 운석속도 - 최소 운석속도) 비율 구하기
+        rotateSpeed = ratio * (maxRotateSpeed - minRotateSpeed) + minRotateSpeed;                   // 최종 회전속도 = ratio *  (최대 회전속도 - 최소 회전속도) + 최소 회전속도
+        
+
+        int rand = Random.Range(0, 4);                  // rand에다가 0 ~ 3 사이의 숫자를 랜덤으로 넣는다.
+        sprite.flipX = ((rand & 0b_01) != 0);           // 0b_ = 이진수를 나타내는 것      첫번째 자리가 1이면 참
+        sprite.flipY = ((rand & 0b_10) != 0);           // 두번째 자리가 1이면 참
+
+        lifeTime = Random.Range(3.0f, 5.0f);
+
+        StartCoroutine(desAster());                     // 운석 n초 후에 소멸
     }
 
     // Update is called once per frame
@@ -36,6 +64,13 @@ public class Asteroid : MonoBehaviour
         //{
         //    Destroy(gameObject);
         //}
+
+        //timeset += Time.deltaTime;
+        //if(lifeTime <= timeset)
+        //{ 
+        //    Crush();
+        //    timeset = 0.0f;
+        //}
     }
 
 
@@ -46,16 +81,41 @@ public class Asteroid : MonoBehaviour
             Hp--;
             if (Hp <= 0)
             {
-            explosion.SetActive(true);
-            explosion.transform.parent = null;
-            Destroy(this.gameObject);
+                Crush();
             }
         }
     }
+
+
+    void Crush()
+    {
+        explosion.SetActive(true);
+        explosion.transform.parent = null;
+
+        splitCount = Random.Range(3, 10);                   // 운석 갯수 랜덤
+        float angleGap = 360.0f / (float)splitCount;        // 운석 개수 만큼 사이각을 계산
+        float anglstemp = Random.Range(0.0f, 360.0f);       // 첫 운석 각도 랜덤
+        for(int i = 0; i < splitCount; i++)
+        {
+            Instantiate(small, transform.position, Quaternion.Euler(0,0,((angleGap * i ) + anglstemp)));
+        }
+
+        Destroy(this.gameObject);
+    }
+
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + direction * 1.5f);
+    }
+
+
+    IEnumerator desAster()              // 운석이 n초 뒤에 소멸하는 코루틴
+    {
+        
+
+        yield return new WaitForSeconds(timeset);
+        Crush();
     }
 }

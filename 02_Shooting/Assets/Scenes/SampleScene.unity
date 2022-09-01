@@ -544,7 +544,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnObject: {fileID: 8379848724548322614, guid: 4b5a4f78b70bb634e902b37a1ddcb5d3, type: 3}
-  SpawnTime: 5
+  SpawnTime: 2
 --- !u!4 &1727392764 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4122697354815461066, guid: 237efe81654258f49b08a257ca05e9fb, type: 3}

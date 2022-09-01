@@ -7,9 +7,14 @@ public class Move_Enemy : MonoBehaviour
 {
     GameObject explosion;
 
-    float speed = 7.0f;
+    float Movespeed = 5.0f;
+    float speed = 1.0f;
     Vector3 dis = new Vector3(-11, 0, 0);
-     
+    float yPos = 0.0f;
+    float runningTime = 0.0f;
+    float high = 1.0f;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +25,11 @@ public class Move_Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Time.deltaTime * speed * Vector3.left, Space.Self);
+        runningTime += Time.deltaTime * speed;
+        yPos = Mathf.Sin(runningTime) *  high;
+
+        transform.Translate(Time.deltaTime * new Vector3(-1*Movespeed, yPos, 0));
+        //transform.Translate(Time.deltaTime * speed * Vector3.left, Space.Self);
         //if(transform.position.x < dis.x)
         //{
         //    Destroy(gameObject);
