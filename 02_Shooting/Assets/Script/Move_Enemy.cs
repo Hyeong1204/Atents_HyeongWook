@@ -8,12 +8,12 @@ public class Move_Enemy : MonoBehaviour
 {
     GameObject explosion;
 
-    float speed = 4.0f;
+    public float speed = 3.0f;
     float timeElapsed;              // 게임 시작부터 얼마나 시간이 지났나를 기록해 놓는 변수
     float spawnY = 1.0f;            // 생성 되었을 때 기준 높이
 
-    public float heightDiff = 2.0f;        // 사인으로 변경되는 위 아래 차이 원래 sin -1 ~ 1 인데 그걸 변경하는 변수
-    public float frequencyTime = 1.0f;     // 사인 그래프가 한번도 도는데 걸리는 신간(원래는 2파이)
+    public float amplutude = 2.0f;        // 사인으로 변경되는 위 아래 차이 원래 sin -1 ~ 1 인데 그걸 변경하는 변수
+    public float frequency = 1.0f;     // 사인 그래프가 한번도 도는데 걸리는 신간(원래는 2파이)
 
 
     // Start is called before the first frame update
@@ -29,10 +29,10 @@ public class Move_Enemy : MonoBehaviour
     void Update()
     {
         // Time.deltaTime : 이전 프레임에서 현재 프레임까지의 시간
-        timeElapsed += Time.deltaTime * frequencyTime;                         // 폭을 곱해주면 sin파의 간격이 줄어든다
+        timeElapsed += Time.deltaTime * frequency;                         // 폭을 곱해주면 sin파의 간격이 줄어든다
 
         // Mathf.Sin(timeElapsed)구한 값에 heightDiff를 곱하면 sin파의 높이가 달라진다.
-        float newY = spawnY + Mathf.Sin(timeElapsed) * heightDiff;             // 결과는 0에서 시작해서 +1까지 증가 하다가 -1까지 감소. 디시 +1까지 증가
+        float newY = spawnY + Mathf.Sin(timeElapsed) * amplutude;             // 결과는 0에서 시작해서 +1까지 증가 하다가 -1까지 감소. 디시 +1까지 증가
         float newX = transform.position.x - speed * Time.deltaTime;
 
         transform.position = new Vector3(newX, newY);
