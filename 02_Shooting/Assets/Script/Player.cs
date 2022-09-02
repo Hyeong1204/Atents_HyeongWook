@@ -23,12 +23,36 @@ public class Player : MonoBehaviour
     public GameObject Bullet;
     GameObject flash;
 
-    Transform[] firePosition;   // 트랜스폼을 여러개 가지는 배열
+    Transform firePositionRoot;   // 트랜스폼을 여러개 가지는 배열
     //Vector3[] fireRot;
 
     Vector3 dir;                // 이동 방향(입력에 따라 변경됨)
     IEnumerator fireCoroutine;
 
+
+    float fireAngle = 30.0f;
+    int power = 0;
+    int Power
+    {
+        get => power;
+        set
+        {
+            power = value;
+            if (power > 3)
+                power = 3;
+
+            for(int i=0; i < power; i++)
+            {
+                GameObject firePos = new GameObject();
+                firePos.name = $"FirePosition_{i}";
+                firePos.transform.parent = firePositionRoot;
+                firePos.transform.position = firePositionRoot.transform.position;
+
+                firePos.transform.rotation = Quaternion.Euler(0, 0, power * (fireAngle * 0.5f) + i * fireAngle);
+                firePos.transform.Translate(1.0f, 0, 0);
+            }
+        }
+    }
 
     public float Speed = 1.0f;  // 플레이어의 이동 속도(초당 이동 속도)
     float boost = 1.0f;
@@ -45,12 +69,10 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();        // 한번만 찾고 저장해서 계속 쓰기(메모리 더 쓰고 성능 아끼기)
         anim = GetComponent<Animator>();
         fireCoroutine = Fire();
-        firePosition = new Transform[transform.childCount-1];
-        for (int i = 0;i < transform.childCount-1; i++)
-        {
-            firePosition[i] = transform.GetChild(i);
-        }
-        flash = transform.GetChild(transform.childCount-1).gameObject;
+
+        firePositionRoot = transform.GetChild(0);
+        flash = transform.GetChild(1).gameObject;
+        flash.SetActive(false);
        //fireRot = new Vector3[3];
        //fireRot[0] = new Vector3(0, 0, 0);
        //fireRot[1] = new Vector3(0, 0, 30);
@@ -101,7 +123,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        
+        Power = 1;
     }
 
     private void Update()
@@ -174,21 +196,21 @@ public class Player : MonoBehaviour
 
         while (true)
         {
-            for(int i = 0; i < firePosition.Length; i++)
-            {
-                // Bullet이라는 프리팹을 firePosition[i]의 위치에 (0,0,0) 회전으로 만들어라
-                GameObject obj = Instantiate(Bullet, firePosition[i].position, firePosition[i].rotation);
+            //for(int i = 0; i < firePosition.Length; i++)
+            //{
+            //    // Bullet이라는 프리팹을 firePosition[i]의 위치에 (0,0,0) 회전으로 만들어라
+            //    GameObject obj = Instantiate(Bullet, firePosition[i].position, firePosition[i].rotation);
 
-                // Instantiate(생성할 프리팹);        // 프리팹이 (0,0,0) 위치에 (0,0,0) 회전에 (1,1,1) 스케일로 만드러짐
-                // Instantiate(생성할 프리팹, 생성할 위치, 생성될 때의 회전);
+            //    // Instantiate(생성할 프리팹);        // 프리팹이 (0,0,0) 위치에 (0,0,0) 회전에 (1,1,1) 스케일로 만드러짐
+            //    // Instantiate(생성할 프리팹, 생성할 위치, 생성될 때의 회전);
 
-                //obj.transform.Rotate(fireRot[i]);
-                //obj.transform.rotation = firePosition[i].rotation;  // 총알의 회전 값으로 firePosition[i]의 회전값을 그래도 사용한다.
+            //    //obj.transform.Rotate(fireRot[i]);
+            //    //obj.transform.rotation = firePosition[i].rotation;  // 총알의 회전 값으로 firePosition[i]의 회전값을 그래도 사용한다.
 
-                //Vector3 angle = firePosition[i].rotation.eulerAngles; // 현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
-                flash.SetActive(true);
-                StartCoroutine(Flashoff());
-            }
+            //    //Vector3 angle = firePosition[i].rotation.eulerAngles; // 현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
+            //}
+            flash.SetActive(true);
+            StartCoroutine(Flashoff());
             yield return new WaitForSeconds(fireInterval);
         }
     }
