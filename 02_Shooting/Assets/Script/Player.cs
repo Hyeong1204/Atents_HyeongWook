@@ -41,15 +41,24 @@ public class Player : MonoBehaviour
             if (power > 3)
                 power = 3;
 
-            for(int i=0; i < power; i++)
+
+            // 전에 만들어진 자식을 지우는 작업
+            while (firePositionRoot.childCount > 0)                  // 자식이 0보다 많으면....
+            {
+                Transform temp = firePositionRoot.GetChild(0);      // temp에 firePositionRoot 첫번째 자식을 넣어라
+                temp.parent = null;                                 // temp에 부모을 버려라
+                Destroy(temp.gameObject);                           // 자기 자신을 지워라
+            }
+
+            for (int i=0; i < power; i++)
             {
                 GameObject firePos = new GameObject();
-                firePos.name = $"FirePosition_{i}";
-                firePos.transform.parent = firePositionRoot;
-                firePos.transform.position = firePositionRoot.transform.position;
+                firePos.name = $"FirePosition_{i}";             // firePos에 이름을 바꿈
+                firePos.transform.parent = firePositionRoot;    // fiePos를 firePositionRoot에 자식으로 만듦
+                firePos.transform.position = firePositionRoot.transform.position;       // firePos의 위치를 firePositionRoot위치로 바꿈
 
-                firePos.transform.rotation = Quaternion.Euler(0, 0, power * (fireAngle * 0.5f) + i * fireAngle);
-                firePos.transform.Translate(1.0f, 0, 0);
+                firePos.transform.rotation = Quaternion.Euler(0, 0, (power - 1) * (fireAngle * 0.5f) + i * -fireAngle);
+                firePos.transform.Translate(1.0f, 0, 0);            // 자기 자신을 x축으로 1.0f만큼 이동해라
             }
         }
     }
@@ -196,19 +205,19 @@ public class Player : MonoBehaviour
 
         while (true)
         {
-            //for(int i = 0; i < firePosition.Length; i++)
-            //{
-            //    // Bullet이라는 프리팹을 firePosition[i]의 위치에 (0,0,0) 회전으로 만들어라
-            //    GameObject obj = Instantiate(Bullet, firePosition[i].position, firePosition[i].rotation);
+            for (int i = 0; i < firePositionRoot.childCount; i++)
+            {
+                // Bullet이라는 프리팹을 firePosition[i]의 위치에 (0,0,0) 회전으로 만들어라
+                GameObject obj = Instantiate(Bullet, firePositionRoot.GetChild(i).position, firePositionRoot.GetChild(i).rotation);
 
-            //    // Instantiate(생성할 프리팹);        // 프리팹이 (0,0,0) 위치에 (0,0,0) 회전에 (1,1,1) 스케일로 만드러짐
-            //    // Instantiate(생성할 프리팹, 생성할 위치, 생성될 때의 회전);
+                // Instantiate(생성할 프리팹);        // 프리팹이 (0,0,0) 위치에 (0,0,0) 회전에 (1,1,1) 스케일로 만드러짐
+                // Instantiate(생성할 프리팹, 생성할 위치, 생성될 때의 회전);
 
-            //    //obj.transform.Rotate(fireRot[i]);
-            //    //obj.transform.rotation = firePosition[i].rotation;  // 총알의 회전 값으로 firePosition[i]의 회전값을 그래도 사용한다.
+                //obj.transform.Rotate(fireRot[i]);
+                //obj.transform.rotation = firePosition[i].rotation;  // 총알의 회전 값으로 firePosition[i]의 회전값을 그래도 사용한다.
 
-            //    //Vector3 angle = firePosition[i].rotation.eulerAngles; // 현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
-            //}
+                //Vector3 angle = firePosition[i].rotation.eulerAngles; // 현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
+            }
             flash.SetActive(true);
             StartCoroutine(Flashoff());
             yield return new WaitForSeconds(fireInterval);
@@ -240,6 +249,11 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //Debug.Log("OnTriggerEnter2D");      // 트리거와 부딪쳤을 때 실행
+        if (collision.CompareTag("PowerUp"))
+        {
+            Power++;
+            Destroy(collision.gameObject);
+        }
     }
 
     //private void OnTriggerStay2D(Collider2D collision)
