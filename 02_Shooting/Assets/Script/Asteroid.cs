@@ -31,7 +31,7 @@ public class Asteroid : MonoBehaviour
     private void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
-        timeset = Random.Range(3.0f, 5.0f);
+        timeset = Random.Range(4.0f, 6.0f);
     }
 
     private void Start()
@@ -92,7 +92,17 @@ public class Asteroid : MonoBehaviour
         explosion.SetActive(true);
         explosion.transform.parent = null;
 
-        splitCount = Random.Range(3, 10);                   // 운석 갯수 랜덤
+
+        if(Random.Range(0.0f,1.0f) < 0.05f)
+        {
+            // 5% 확률에 당첨 되었다.
+            splitCount = 20;
+        }
+        else
+        {
+            // 95% 확률에 담첨 되었다.
+            splitCount = Random.Range(3, 10);                   // 운석 갯수 랜덤
+        }
         float angleGap = 360.0f / (float)splitCount;        // 운석 개수 만큼 사이각을 계산
         float anglstemp = Random.Range(0.0f, 360.0f);       // 첫 운석 각도 랜덤
         for(int i = 0; i < splitCount; i++)
