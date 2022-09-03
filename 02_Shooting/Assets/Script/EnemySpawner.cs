@@ -5,6 +5,8 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject SpawnObject;
+    public GameObject item_Enemy;
+
     public float SpawnTime = 1.0f;
     protected float minY = -4.0f;
     protected float maxY = 4.0f;
@@ -29,10 +31,19 @@ public class EnemySpawner : MonoBehaviour
 
     protected virtual IEnumerator EnemySpawn()
     {
+        GameObject obj;
         while (true)
         {            
-            GameObject obj = Instantiate(SpawnObject, transform.position, Quaternion.identity);   // 생성하고 부모를 이 오브젝트로 설정
+            if(Random.Range(0.0f,1.0f) < 0.1f)                // 10% 확률로 적을 소환하는 로직
+            {
+                obj = Instantiate(item_Enemy, transform.position, Quaternion.identity);
+                obj.transform.Translate(0, Random.Range(minY, maxY), 0);
+            }
+            else                                                // 90% 확률로 일반 적을 소환
+            {
+            obj = Instantiate(SpawnObject, transform.position, Quaternion.identity);   // 생성하고 부모를 이 오브젝트로 설정
             obj.transform.Translate(0, Random.Range(minY, maxY), 0);        // 스폰 생성 범위 안에서 랜덤으로 높이 정하기
+            }
             yield return new WaitForSeconds(SpawnTime);     // SpawnTime 만큼 대기
         }
     }

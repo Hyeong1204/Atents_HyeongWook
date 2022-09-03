@@ -32,7 +32,7 @@ public class PowerUP_Move : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("on");
+        
         if (collision.CompareTag("Border"))
         {
             move.y = -move.y;
