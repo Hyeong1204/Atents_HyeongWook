@@ -13,6 +13,7 @@ public class PowerUP_Move : MonoBehaviour
     private void Start()
     {
         move = new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 0);
+        Destroy(this.gameObject, 10.0f);
     }
 
     // Update is called once per frame
