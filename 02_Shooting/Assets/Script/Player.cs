@@ -37,12 +37,12 @@ public class Player : MonoBehaviour
         get => power;
         set
         {
-            power = value;
-            if (power > 3)
+            power = value;          // 들어온 값으로 파워 설정
+            if (power > 3)          // 파워가 3을 벗어나면 3을 제한
                 power = 3;
 
 
-            // 전에 만들어진 자식을 지우는 작업
+            // 기존에 있는 파이어 포지션 제거
             while (firePositionRoot.childCount > 0)                  // 자식이 0보다 많으면....
             {
                 Transform temp = firePositionRoot.GetChild(0);      // temp에 firePositionRoot 첫번째 자식을 넣어라
@@ -50,13 +50,17 @@ public class Player : MonoBehaviour
                 Destroy(temp.gameObject);                           // 자기 자신을 지워라
             }
 
+            // 파워 등급에 맞게 새로 배치
             for (int i=0; i < power; i++)
             {
-                GameObject firePos = new GameObject();
+                GameObject firePos = new GameObject();          // 빈 오브젝트 생성하기
                 firePos.name = $"FirePosition_{i}";             // firePos에 이름을 바꿈
                 firePos.transform.parent = firePositionRoot;    // fiePos를 firePositionRoot에 자식으로 만듦
                 firePos.transform.position = firePositionRoot.transform.position;       // firePos의 위치를 firePositionRoot위치로 바꿈
 
+                // power가 1일때 : 0도
+                // power가 2일때 : -15도, +15도
+                // power가 3일때 : -30도, 0도, +30도
                 firePos.transform.rotation = Quaternion.Euler(0, 0, (power - 1) * (fireAngle * 0.5f) + i * -fireAngle);
                 firePos.transform.Translate(1.0f, 0, 0);            // 자기 자신을 x축으로 1.0f만큼 이동해라
             }
@@ -236,8 +240,10 @@ public class Player : MonoBehaviour
         //Debug.Log("OnCollisionEnter2D");        // Collider와 부딪쳤을 때 실행
         if (collision.gameObject.CompareTag("PowerUp"))
         {
-            Power++;
-            Destroy(collision.gameObject);
+
+            // 파워업 아이템을 먹었으면
+            Power++;                                // 파워 증가
+            Destroy(collision.gameObject);          // 파워업 오브젝트 삭제
         }
     }
 

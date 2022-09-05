@@ -33,10 +33,10 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)
         {
-            GameObject prefab = SpawnObject;
+            GameObject prefab = SpawnObject;                // 기본적으로 생성하는 것은 SpawnObject
             if(Random.Range(0.0f,1.0f) < 0.1f)                // 10% 확률로 적을 소환하는 로직
             {
-                prefab = item_Enemy;
+                prefab = item_Enemy;                // 10% 이하의 확률로 item_Enemy 적 생성
             }
                                                            // 90% 확률로 일반 적을 소환
             GameObject obj = Instantiate(prefab, transform.position, Quaternion.identity);   // 생성하고 부모를 이 오브젝트로 설정
