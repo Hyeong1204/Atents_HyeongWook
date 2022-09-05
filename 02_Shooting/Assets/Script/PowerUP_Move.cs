@@ -45,7 +45,7 @@ public class PowerUP_Move : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(coolTime);
-            SetRandomDir();
+            SetRandomDir(false);
         }
     }
 
@@ -59,6 +59,15 @@ public class PowerUP_Move : MonoBehaviour
         else
         {
             Vector2 playerToPowerUp = transform.position - player.transform.position;
+            playerToPowerUp = playerToPowerUp.normalized;
+            if(Random.value < 0.6f)         // 60% 
+            {
+                move = Quaternion.Euler(0, 0, Random.Range(-90.0f, 90.0f)) * playerToPowerUp;           // playerToPowerUp 백터를 z축으로 -90~+90만큼 회천시켜서 dir에 넣기
+            }
+            else   //  40%확률로 플레이어 방향으로 이동
+            {
+                move = Quaternion.Euler(0, 0, Random.Range(-90.0f, 90.0f)) * -playerToPowerUp;
+            }
         }
     }
 
