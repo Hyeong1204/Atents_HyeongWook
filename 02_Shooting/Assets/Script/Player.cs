@@ -234,6 +234,11 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.Log("OnCollisionEnter2D");        // Collider와 부딪쳤을 때 실행
+        if (collision.gameObject.CompareTag("PowerUp"))
+        {
+            Power++;
+            Destroy(collision.gameObject);
+        }
     }
 
     //private void OnCollisionStay2D(Collision2D collision)
@@ -249,11 +254,7 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //Debug.Log("OnTriggerEnter2D");      // 트리거와 부딪쳤을 때 실행
-        if (collision.CompareTag("PowerUp"))
-        {
-            Power++;
-            Destroy(collision.gameObject);
-        }
+        
     }
 
     //private void OnTriggerStay2D(Collider2D collision)

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -632510322774510680}
   - component: {fileID: -8851970127763992027}
   - component: {fileID: -762291663620361547}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PowerUp
   m_TagString: PowerUp
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 2218050220484740530}
   - component: {fileID: 7083328647158555597}
   - component: {fileID: 9181309664409722868}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -5,45 +5,61 @@ using UnityEngine;
 
 public class PowerUP_Move : MonoBehaviour
 {
-    float speed = 4.0f;
-    float coolTime = 0.0f;
-    Vector3 move;
+    float speed = 3.0f;
+    float coolTime = 5.0f;
+    Vector2 move;
 
+    Player player;
+
+    private void Awake()
+    {
+        player = FindObjectOfType<Player>();
+    }
 
     private void Start()
     {
-        move = new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 0);
-        Destroy(this.gameObject, 10.0f);
+        SetRandomDir();
+        StartCoroutine(DirChange());
+        Destroy(this.gameObject, 10.0f);            // 10초 뒤에 소멸
     }
 
     // Update is called once per frame
     void Update()
     {
-        coolTime += Time.deltaTime;
-        if(coolTime >= 1.0f)
-        {
-           move = new Vector3(Random.Range(-1,1), Random.Range(-1,1), 0);
-            coolTime = 0.0f;
-        }
-
-
         transform.Translate(speed * Time.deltaTime * move);
     }
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
+   
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Border"))
+        if (collision.gameObject.CompareTag("Border"))
         {
-            move.y = -move.y;
-            move.x = -move.x;
+            move = -Vector2.Reflect(move, collision.contacts[0].normal);
         }
     }
 
-
-    private void OnTriggerStay2D(Collider2D collision)
+    IEnumerator DirChange()
     {
-            
+        while (true)
+        {
+            yield return new WaitForSeconds(coolTime);
+            SetRandomDir();
+        }
+    }
+
+    void SetRandomDir(bool allRandom = true)            // 디폴트 파라메터. 값을 지정하지 않으면 디폴트 값이 대신 들어간다.
+    {
+        if (allRandom)
+        {
+        move = Random.insideUnitCircle;             // 원 중심점 기준으로 아무곳을 랜덤하게 지정
+        move = move.normalized;
+        }
+        else
+        {
+            Vector2 playerToPowerUp = transform.position - player.transform.position;
+        }
     }
 
 }
