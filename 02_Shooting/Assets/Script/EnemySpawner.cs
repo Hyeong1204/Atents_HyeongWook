@@ -31,19 +31,17 @@ public class EnemySpawner : MonoBehaviour
 
     protected virtual IEnumerator EnemySpawn()
     {
-        GameObject obj;
         while (true)
-        {            
+        {
+            GameObject prefab = SpawnObject;
             if(Random.Range(0.0f,1.0f) < 0.1f)                // 10% 확률로 적을 소환하는 로직
             {
-                obj = Instantiate(item_Enemy, transform.position, Quaternion.identity);
-                obj.transform.Translate(0, Random.Range(minY, maxY), 0);
+                prefab = item_Enemy;
             }
-            else                                                // 90% 확률로 일반 적을 소환
-            {
-            obj = Instantiate(SpawnObject, transform.position, Quaternion.identity);   // 생성하고 부모를 이 오브젝트로 설정
+                                                           // 90% 확률로 일반 적을 소환
+            GameObject obj = Instantiate(prefab, transform.position, Quaternion.identity);   // 생성하고 부모를 이 오브젝트로 설정
             obj.transform.Translate(0, Random.Range(minY, maxY), 0);        // 스폰 생성 범위 안에서 랜덤으로 높이 정하기
-            }
+            
             yield return new WaitForSeconds(SpawnTime);     // SpawnTime 만큼 대기
         }
     }
