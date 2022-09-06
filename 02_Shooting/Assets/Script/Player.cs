@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
     Vector3 dir;                // 이동 방향(입력에 따라 변경됨)
     IEnumerator fireCoroutine;
 
+    bool isDead = false;
 
     float fireAngle = 30.0f;
     int power = 0;
@@ -128,6 +130,11 @@ public class Player : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        InputDisable();
+    }
+
+    void InputDisable()
+    {
         inputActions.Player.Move.performed -= OnMove;   // 연결해 놓은 함수 해제(안전을 위해)
         inputActions.Player.Move.canceled -= OnMove;
         inputActions.Player.Fire.performed -= OnFireStart;
@@ -136,6 +143,7 @@ public class Player : MonoBehaviour
         inputActions.Player.Fire.canceled -= OnFireStop;
         inputActions.Player.Disable();  // 오브젝트가 사라질때 더 이상 입력을 받지 않도록 비활성화
     }
+
 
     private void Start()
     {
@@ -158,6 +166,8 @@ public class Player : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+        if (!isDead)
+        {
         //transform.position += (Speed * Time.fixedDeltaTime * dir);
         // 이 스크립트 파일이 들어 있는 게임 오브젝트에서 Rigiboody2D 컴포넌트를 찾아 리턴.(없으면 null)
         // 그런데 GetComponent는 무거운 함수 => (Update나 FixedUpdate처럼 주기적 또는 자주 호촐되는 함수 안에서는 안쓰는 것이 좋다
@@ -171,6 +181,12 @@ public class Player : MonoBehaviour
         //    Instantiate(Bullet, transform.position, Quaternion.identity);
         //    fireTimeCount = 0.0f;
         //}
+        }
+        else
+        {
+            rigid.AddForce(Vector2.left * 0.1f, ForceMode2D.Impulse);       // 죽었을 때 뒤로 돌면서 튕겨나가기
+            rigid.AddTorque(10.0f);
+        }
     }
 
 
@@ -251,39 +267,19 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Dead();
+            //if(isDead == false)
+            Dead();     // 적이랑 부딪치면 죽이기
         }
     }
 
-    //private void OnCollisionStay2D(Collision2D collision)
-    //{
-    //    Debug.Log("OnCollisionStay2D");      // Collider와 계속 접촉하고 있을 때 (매 프레임마다 호출)
-    //}
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        //Debug.Log("OnCollisionExit2D");     // Collider와 접촉이 떨어지는 순간 실행
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //Debug.Log("OnTriggerEnter2D");      // 트리거와 부딪쳤을 때 실행
-        
-    }
-
-    //private void OnTriggerStay2D(Collider2D collision)
-    //{
-    //    Debug.Log("OnTriggerStay2D");       // 트리거와 계속 겹쳤을 떄(매 프레임마다 호출)
-    //}
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        //Debug.Log("OnTriggerExit2D");       // 트리거와 좁촉이 끝난 순간 실행
-    }
-
-
     void Dead()
     {
-        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        isDead = true;          // 죽었다고 표시
+        GetComponent<Collider2D>().enabled = false;             // 콜라이더를 비활성화
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);      //폭팔 이팩트 생성
+        InputDisable();                     // 입력 막기
+        rigid.gravityScale = 1.0f;          // 충력으로 떨어지게 만들기
+        rigid.freezeRotation = false;       // 회전 막아놓은 것 풀기
+        StopCoroutine(fireCoroutine);       // 총을 쏘던 중이면 더이상 쏘지 않게 처리
     }
 }

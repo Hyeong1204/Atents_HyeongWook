@@ -20,7 +20,7 @@ public class PowerUP_Move : MonoBehaviour
     {
         SetRandomDir();                             // 랜덤하게 현재 이동 방향 설정
         StartCoroutine(DirChange());                // 코루틴 실행해서 일정 시간 간격으로 이동 방향 변경되게 설정
-        Destroy(this.gameObject, 10.0f);            // 10초 뒤에 소멸
+        Destroy(this.gameObject, 30.0f);            // 10초 뒤에 소멸
     }
 
     // Update is called once per frame
