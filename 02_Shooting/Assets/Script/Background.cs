@@ -23,14 +23,30 @@ public class Background : MonoBehaviour
     protected virtual void Update()
     {
         float minusX = transform.position.x - Background_Width;
-        foreach(Transform slot in bgSlots)     // 속도가 그냥 for보다 빠름
-        {
-            slot.Translate(scorlloingSpeed * Time.deltaTime *  -transform.right);
+        //foreach(Transform slot in bgSlots)     // 속도가 그냥 for보다 빠름
+        //{
+        //    slot.Translate(scorlloingSpeed * Time.deltaTime *  -transform.right);
 
-            if(slot.position.x < minusX)
+        //    if(slot.position.x < minusX)
+        //    {
+        //        slot.Translate(Background_Width * bgSlots.Length * transform.right);        // 오른쪽으로 Background_Width에 3배(bgSlots.Length에 3개가 들어 있으니까) 만큼 이동
+        //    }
+        //}
+
+        for(int i = 0; i < bgSlots.Length; i++)
+        {
+            bgSlots[i].Translate(scorlloingSpeed * Time.deltaTime * -transform.right);
+
+            if (bgSlots[i].position.x < minusX)
             {
-                slot.Translate(Background_Width * bgSlots.Length * transform.right);        // 오른쪽으로 Background_Width에 3배(bgSlots.Length에 3개가 들어 있으니까) 만큼 이동
+                // 오른쪽으로 Background_Width에 3배(bgSlots.Length에 3개가 들어 있으니까) 만큼 이동
+                MoveRightEnd(i);
             }
         }
+    }
+
+    protected virtual void MoveRightEnd(int index)
+    {
+        bgSlots[index].Translate(Background_Width * bgSlots.Length * transform.right);
     }
 }
