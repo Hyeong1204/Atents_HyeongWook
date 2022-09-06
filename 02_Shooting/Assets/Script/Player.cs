@@ -94,7 +94,6 @@ public class Player : MonoBehaviour
         //fireRot[0] = new Vector3(0, 0, 0);
         //fireRot[1] = new Vector3(0, 0, 30);
         //fireRot[2] = new Vector3(0, 0, -30);
-
     }
 
     /// <summary>
