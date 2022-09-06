@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     public GameObject Bullet;
     GameObject flash;
 
+    public GameObject explosionPrefab;
+
     Transform firePositionRoot;   // 트랜스폼을 여러개 가지는 배열
     //Vector3[] fireRot;
 
@@ -86,10 +88,11 @@ public class Player : MonoBehaviour
         firePositionRoot = transform.GetChild(0);
         flash = transform.GetChild(1).gameObject;
         flash.SetActive(false);
-       //fireRot = new Vector3[3];
-       //fireRot[0] = new Vector3(0, 0, 0);
-       //fireRot[1] = new Vector3(0, 0, 30);
-       //fireRot[2] = new Vector3(0, 0, -30);
+        //fireRot = new Vector3[3];
+        //fireRot[0] = new Vector3(0, 0, 0);
+        //fireRot[1] = new Vector3(0, 0, 30);
+        //fireRot[2] = new Vector3(0, 0, -30);
+
     }
 
     /// <summary>
@@ -245,6 +248,11 @@ public class Player : MonoBehaviour
             Power++;                                // 파워 증가
             Destroy(collision.gameObject);          // 파워업 오브젝트 삭제
         }
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Dead();
+        }
     }
 
     //private void OnCollisionStay2D(Collision2D collision)
@@ -271,5 +279,11 @@ public class Player : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         //Debug.Log("OnTriggerExit2D");       // 트리거와 좁촉이 끝난 순간 실행
+    }
+
+
+    void Dead()
+    {
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
     }
 }
