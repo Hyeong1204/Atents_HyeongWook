@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Background : MonoBehaviour
 {
-    Transform[] bgSlots;
+    public Transform[] bgSlots;
 
     public float scorlloingSpeed = 2.5f;
-
+    
     const float Background_Width = 13.6f;
 
-    private void Awake()
+    protected virtual void Awake()
     {        
         bgSlots = new Transform[transform.childCount];
 
@@ -20,7 +20,7 @@ public class Background : MonoBehaviour
         }
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         float minusX = transform.position.x - Background_Width;
         foreach(Transform slot in bgSlots)     // 속도가 그냥 for보다 빠름
