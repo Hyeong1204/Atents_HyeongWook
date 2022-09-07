@@ -112,13 +112,74 @@ public class Player : MonoBehaviour
     }
 
    
+    // 입력 처리용 함수 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+    /// <summary>
+    /// 이동 부스트 발동 해제용 입력 처리용 (Shift 땠을 때)
+    /// </summary>
+    private void OffBooster(InputAction.CallbackContext context)
+    {
+        boost = 1.0f;       // 이동 속도에 계산에들 어가는 계수를 1로 변경
+    }
+
+    /// <summary>
+    /// 이동 부스트 발동용 입력 처리용 (Shift 눌렀을 때)
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnBooster(InputAction.CallbackContext context)
+    {
+        boost *= 2.0f;  // 이동 속도에 계산에들 어가는 계수를 2로 변경
+    }
+
+    /// <summary>
+    /// 이동 입력 처리용 함수
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        // Exception : 예외 상황( 무엇을 해야 할지 지정이 안되어있는 예외 일때 )
+        //throw new NotImplementedException();    // NotImplementedException 을 실행해라. => 코드 구현을 알려주기 위해 강제로 죽이는 코드
+        Vector2 inputdir = context.ReadValue<Vector2>();    // 어느 방향으로 움직여야 하는지를 입력받음
+        dir = inputdir;
+        //Debug.Log("이동 입력");
+
+        //dir.y > 0     // W를 눌렀다
+        //dir.y == 0 // w,s 중 아무것도 안눌렀다,
+        //dir.y < 0 // s를 눌렀다,
+        anim.SetFloat("InputY", dir.y);
+    }
+
+    /// <summary>
+    /// 총알 발사 시작 입력 처리용 (Space를 눌렀을 때)
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnFireStart(InputAction.CallbackContext context)
+    {
+        //Debug.Log("발사");
+        //float value = Random.Range(0.0f, 10.0f);      // value에는 0.0 ~ 10.0 의 랜덤값이 들어간다.
+        //Instantiate(Bullet, transform.position, Quaternion.identity);
+        //isFire = true;
+        StartCoroutine(fireCoroutine);  // 코루틴 실행
+    }
+
+    /// <summary>
+    /// 총알 발사 중지 입력 처리용 (Space를 땠을 때)
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnFireStop(InputAction.CallbackContext context)
+    {
+        //isFire = false;
+        //StopAllCoroutines();
+        StopCoroutine(fireCoroutine);       // 코루틴 정지
+    }
+
+    // 유니티 이벤트 함수 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 생성된 직후에 호출
     /// </summary>
     private void Awake()
     {
-        inputActions = new PlayerinputAction();
+        inputActions = new PlayerinputAction();     // 액션맵 인스턴스 생성
         rigid = GetComponent<Rigidbody2D>();        // 한번만 찾고 저장해서 계속 쓰기(메모리 더 쓰고 성능 아끼기)
         anim = GetComponent<Animator>();
         bodyCollider = GetComponent<Collider2D>();  // CapsuleCollider2D가 Collider2D의 자식이라서 가능
@@ -147,50 +208,61 @@ public class Player : MonoBehaviour
         inputActions.Player.Booster.canceled += OffBooster;
     }
 
-    
-
-    private void OffBooster(InputAction.CallbackContext context)
-    {
-        boost = 1.0f;
-    }
-
-    private void OnBooster(InputAction.CallbackContext context)
-    {
-        boost *= 2.0f;
-    }
-
-
-
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 비활성화 되었을 때 호출
     /// </summary>
     private void OnDisable()
     {
-        InputDisable();
+        InputDisable(); // 입력도 비호라성화
     }
 
 
-
-    private void Start()
+    /// <summary>
+    /// 충돌이 발생했을 때 실행.(충동한 순간)
+    /// </summary>
+    /// <param name="collision"></param>
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        Power = 1;
-    }
-
-    private void Update()
-    {
-        if (isInvincbleMode)
+        //Debug.Log("OnCollisionEnter2D");        // Collider와 부딪쳤을 때 실행
+        if (collision.gameObject.CompareTag("PowerUp"))
         {
-            timeElapsed += Time.deltaTime * 30.0f;
-            float alpha = (Mathf.Cos(timeElapsed) + 1.0f) * 0.5f;       // cosdml 결과를 1~0으로 변경
-            sprite.color = new Color(1, 1, 1, alpha);
+
+            // 파워업 아이템을 먹었으면
+            Power++;                                // 파워 증가
+            Destroy(collision.gameObject);          // 파워업 오브젝트 삭제
+        }
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            //if(isDead == false)
+            //Dead();     // 적이랑 부딪치면 죽이기
+
+            Life--; // 적이랑 부딪치면 life가 1 감소한다.
+            
+            
         }
     }
 
+    /// <summary>
+    /// 시작할 때. 첫번째 Update 함수가 실행되기 직전에 호출.
+    /// </summary>
+    private void Start()
+    {
+        Power = 1;      // 시잘할 때 파워를 1로 설정(발싸 위치 갱신용)
+    }
 
-    //private void Update()
-    //{
-    //    //transform.position += (Speed * Time.deltaTime * dir);
-    //}
+    /// <summary>
+    /// 매 프레임마다 호출.
+    /// </summary>
+    private void Update()
+    {
+        if (isInvincbleMode)        // 무적 상태용 코드
+        {
+            timeElapsed += Time.deltaTime * 30.0f;          // 시간의 30배 누적
+            float alpha = (Mathf.Cos(timeElapsed) + 1.0f) * 0.5f;       // cos의 결과를 1~0으로 변경
+            sprite.color = new Color(1, 1, 1, alpha);       // 알파값 변경
+        }
+    }
 
     /// <summary>
     /// 일정 시간 간격(물리 업데이트 시간 간격)으로 호출
@@ -215,65 +287,17 @@ public class Player : MonoBehaviour
         }
         else
         {
-            rigid.AddForce(Vector2.left * 0.1f, ForceMode2D.Impulse);       // 죽었을 때 뒤로 돌면서 튕겨나가기
+            rigid.AddForce(Vector2.left * 0.1f, ForceMode2D.Impulse);       // 죽었을 때 연출용. 뒤로 돌면서 튕겨나가기
             rigid.AddTorque(10.0f);
         }
     }
 
 
-    private void OnMove(InputAction.CallbackContext context)
-    {
-        // Exception : 예외 상황( 무엇을 해야 할지 지정이 안되어있는 예외 일때 )
-        //throw new NotImplementedException();    // NotImplementedException 을 실행해라. => 코드 구현을 알려주기 위해 강제로 죽이는 코드
-        Vector2 inputdir = context.ReadValue<Vector2>();
-        dir = inputdir;
-        //Debug.Log("이동 입력");
 
-        //dir.y > 0     // W를 눌렀다
-        //dir.y == 0 // w,s 중 아무것도 안눌렀다,
-        //dir.y < 0 // s를 눌렀다,
-        anim.SetFloat("InputY", dir.y);
-    }
-
-    private void OnFireStart(InputAction.CallbackContext context)
-    {
-        //Debug.Log("발사");
-        //float value = Random.Range(0.0f, 10.0f);      // value에는 0.0 ~ 10.0 의 랜덤값이 들어간다.
-        //Instantiate(Bullet, transform.position, Quaternion.identity);
-        //isFire = true;
-        StartCoroutine(fireCoroutine);
-    }
-
-    private void OnFireStop(InputAction.CallbackContext context)
-    {
-        //isFire = false;
-        //StopAllCoroutines();
-        StopCoroutine(fireCoroutine);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        //Debug.Log("OnCollisionEnter2D");        // Collider와 부딪쳤을 때 실행
-        if (collision.gameObject.CompareTag("PowerUp"))
-        {
-
-            // 파워업 아이템을 먹었으면
-            Power++;                                // 파워 증가
-            Destroy(collision.gameObject);          // 파워업 오브젝트 삭제
-        }
-
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            //if(isDead == false)
-            //Dead();     // 적이랑 부딪치면 죽이기
-
-            Life--; // 적이랑 부딪치면 life가 1 감소한다.
-            
-            
-        }
-    }
-
-
+    /// <summary>
+    /// 총알 연속 발사용 코루틴
+    /// </summary>
+    /// <returns></returns>
     IEnumerator Fire()
     {
         //yield return null;      // 다음 프레임에 이어서 시작해라
@@ -331,6 +355,8 @@ public class Player : MonoBehaviour
         }
         sprite.color = Color.white;         // 원래 색으로 되돌리기
     }
+
+    // 함수(매서드) ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
     /// <summary>
     /// 플레이어가 죽었을 때 실행될 일들
