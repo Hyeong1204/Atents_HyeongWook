@@ -19,36 +19,43 @@ public class Player : MonoBehaviour
     //Func<int, float> del4;      // 리턴타입이 int고 파라메터는 float 하나인 델리게이트 del4를 만듬
 
     // Awake > OnEnble > Start : 대체적으로 이 순서
-    PlayerinputAction inputActions;
-    Rigidbody2D rigid;
-    Animator anim;
-    Collider2D bodyCollider;
-    SpriteRenderer sprite;
+    private PlayerinputAction inputActions; // InputSystem용 입력 액션
+    private Rigidbody2D rigid;
+    private Animator anim;
+    private Collider2D bodyCollider;
+    private SpriteRenderer sprite;
+    private Transform firePositionRoot;     // 총알이 발사될 위치와 회전을 가지고 있는 트랜스 폼
 
-    public GameObject Bullet;
-    GameObject flash;
+    [Header("프리펩")]
+    private GameObject flash;               // 총알이 발사될 때 보일 플래시 이팩트 게임 오브젝트
+    public GameObject BulletPrefab;         // 총알용 프리펩
+    public GameObject explosionPrefab;      // 폭팔 프리펩
 
-
-    public GameObject explosionPrefab;
-
-    Transform firePositionRoot;   // 트랜스폼을 여러개 가지는 배열
+    Vector3 dir;                            // 이동 방향(입력에 따라 변경됨)
     //Vector3[] fireRot;
 
-    Vector3 dir;                // 이동 방향(입력에 따라 변경됨)
-    IEnumerator fireCoroutine;
+    IEnumerator fireCoroutine;              // 총알 연사용 코루틴
 
-    bool isDead = false;
-    bool isInvincbleMode = false;
-    float timeElapsed = 0.0f;
+    private bool isDead = false;            // 플레이어의 사망여부(true면 사망 false면 생존)
+    private bool isInvincbleMode = false;   // 무적 상태인지 표시용(true면 on false off)
+    //bool isFire = false;
 
-    int life;
-    public int initialLife = 3;
+    private int life;                       // 현재 생명수
+    private int power = 0;                  // 파워업을 아이템을 획득한 갯수(최대값 = 3)
+    public int initialLife = 3;             // 초기 생명 개수
 
-    float fireAngle = 30.0f;
-    int power = 0;
-    const float InvincbleTime = 1.0f;
+    private float boost = 1.0f;             // 부스트 속도(부스트 상태에 들어가면 2, 보통 상태일 때는 1)
+    private float timeElapsed = 0.0f;       // 무적상태에 들어간 후의 경과 시간(의 30배)
+    private float fireAngle = 30.0f;        // 총알이 한번에 여러발 발사될 때 총알간의 사이각도
+    public float fireInterval = 0.5f;       // 총알 발사 시간간격
+    public float Speed = 1.0f;              // 플레이어의 이동 속도(초당 이동 속도)
+    private const float InvincbleTime = 1.0f;       // 피격시 무적 시간;
+    //float fireTimeCount = 0.0f;
 
-    int Life
+    /// <summary>
+    /// 생명갯수 용 프로퍼티. 0~3 사이의 값을 가진다
+    /// </summary>
+    private int Life            // 프로퍼티
     {
         get => life;
         set
@@ -66,8 +73,10 @@ public class Player : MonoBehaviour
         }
     }
 
-
-    int Power
+    /// <summary>
+    /// 공격력 용 프로퍼티. 1~3 사이의 값으 가진다. 한번에 발사하는 총알의 숫자와 같다.
+    /// </summary>
+    private int Power
     {
         get => power;
         set
@@ -102,11 +111,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public float Speed = 1.0f;  // 플레이어의 이동 속도(초당 이동 속도)
-    float boost = 1.0f;
-    //bool isFire = false;
-    public float fireInterval = 0.5f;
-    //float fireTimeCount = 0.0f;
+   
 
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 생성된 직후에 호출
@@ -119,16 +124,13 @@ public class Player : MonoBehaviour
         bodyCollider = GetComponent<Collider2D>();  // CapsuleCollider2D가 Collider2D의 자식이라서 가능
         sprite = GetComponent<SpriteRenderer>();
 
-        fireCoroutine = Fire();
+        fireCoroutine = Fire();     // 연사용 코루틴 저장
 
-        firePositionRoot = transform.GetChild(0);
-        flash = transform.GetChild(1).gameObject;
-        flash.SetActive(false);
-        //fireRot = new Vector3[3];
-        //fireRot[0] = new Vector3(0, 0, 0);
-        //fireRot[1] = new Vector3(0, 0, 30);
-        //fireRot[2] = new Vector3(0, 0, -30);
-        life = initialLife;
+        firePositionRoot = transform.GetChild(0);   // 발사 트랜스폼 찾기
+        flash = transform.GetChild(1).gameObject;   // flash 가져오기
+        flash.SetActive(false);                     // flash 비활성화
+        
+        life = initialLife; // 생명숫자도 초기화
     }
 
     /// <summary>
@@ -167,16 +169,6 @@ public class Player : MonoBehaviour
         InputDisable();
     }
 
-    void InputDisable()
-    {
-        inputActions.Player.Move.performed -= OnMove;   // 연결해 놓은 함수 해제(안전을 위해)
-        inputActions.Player.Move.canceled -= OnMove;
-        inputActions.Player.Fire.performed -= OnFireStart;
-        inputActions.Player.Booster.performed -= OnBooster;
-        inputActions.Player.Booster.canceled -= OffBooster;
-        inputActions.Player.Fire.canceled -= OnFireStop;
-        inputActions.Player.Disable();  // 오브젝트가 사라질때 더 이상 입력을 받지 않도록 비활성화
-    }
 
 
     private void Start()
@@ -259,40 +251,6 @@ public class Player : MonoBehaviour
         StopCoroutine(fireCoroutine);
     }
 
-    IEnumerator Fire()
-    {
-        //yield return null;      // 다음 프레임에 이어서 시작해라
-
-        //yield return new WaitForSeconds(1.0f);      // 1초 후에 이어서 시작해라
-
-        while (true)
-        {
-            for (int i = 0; i < firePositionRoot.childCount; i++)
-            {
-                // Bullet이라는 프리팹을 firePosition[i]의 위치에 (0,0,0) 회전으로 만들어라
-                GameObject obj = Instantiate(Bullet, firePositionRoot.GetChild(i).position, firePositionRoot.GetChild(i).rotation);
-
-                // Instantiate(생성할 프리팹);        // 프리팹이 (0,0,0) 위치에 (0,0,0) 회전에 (1,1,1) 스케일로 만드러짐
-                // Instantiate(생성할 프리팹, 생성할 위치, 생성될 때의 회전);
-
-                //obj.transform.Rotate(fireRot[i]);
-                //obj.transform.rotation = firePosition[i].rotation;  // 총알의 회전 값으로 firePosition[i]의 회전값을 그래도 사용한다.
-
-                //Vector3 angle = firePosition[i].rotation.eulerAngles; // 현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
-            }
-            flash.SetActive(true);
-            StartCoroutine(Flashoff());
-            yield return new WaitForSeconds(fireInterval);
-        }
-    }
-
-
-    IEnumerator Flashoff()
-    {
-        yield return new WaitForSeconds(0.1f);
-        flash.SetActive(false);
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.Log("OnCollisionEnter2D");        // Collider와 부딪쳤을 때 실행
@@ -315,21 +273,69 @@ public class Player : MonoBehaviour
         }
     }
 
+
+    IEnumerator Fire()
+    {
+        //yield return null;      // 다음 프레임에 이어서 시작해라
+
+        //yield return new WaitForSeconds(1.0f);      // 1초 후에 이어서 시작해라
+
+        while (true)
+        {
+            for (int i = 0; i < firePositionRoot.childCount; i++)
+            {
+                // Bullet이라는 프리팹을 firePosition[i]의 위치에 (0,0,0) 회전으로 만들어라
+                Instantiate(BulletPrefab, firePositionRoot.GetChild(i).position, firePositionRoot.GetChild(i).rotation);
+
+                // Instantiate(생성할 프리팹);        // 프리팹이 (0,0,0) 위치에 (0,0,0) 회전에 (1,1,1) 스케일로 만드러짐
+                // Instantiate(생성할 프리팹, 생성할 위치, 생성될 때의 회전);
+
+                //obj.transform.Rotate(fireRot[i]);
+                //obj.transform.rotation = firePosition[i].rotation;  // 총알의 회전 값으로 firePosition[i]의 회전값을 그래도 사용한다.
+
+                //Vector3 angle = firePosition[i].rotation.eulerAngles; // 현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
+            }
+            flash.SetActive(true);      // flash 켜기
+            StartCoroutine(Flashoff()); // 0.1초 후에 flash를 끄는 코루틴 실행
+            yield return new WaitForSeconds(fireInterval);      // 총알 발사 시간 간격만큼 대기
+        }
+    }
+
+    /// <summary>
+    /// 0.1초 후에 flash를 끄는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Flashoff()
+    {
+        yield return new WaitForSeconds(0.1f);      // 0.1초 대기
+        flash.SetActive(false);     // flash 끄기
+    }
+
+    /// <summary>
+    /// 충돌 막고, 무적 모드 설정, 타이머 초기화를 진행한 후 InvincbleTime초 후에 다시 원상 복구
+    /// </summary>
+    /// <returns></returns>
     IEnumerator EnterIncibleMode()
     {
-        bodyCollider.enabled = false;
+        bodyCollider.enabled = false;       // 충돌이 안일어나게 만들기
 
-        isInvincbleMode = true;
-        timeElapsed = 0.0f;
+        isInvincbleMode = true;             // 무적모드 켜기
+        timeElapsed = 0.0f;                 // 타이머 초기화
 
         yield return new WaitForSeconds(InvincbleTime);     // 무적시간 동안 대기
 
-        isInvincbleMode = false;
-        bodyCollider.enabled = true;
-        sprite.color = Color.white;
+        isInvincbleMode = false;            // 무적모드 끄기
+        if(!(Life <= 0))
+        {
+        bodyCollider.enabled = true;        // 충돌이 다시 발생하게 만들기
+        }
+        sprite.color = Color.white;         // 원래 색으로 되돌리기
     }
 
-    void Dead()
+    /// <summary>
+    /// 플레이어가 죽었을 때 실행될 일들
+    /// </summary>
+    private void Dead()
     {
         isDead = true;          // 죽었다고 표시
         GetComponent<Collider2D>().enabled = false;             // 콜라이더를 비활성화
@@ -340,5 +346,18 @@ public class Player : MonoBehaviour
         StopCoroutine(fireCoroutine);       // 총을 쏘던 중이면 더이상 쏘지 않게 처리
     }
 
+    /// <summary>
+    /// 입력 막기. 모든 액션맵을 비활성화 하고 입력 이벤트에 인결된 함수들 제거
+    /// </summary>
+    private void InputDisable()
+    {
+        inputActions.Player.Move.performed -= OnMove;   // 연결해 놓은 함수 해제(안전을 위해)
+        inputActions.Player.Move.canceled -= OnMove;
+        inputActions.Player.Fire.performed -= OnFireStart;
+        inputActions.Player.Booster.performed -= OnBooster;
+        inputActions.Player.Booster.canceled -= OffBooster;
+        inputActions.Player.Fire.canceled -= OnFireStop;
+        inputActions.Player.Disable();  // 오브젝트가 사라질때 더 이상 입력을 받지 않도록 비활성화
+    }
     
 }
