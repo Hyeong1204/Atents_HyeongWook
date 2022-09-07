@@ -52,6 +52,11 @@ public class Player : MonoBehaviour
     private const float InvincbleTime = 1.0f;       // 피격시 무적 시간;
     //float fireTimeCount = 0.0f;
 
+    // 델리 게이트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+    public Action<int> onLifeChange;
+
+    // 프로퍼티ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
     /// <summary>
     /// 생명갯수 용 프로퍼티. 0~3 사이의 값을 가진다
     /// </summary>
@@ -60,16 +65,26 @@ public class Player : MonoBehaviour
         get => life;
         set
         {
-            if(life > value)
+            if (life != value && !isDead)   // 값에 변경이 일어났다. 그리고 살아있다.
             {
-                // life가 감소한 상황( 새로운 값(value)이 옛날 값(life)보다 작다 => 감소했다)
-                StartCoroutine(EnterIncibleMode());
+                
+
+                if (life > value)
+                {
+                    // life가 감소한 상황( 새로운 값(value)이 옛날 값(life)보다 작다 => 감소했다)
+                    StartCoroutine(EnterIncibleMode());
+                }
+
+                life = value;
+
+                if (life <= 0)      // 비교범위는 가능한 크게 잡는 쪽이 안전하다. 
+                {
+                    life = 0;
+                    Dead();
+                }
             }
-
-            life = value;
-
-            if (life <= 0)      // 비교범위는 가능한 크게 잡는 쪽이 안전하다. 
-                Dead();
+            // (변수명)?. : 왼족 변수가 null이면 null.   null이 아니면 (변수명) 맴버에 접근
+            onLifeChange?.Invoke(life); // 라이프가 변경될 때 onLifeChange 델리게이트에 등록된 함수들을 실행시킨다.
         }
     }
 
@@ -341,8 +356,8 @@ public class Player : MonoBehaviour
     /// <returns></returns>
     IEnumerator EnterIncibleMode()
     {
-        bodyCollider.enabled = false;       // 충돌이 안일어나게 만들기
-
+        //bodyCollider.enabled = false;       // 충돌이 안일어나게 만들기
+        gameObject.layer = LayerMask.NameToLayer("Invincible");
         isInvincbleMode = true;             // 무적모드 켜기
         timeElapsed = 0.0f;                 // 타이머 초기화
 
@@ -351,8 +366,9 @@ public class Player : MonoBehaviour
         isInvincbleMode = false;            // 무적모드 끄기
         if(!(Life <= 0))
         {
-        bodyCollider.enabled = true;        // 충돌이 다시 발생하게 만들기
+        //bodyCollider.enabled = true;        // 살아있을 때만 충돌이 다시 발생하게 만들기
         }
+        gameObject.layer = LayerMask.NameToLayer("Player");
         sprite.color = Color.white;         // 원래 색으로 되돌리기
     }
 
@@ -365,6 +381,7 @@ public class Player : MonoBehaviour
     {
         isDead = true;          // 죽었다고 표시
         GetComponent<Collider2D>().enabled = false;             // 콜라이더를 비활성화
+        gameObject.layer = LayerMask.NameToLayer("Player");     // 죽었을 때 플레이어로 원상 복구
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);      //폭팔 이팩트 생성
         InputDisable();                     // 입력 막기
         rigid.gravityScale = 1.0f;          // 충력으로 떨어지게 만들기
