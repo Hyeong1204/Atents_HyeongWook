@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR.Haptics;
 
 public class Player : MonoBehaviour
 {
@@ -21,8 +22,12 @@ public class Player : MonoBehaviour
     PlayerinputAction inputActions;
     Rigidbody2D rigid;
     Animator anim;
+    Collider2D bodyCollider;
+    SpriteRenderer sprite;
+
     public GameObject Bullet;
     GameObject flash;
+
 
     public GameObject explosionPrefab;
 
@@ -33,9 +38,35 @@ public class Player : MonoBehaviour
     IEnumerator fireCoroutine;
 
     bool isDead = false;
+    bool isInvincbleMode = false;
+    float timeElapsed = 0.0f;
+
+    int life;
+    public int initialLife = 3;
 
     float fireAngle = 30.0f;
     int power = 0;
+    const float InvincbleTime = 1.0f;
+
+    int Life
+    {
+        get => life;
+        set
+        {
+            if(life > value)
+            {
+                // life가 감소한 상황( 새로운 값(value)이 옛날 값(life)보다 작다 => 감소했다)
+                StartCoroutine(EnterIncibleMode());
+            }
+
+            life = value;
+
+            if (life <= 0)      // 비교범위는 가능한 크게 잡는 쪽이 안전하다. 
+                Dead();
+        }
+    }
+
+
     int Power
     {
         get => power;
@@ -85,6 +116,9 @@ public class Player : MonoBehaviour
         inputActions = new PlayerinputAction();
         rigid = GetComponent<Rigidbody2D>();        // 한번만 찾고 저장해서 계속 쓰기(메모리 더 쓰고 성능 아끼기)
         anim = GetComponent<Animator>();
+        bodyCollider = GetComponent<Collider2D>();  // CapsuleCollider2D가 Collider2D의 자식이라서 가능
+        sprite = GetComponent<SpriteRenderer>();
+
         fireCoroutine = Fire();
 
         firePositionRoot = transform.GetChild(0);
@@ -94,6 +128,7 @@ public class Player : MonoBehaviour
         //fireRot[0] = new Vector3(0, 0, 0);
         //fireRot[1] = new Vector3(0, 0, 30);
         //fireRot[2] = new Vector3(0, 0, -30);
+        life = initialLife;
     }
 
     /// <summary>
@@ -151,7 +186,12 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        
+        if (isInvincbleMode)
+        {
+            timeElapsed += Time.deltaTime * 30.0f;
+            float alpha = (Mathf.Cos(timeElapsed) + 1.0f) * 0.5f;       // cosdml 결과를 1~0으로 변경
+            sprite.color = new Color(1, 1, 1, alpha);
+        }
     }
 
 
@@ -267,8 +307,26 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             //if(isDead == false)
-            Dead();     // 적이랑 부딪치면 죽이기
+            //Dead();     // 적이랑 부딪치면 죽이기
+
+            Life--; // 적이랑 부딪치면 life가 1 감소한다.
+            
+            
         }
+    }
+
+    IEnumerator EnterIncibleMode()
+    {
+        bodyCollider.enabled = false;
+
+        isInvincbleMode = true;
+        timeElapsed = 0.0f;
+
+        yield return new WaitForSeconds(InvincbleTime);     // 무적시간 동안 대기
+
+        isInvincbleMode = false;
+        bodyCollider.enabled = true;
+        sprite.color = Color.white;
     }
 
     void Dead()
@@ -281,4 +339,6 @@ public class Player : MonoBehaviour
         rigid.freezeRotation = false;       // 회전 막아놓은 것 풀기
         StopCoroutine(fireCoroutine);       // 총을 쏘던 중이면 더이상 쏘지 않게 처리
     }
+
+    
 }
