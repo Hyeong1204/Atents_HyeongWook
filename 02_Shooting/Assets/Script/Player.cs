@@ -384,7 +384,7 @@ public class Player : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("Player");     // 죽었을 때 플레이어로 원상 복구
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);      //폭팔 이팩트 생성
         InputDisable();                     // 입력 막기
-        rigid.gravityScale = 1.0f;          // 충력으로 떨어지게 만들기
+        rigid.gravityScale = 1.0f;          // 중력으로 떨어지게 만들기
         rigid.freezeRotation = false;       // 회전 막아놓은 것 풀기
         StopCoroutine(fireCoroutine);       // 총을 쏘던 중이면 더이상 쏘지 않게 처리
     }
