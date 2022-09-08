@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     private Collider2D bodyCollider;
     private SpriteRenderer sprite;
     private Transform firePositionRoot;     // 총알이 발사될 위치와 회전을 가지고 있는 트랜스 폼
+    private AudioSource ShootAudio;
 
     [Header("프리펩")]
     private GameObject flash;               // 총알이 발사될 때 보일 플래시 이팩트 게임 오브젝트
@@ -45,6 +46,8 @@ public class Player : MonoBehaviour
     private int power = 0;                  // 파워업을 아이템을 획득한 갯수(최대값 = 3)
     public int initialLife = 3;             // 초기 생명 개수
     public int totalScore = 0;             // 플레이어가 획득한 점수
+    private int extraPowerBouns = 100;
+    
 
     private float boost = 1.0f;             // 부스트 속도(부스트 상태에 들어가면 2, 보통 상태일 때는 1)
     private float timeElapsed = 0.0f;       // 무적상태에 들어간 후의 경과 시간(의 30배)
@@ -70,7 +73,7 @@ public class Player : MonoBehaviour
         {
             if (life != value && !isDead)   // 값에 변경이 일어났다. 그리고 살아있다.
             {
-                
+                Power--;
 
                 if (life > value)
                 {
@@ -101,8 +104,14 @@ public class Player : MonoBehaviour
         {
             power = value;          // 들어온 값으로 파워 설정
             if (power > 3)          // 파워가 3을 벗어나면 3을 제한
+            {
+                AddScore(extraPowerBouns);
                 power = 3;
-
+            }
+            if(power < 1)
+            {
+                power = 1;
+            }
 
             // 기존에 있는 파이어 포지션 제거
             while (firePositionRoot.childCount > 0)                  // 자식이 0보다 많으면....
@@ -208,8 +217,8 @@ public class Player : MonoBehaviour
         firePositionRoot = transform.GetChild(0);   // 발사 트랜스폼 찾기
         flash = transform.GetChild(1).gameObject;   // flash 가져오기
         flash.SetActive(false);                     // flash 비활성화
-        
-        
+
+        ShootAudio = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -340,6 +349,7 @@ public class Player : MonoBehaviour
 
                 //Vector3 angle = firePosition[i].rotation.eulerAngles; // 현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
             }
+            ShootAudio.Play();
             flash.SetActive(true);      // flash 켜기
             StartCoroutine(Flashoff()); // 0.1초 후에 flash를 끄는 코루틴 실행
             yield return new WaitForSeconds(fireInterval);      // 총알 발사 시간 간격만큼 대기

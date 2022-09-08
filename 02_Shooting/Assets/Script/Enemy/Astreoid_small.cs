@@ -15,7 +15,8 @@ public class Astreoid_small : MonoBehaviour
 
     private void Awake()
     {
-        explosion = transform.GetChild(0).GetChild(1).gameObject;
+        explosion = transform.GetChild(0).gameObject;
+
 
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         int rand = UnityEngine.Random.Range(0, 4);
