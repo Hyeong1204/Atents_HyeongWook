@@ -1,18 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Score_Panel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    TextMeshProUGUI scoreText;
+
+    private void Awake()
     {
-        
+        scoreText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        Player player = FindObjectOfType<Player>();
+        player.onScoreChange += RefreshScore;
+    }
+
+    private void RefreshScore(int totalScore)
+    {
+        //socreText.text = totalScore.ToString();
+        scoreText.text = $"{totalScore,4}";
     }
 }

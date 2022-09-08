@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.InputSystem.XR.Haptics;
 
 public class Player : MonoBehaviour
@@ -43,6 +44,7 @@ public class Player : MonoBehaviour
     private int life;                       // 현재 생명수
     private int power = 0;                  // 파워업을 아이템을 획득한 갯수(최대값 = 3)
     public int initialLife = 3;             // 초기 생명 개수
+    public int totalScore = 0;             // 플레이어가 획득한 점수
 
     private float boost = 1.0f;             // 부스트 속도(부스트 상태에 들어가면 2, 보통 상태일 때는 1)
     private float timeElapsed = 0.0f;       // 무적상태에 들어간 후의 경과 시간(의 30배)
@@ -54,6 +56,7 @@ public class Player : MonoBehaviour
 
     // 델리 게이트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
     public Action<int> onLifeChange;
+    public Action<int> onScoreChange;
 
     // 프로퍼티ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
@@ -265,6 +268,8 @@ public class Player : MonoBehaviour
     {
         Power = 1;      // 시잘할 때 파워를 1로 설정(발싸 위치 갱신용)
         Life = initialLife; // 생명숫자도 초기화
+        totalScore = 0;     // 점수 초기화
+        AddScore(0);        // ui 갱신용
     }
 
     /// <summary>
@@ -402,6 +407,12 @@ public class Player : MonoBehaviour
         inputActions.Player.Booster.canceled -= OffBooster;
         inputActions.Player.Fire.canceled -= OnFireStop;
         inputActions.Player.Disable();  // 오브젝트가 사라질때 더 이상 입력을 받지 않도록 비활성화
+    }
+
+    public void AddScore(int score)
+    {
+        totalScore += score;
+        onScoreChange?.Invoke(totalScore);
     }
     
 }

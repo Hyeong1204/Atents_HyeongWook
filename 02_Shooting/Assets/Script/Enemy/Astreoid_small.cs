@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
@@ -9,22 +10,23 @@ public class Astreoid_small : MonoBehaviour
     GameObject explosion;
 
     public float speed = 5.0f;
-
+    public int score = 5;
+    Action<int> onDead;
 
     private void Awake()
     {
-        explosion = transform.GetChild(0).gameObject;
-
+        explosion = transform.GetChild(0).GetChild(1).gameObject;
 
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-        int rand = Random.Range(0, 4);
+        int rand = UnityEngine.Random.Range(0, 4);
         renderer.flipX = (rand & 0b_01) != 0;
         renderer.flipY = (rand & 0b_10) != 0;
     }
 
     private void Start()
     {
-        
+        Player player = FindObjectOfType<Player>();
+        onDead += player.AddScore;
     }
 
     private void Update()
@@ -37,6 +39,7 @@ public class Astreoid_small : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
+            onDead?.Invoke(score);
             explosion.SetActive(true);
             explosion.transform.parent = null;
 

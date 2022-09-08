@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -8,17 +9,21 @@ public class Move_Enemy : MonoBehaviour
 {
     GameObject explosion;
 
+
+    public int score = 10;
     public float speed = 3.0f;
     float timeElapsed;              // 게임 시작부터 얼마나 시간이 지났나를 기록해 놓는 변수
     float spawnY = 1.0f;            // 생성 되었을 때 기준 높이
 
     public float amplutude = 2.0f;        // 사인으로 변경되는 위 아래 차이 원래 sin -1 ~ 1 인데 그걸 변경하는 변수
     public float frequency = 1.0f;     // 사인 그래프가 한번도 도는데 걸리는 신간(원래는 2파이)
-
+    Action<int> onDead;
 
     // Start is called before the first frame update
     void Start()
     {
+        Player palyer = FindObjectOfType<Player>();
+        onDead += palyer.AddScore;
         explosion = transform.GetChild(0).gameObject;
         //explosion.SetActive(false); // 활성화 상태를 끄기(비활성화)
         spawnY = transform.position.y;
@@ -54,6 +59,7 @@ public class Move_Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
+            onDead?.Invoke(score);
             //GameObject obj = Instantiate(explosion, collision.transform.position, Quaternion.identity);
             //Destroy(obj, 0.42f);
             explosion.SetActive(true);  // 총알에 맞았을 때 비활성화를 활성화로 만듬
