@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
     private float fireAngle = 30.0f;        // 총알이 한번에 여러발 발사될 때 총알간의 사이각도
     public float fireInterval = 0.5f;       // 총알 발사 시간간격
     public float Speed = 1.0f;              // 플레이어의 이동 속도(초당 이동 속도)
-    private const float InvincbleTime = 1.0f;       // 피격시 무적 시간;
+    private const float InvincbleTime = 2.0f;       // 피격시 무적 시간;
     //float fireTimeCount = 0.0f;
 
     // 델리 게이트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -206,7 +206,7 @@ public class Player : MonoBehaviour
         flash = transform.GetChild(1).gameObject;   // flash 가져오기
         flash.SetActive(false);                     // flash 비활성화
         
-        life = initialLife; // 생명숫자도 초기화
+        
     }
 
     /// <summary>
@@ -264,6 +264,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         Power = 1;      // 시잘할 때 파워를 1로 설정(발싸 위치 갱신용)
+        Life = initialLife; // 생명숫자도 초기화
     }
 
     /// <summary>
