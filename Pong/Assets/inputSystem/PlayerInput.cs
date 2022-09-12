@@ -72,6 +72,56 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Player2P"",
+            ""id"": ""71a82588-1631-49c2-a3df-0e1b1a20610e"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""82e4f1df-cd3d-407a-bbee-c499d8bb9b67"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""4d11db01-d44f-49cb-9378-0b48a54a97ef"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""82bee435-46ae-4b98-ab08-91e43e7b0eb2"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""284cf2dc-b5f8-4225-9230-e300f9d4ad6d"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -79,6 +129,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        // Player2P
+        m_Player2P = asset.FindActionMap("Player2P", throwIfNotFound: true);
+        m_Player2P_Move = m_Player2P.FindAction("Move", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -167,7 +220,44 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Player2P
+    private readonly InputActionMap m_Player2P;
+    private IPlayer2PActions m_Player2PActionsCallbackInterface;
+    private readonly InputAction m_Player2P_Move;
+    public struct Player2PActions
+    {
+        private @PlayerInput m_Wrapper;
+        public Player2PActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Player2P_Move;
+        public InputActionMap Get() { return m_Wrapper.m_Player2P; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(Player2PActions set) { return set.Get(); }
+        public void SetCallbacks(IPlayer2PActions instance)
+        {
+            if (m_Wrapper.m_Player2PActionsCallbackInterface != null)
+            {
+                @Move.started -= m_Wrapper.m_Player2PActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_Player2PActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_Player2PActionsCallbackInterface.OnMove;
+            }
+            m_Wrapper.m_Player2PActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+            }
+        }
+    }
+    public Player2PActions @Player2P => new Player2PActions(this);
     public interface IPlayerActions
+    {
+        void OnMove(InputAction.CallbackContext context);
+    }
+    public interface IPlayer2PActions
     {
         void OnMove(InputAction.CallbackContext context);
     }

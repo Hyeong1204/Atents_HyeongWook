@@ -8,7 +8,8 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    private PlayerInput input;
+    protected PlayerInput input;
+    private Rigidbody2D rigid;
     private Vector3 dir;
 
     public float speed = 1.0f;
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         input = new PlayerInput();
+        rigid = GetComponent<Rigidbody2D>();
     }
 
 
@@ -33,14 +35,13 @@ public class Player : MonoBehaviour
         input.Player.Move.performed -= onMove;
         input.Player.Disable();
     }
-    private void onMove(InputAction.CallbackContext context)
+    protected virtual void onMove(InputAction.CallbackContext context)
     {
         dir = context.ReadValue<Vector2>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        transform.Translate(speed * Time.deltaTime * dir);
+        rigid.MovePosition(transform.position += speed * Time.deltaTime * dir);
     }
-
 }

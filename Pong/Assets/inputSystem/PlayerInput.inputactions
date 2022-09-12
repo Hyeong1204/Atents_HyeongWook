@@ -1,5 +1,5 @@
 {
-    "name": "PlatyerInput",
+    "name": "PlayerInput",
     "maps": [
         {
             "name": "Player",
@@ -42,6 +42,56 @@
                     "name": "down",
                     "id": "db23cb5c-0ea3-42f5-868d-1177c4ab9494",
                     "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        },
+        {
+            "name": "Player2P",
+            "id": "71a82588-1631-49c2-a3df-0e1b1a20610e",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "82e4f1df-cd3d-407a-bbee-c499d8bb9b67",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "2D Vector",
+                    "id": "4d11db01-d44f-49cb-9378-0b48a54a97ef",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "82bee435-46ae-4b98-ab08-91e43e7b0eb2",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "284cf2dc-b5f8-4225-9230-e300f9d4ad6d",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
