@@ -20,4 +20,9 @@ public class Ball : MonoBehaviour
     }
 
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        dir = Vector3.Reflect(dir, collision.contacts[0].normal);
+    }
+
 }
