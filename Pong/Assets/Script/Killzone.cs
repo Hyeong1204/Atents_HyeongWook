@@ -7,6 +7,11 @@ public class Killzone : MonoBehaviour
 {
 
     public Action onballDead;
+    public Action<int> onPlayerScore;
+    public Action<int> onPlayerScore2p;
+
+    private int playerScore = 0;
+    private int playerScore2P = 0;
 
     private void Awake()
     {
@@ -20,6 +25,19 @@ public class Killzone : MonoBehaviour
         if (collision.gameObject.CompareTag("Ball"))
         {
             onballDead?.Invoke();
+        }
+
+        if(collision.gameObject.CompareTag("Ball") && collision.transform.position.x > 0.0f)
+        {
+            playerScore++;
+            onPlayerScore?.Invoke(playerScore);
+        }
+
+
+        if(collision.gameObject.CompareTag("Ball") && collision.transform.position.x < 0.0f)
+        {
+            playerScore2P++;
+            onPlayerScore2p?.Invoke(playerScore2P);
         }
     }
 }
