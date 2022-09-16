@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     PlayerInputActions inputActions;            // PlayerInputActions 타입이고 inputActions 이름을 가진 변수를 선언
     Rigidbody rigid;
 
+    GroundChecker groundChecker;
+
     public float moveSpeed = 5.0f;
     public float rotateSpeed = 180.0f;
     public float jumpPower = 3.0f;
@@ -16,12 +18,16 @@ public class Player : MonoBehaviour
     float moveDir = 0.0f;
     float rotateDir = 0.0f;
 
+    bool isJumping = false;
+
     Vector3 dir;
 
     private void Awake()
     {
         inputActions = new PlayerInputActions();    // 인스턴스 생성. 실제 메로리를 할당 받고 사용할 수 있도록 만듬
         rigid = GetComponent<Rigidbody>();
+        groundChecker = GetComponentInChildren<GroundChecker>();
+        groundChecker.onGrounded += OnGround;
     }
 
     private void OnEnable()
@@ -47,6 +53,14 @@ public class Player : MonoBehaviour
     {
         Move();
         Rotate();
+
+        if (isJumping)
+        {
+            if(rigid.velocity.y < 0)
+            {
+                groundChecker.gameObject.SetActive(true);
+            }
+        }
     }
 
     private void OnMove(InputAction.CallbackContext context)
@@ -59,8 +73,10 @@ public class Player : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext _)
     {
-        // 플레이어의 위쪽 방향(up)으로 jumpPower만큼 즉시 힘을 추가한다.(질량 있음)
-        rigid.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+        if (!isJumping)     // 점프 중이 아닐 때만 점프
+        {
+            JumpStart();
+        }
     }
 
     void Move()
@@ -75,5 +91,20 @@ public class Player : MonoBehaviour
 
         // Quaternion.Euler(0, rotateDir * rotateSpeed * Time.fixedDeltaTime, 0) // x, y 축은 회전  없고 y 기준으로 회전    // world 기준
         // Quaternion.AngleAxis(rotateDir * rotateSpeed * Time.fixedDeltaTime, transform.up) // 플레이어의 y축 기준으로 회전    // 오브젝트 기준
+    }
+
+
+     void OnGround()
+    {
+        isJumping = false;
+    }
+
+    void JumpStart()
+    {
+        // 플레이어의 위쪽 방향(up)으로 jumpPower만큼 즉시 힘을 추가한다.(질량 있음)
+        rigid.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+        isJumping = true;
+
+        groundChecker.gameObject.SetActive(false);
     }
 }
