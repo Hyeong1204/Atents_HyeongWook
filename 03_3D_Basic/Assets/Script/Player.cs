@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
 
     GroundChecker groundChecker;
 
+    Animator anima;
+
     public float moveSpeed = 5.0f;
     public float rotateSpeed = 180.0f;
     public float jumpPower = 3.0f;
@@ -28,6 +30,7 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         groundChecker = GetComponentInChildren<GroundChecker>();
         groundChecker.onGrounded += OnGround;
+        anima = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -65,10 +68,13 @@ public class Player : MonoBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        dir = context.ReadValue<Vector2>();
+        dir = context.ReadValue<Vector2>();     // 입력된 값을 읽어오기
 
         moveDir = dir.y;            // w : +1, s : -1   전진인지 후진인지 결정
         rotateDir = dir.x;          // a : -1, d : +1   좌회전인지 우회전인지 결정
+
+
+        anima.SetBool("IsMove", !context.canceled);     // 이동키를 눌럿으면 true, 아니면 false
     }
 
     private void OnJump(InputAction.CallbackContext _)
