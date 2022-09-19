@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEditor;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IUser
 {
     PlayerInputActions inputActions;            // PlayerInputActions 타입이고 inputActions 이름을 가진 변수를 선언
     Rigidbody rigid;
@@ -23,9 +24,11 @@ public class Player : MonoBehaviour
     bool isJumping = false;
 
     Vector3 dir;
+    Vector3 usePosition = Vector3.zero; // 플레이어가 오브젝트 사용을 확인하느 캡슐의 아래 지점
+    float useRedius = 0.5f;             // 캡슐의 반지름
+    float useHeight = 2.0f;             // 캡슐의 높이
 
-
-    public Action onObjectUse;
+    public Action onObjectUse { get; set; }
 
     private void Awake()
     {
@@ -34,6 +37,8 @@ public class Player : MonoBehaviour
         groundChecker = GetComponentInChildren<GroundChecker>();
         groundChecker.onGrounded += OnGround;
         anima = GetComponent<Animator>();
+
+        usePosition = transform.forward;        // 기본적으로 플레이어의 앞
     }
 
     private void OnEnable()
@@ -70,6 +75,13 @@ public class Player : MonoBehaviour
                 groundChecker.gameObject.SetActive(true);
             }
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        // 플레이어가 오브젝트를 사용하는 범위 표시
+        Gizmos.DrawWireSphere(transform.position + usePosition, useRedius);
+        Gizmos.DrawWireSphere(transform.position + usePosition + transform.up * useHeight, useRedius);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -118,7 +130,7 @@ public class Player : MonoBehaviour
     {
         // 리지드바디로 회전 설정
         rigid.MoveRotation(rigid.rotation * Quaternion.AngleAxis(rotateDir * rotateSpeed * Time.fixedDeltaTime, transform.up));
-
+        usePosition = Quaternion.AngleAxis(rotateDir * rotateSpeed * Time.fixedDeltaTime, transform.up) * usePosition;
         // Quaternion.Euler(0, rotateDir * rotateSpeed * Time.fixedDeltaTime, 0) // x, y 축은 회전  없고 y 기준으로 회전    // world 기준
         // Quaternion.AngleAxis(rotateDir * rotateSpeed * Time.fixedDeltaTime, transform.up) // 플레이어의 y축 기준으로 회전    // 오브젝트 기준
     }
@@ -140,8 +152,22 @@ public class Player : MonoBehaviour
 
     private void OnUse(InputAction.CallbackContext _)
     {
-        anima.SetTrigger("Use");
-        onObjectUse?.Invoke();
+        anima.SetTrigger("Use");        // 아이템 사용 애니메이션 재생
+        //onObjectUse?.Invoke();
+        Collider[] colliders = Physics.OverlapCapsule(      // 캡슐 모양에 겹치는 컬라이더가 있는지 체크
+            transform.position + usePosition,               // 캡슐의 아래구의 중심선
+            transform.position + usePosition + transform.up * useHeight, useRedius,     // 캡슐의 위쪽구의 중심점
+            LayerMask.GetMask("UseableObjest"));            // 체크할 레이어
+
+        if(colliders.Length > 0)        // 캡슐에 겹쳐진 UseableObjest 컬라이더가 한개 이상이다.
+        {
+            IUseavleObject useable = colliders[0].GetComponent<IUseavleObject>();   // 여러개가 있어도 하나만 처리
+            if(useable != null)     // IUseavleObject를 가진 오브젝트이면
+            {
+                useable.Use();      // 사용하기
+            }
+        }
+
     }
 
 
