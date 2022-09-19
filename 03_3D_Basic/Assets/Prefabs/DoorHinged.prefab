@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3615272233191884914}
   - component: {fileID: 3453382019106187387}
   - component: {fileID: -2726681254798784480}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DoorHinged
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7876808559154015194}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hinge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 9070281472098367310}
   - component: {fileID: 6391957277583501161}
   - component: {fileID: 6389746639208119402}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,9 +249,21 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2807299502185113267, guid: 53d816afd91799e42a83a27350640e41, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3129366032819819982, guid: 53d816afd91799e42a83a27350640e41, type: 3}
       propertyPath: m_Name
       value: DoorFrame
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129366032819819982, guid: 53d816afd91799e42a83a27350640e41, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3742487031754846525, guid: 53d816afd91799e42a83a27350640e41, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3878992802703972130, guid: 53d816afd91799e42a83a27350640e41, type: 3}
       propertyPath: m_Mesh
@@ -272,6 +284,10 @@ PrefabInstance:
     - target: {fileID: 5638431104673164302, guid: 53d816afd91799e42a83a27350640e41, type: 3}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6165828030773840619, guid: 53d816afd91799e42a83a27350640e41, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7255157298852564903, guid: 53d816afd91799e42a83a27350640e41, type: 3}
       propertyPath: m_RootOrder

@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour
+public class Door : MonoBehaviour, IUseavleObject
 {
     Animator anim;
+
+    bool playerIn = false;
+    bool ondoor = true;
 
     private void Awake()
     {
@@ -17,8 +20,9 @@ public class Door : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //Debug.Log("문 열림");
+            playerIn = true;
 
-            anim.SetBool("IsOpen", true);
+            
         }
     }
 
@@ -29,8 +33,19 @@ public class Door : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //Debug.Log("문 닫힘");
+            playerIn = false;
 
-            anim.SetBool("IsOpen", false);
+            
+        }
+
+    }
+
+    public void Use()
+    {
+        if (playerIn)
+        {
+            anim.SetBool("IsOpen", ondoor);
+            ondoor = !ondoor;
         }
     }
 }
