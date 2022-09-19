@@ -24,6 +24,9 @@ public class Player : MonoBehaviour
 
     Vector3 dir;
 
+
+    public Action onObjectUse;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();    // 인스턴스 생성. 실제 메로리를 할당 받고 사용할 수 있도록 만듬
@@ -39,11 +42,14 @@ public class Player : MonoBehaviour
         inputActions.Player.Move.performed += OnMove;
         inputActions.Player.Move.canceled += OnMove;
         inputActions.Player.Jump.performed += OnJump;
+        inputActions.Player.Use.performed += OnUse;
     }
 
+    
 
     private void OnDisable()
     {
+        inputActions.Player.Use.performed -= OnUse;
         inputActions.Player.Jump.performed -= OnJump;
         inputActions.Player.Move.canceled -= OnMove;
         inputActions.Player.Move.performed -= OnMove;
@@ -63,6 +69,24 @@ public class Player : MonoBehaviour
             {
                 groundChecker.gameObject.SetActive(true);
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("PlatForm"))
+        {
+            Platform platform = collision.gameObject.GetComponent<Platform>();
+            platform.onMove += OnMoveingObject;     // 델리게이트 연결
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("PlatForm"))
+        {
+            Platform platform = collision.gameObject.GetComponent<Platform>();
+            platform.onMove -= OnMoveingObject;     // 델리게이트 해제
         }
     }
 
@@ -113,4 +137,20 @@ public class Player : MonoBehaviour
 
         groundChecker.gameObject.SetActive(false);
     }
+
+    private void OnUse(InputAction.CallbackContext _)
+    {
+        anima.SetTrigger("Use");
+        onObjectUse?.Invoke();
+    }
+
+
+    void OnMoveingObject(Vector3 delta)
+    {
+        rigid.velocity = Vector3.zero;          // 원래 플레이어의 벨로시티 제거
+        rigid.MovePosition(rigid.position + delta);     // 플렛폼이 이동한 만큼 이동시키기
+    }
+
+
+
 }

@@ -1,15 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+
+// 수직 또는 수평으로만 움직일 것. 대각선은 밀리는 현상 발생
 
 public class Platform : MonoBehaviour
 {
     public Transform destiantion;
     public float moveSpeed = 1.0f;
+    public Action<Vector3> onMove;
+
+    protected bool isMoveing = false;
 
     Rigidbody rigid;
-
-    bool isMoveing = false;
 
     private void Awake()
     {
@@ -20,7 +25,7 @@ public class Platform : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerIn = true;
+            isMoveing = true;
         }
     }
 
@@ -28,15 +33,34 @@ public class Platform : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerIn = false;
+            isMoveing = false;
         }
     }
 
     private void FixedUpdate()
     {
-        if (playerIn)
+        if (isMoveing)
         {
-            rigid.MovePosition(transform.position + moveSpeed * Time.fixedDeltaTime * (destiantion.position - rigid.position).normalized);
+            // 이번 FixedUpdate때 움직일 벡터 구하기
+            Vector3 moveDelta = moveSpeed * Time.fixedDeltaTime * (destiantion.position - rigid.position).normalized;
+
+            // 새로운 위치 구하기
+            Vector3 newPos = rigid.position + moveDelta;
+
+            // 새로운 위치가 도착지점에 거의 근접하면
+            if ((destiantion.position - newPos).sqrMagnitude < 0.001f)
+            {
+                // 도착했다고 처리
+                isMoveing = false;
+                newPos = destiantion.position;
+                moveDelta = Vector3.zero;
+            }
+
+            // 위치 최종 결정
+            rigid.MovePosition(newPos);
+
+            // 델리게이트에 연결된 함수
+            onMove?.Invoke(moveDelta);
         }
     }
 
