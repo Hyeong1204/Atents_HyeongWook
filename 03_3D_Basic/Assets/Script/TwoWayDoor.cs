@@ -8,9 +8,20 @@ public class TwoWayDoor : Door
 
     private void OnTriggerEnter(Collider other)
     {
+        
         if (other.CompareTag("Player"))
         {
-            anim.SetTrigger("OpeninFront");
+            Vector3 playerToDoor = transform.position - other.transform.position;
+            if (Vector3.Angle(transform.forward, playerToDoor) > 90.0f)
+            {
+                anim.SetTrigger("OpeninFront");
+            }
+            else
+            {
+                anim.SetTrigger("OpeninBack");
+            }
+
+
         }
     }
 

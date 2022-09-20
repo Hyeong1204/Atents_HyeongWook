@@ -40,7 +40,7 @@ public class Door : MonoBehaviour, IUseavleObject
 
     }
 
-    public void Use()
+    public virtual void Use()
     {
         if (playerIn)
         {
@@ -48,4 +48,16 @@ public class Door : MonoBehaviour, IUseavleObject
             ondoor = !ondoor;
         }
     }
+
+    public virtual void Open()
+    {
+
+    }
+
+
+    public virtual void Close()
+    {
+
+    }
+
 }
