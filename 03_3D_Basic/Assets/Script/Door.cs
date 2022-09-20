@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Door : MonoBehaviour, IUseavleObject
 {
-    Animator anim;
+    protected Animator anim;
 
     bool playerIn = false;
     bool ondoor = true;
