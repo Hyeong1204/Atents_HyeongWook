@@ -80,8 +80,9 @@ public class Player : MonoBehaviour, IUser
     void OnDrawGizmos()
     {
         // 플레이어가 오브젝트를 사용하는 범위 표시
-        Gizmos.DrawWireSphere(transform.position + usePosition, useRedius);
-        Gizmos.DrawWireSphere(transform.position + usePosition + transform.up * useHeight, useRedius);
+        Vector3 newUsePosition = transform.rotation * usePosition;
+        Gizmos.DrawWireSphere(this.transform.position + newUsePosition, useRedius);
+        Gizmos.DrawWireSphere(this.transform.position + newUsePosition + transform.up * useHeight, useRedius);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -130,7 +131,7 @@ public class Player : MonoBehaviour, IUser
     {
         // 리지드바디로 회전 설정
         rigid.MoveRotation(rigid.rotation * Quaternion.AngleAxis(rotateDir * rotateSpeed * Time.fixedDeltaTime, transform.up));
-        usePosition = Quaternion.AngleAxis(rotateDir * rotateSpeed * Time.fixedDeltaTime, transform.up) * usePosition;
+        
         // Quaternion.Euler(0, rotateDir * rotateSpeed * Time.fixedDeltaTime, 0) // x, y 축은 회전  없고 y 기준으로 회전    // world 기준
         // Quaternion.AngleAxis(rotateDir * rotateSpeed * Time.fixedDeltaTime, transform.up) // 플레이어의 y축 기준으로 회전    // 오브젝트 기준
     }
@@ -153,10 +154,13 @@ public class Player : MonoBehaviour, IUser
     private void OnUse(InputAction.CallbackContext _)
     {
         anima.SetTrigger("Use");        // 아이템 사용 애니메이션 재생
+
+        Vector3 newUsePosition = transform.rotation * usePosition;
+
         //onObjectUse?.Invoke();
         Collider[] colliders = Physics.OverlapCapsule(      // 캡슐 모양에 겹치는 컬라이더가 있는지 체크
-            transform.position + usePosition,               // 캡슐의 아래구의 중심선
-            transform.position + usePosition + transform.up * useHeight, useRedius,     // 캡슐의 위쪽구의 중심점
+            transform.position + newUsePosition,               // 캡슐의 아래구의 중심선
+            transform.position + newUsePosition + transform.up * useHeight, useRedius,     // 캡슐의 위쪽구의 중심점
             LayerMask.GetMask("UseableObjest"));            // 체크할 레이어
 
         if(colliders.Length > 0)        // 캡슐에 겹쳐진 UseableObjest 컬라이더가 한개 이상이다.

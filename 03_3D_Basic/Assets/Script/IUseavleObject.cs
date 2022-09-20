@@ -9,5 +9,8 @@ using UnityEngine;
 /// </summary>
 interface IUseavleObject
 {
+    /// <summary>
+    /// 오브젝트가 사용될 때 사용될 함수
+    /// </summary>
     void Use(); // 오브젝트 사용
 }
