@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Meney : MonoBehaviour
+public class Movement : MonoBehaviour
 {
     public float moveSpeed = 0.0f;
 
@@ -18,7 +18,7 @@ public class Meney : MonoBehaviour
 
     public void MoveTo(Vector3 newPosition)
     {
-        moveDir = newPosition;
+        moveDir = newPosition;      // newPosition으로 방향 설정
     }
 
 }
