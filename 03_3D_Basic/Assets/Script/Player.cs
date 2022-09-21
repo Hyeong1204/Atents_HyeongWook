@@ -24,7 +24,7 @@ public class Player : MonoBehaviour, IUser
     bool isJumping = false;
 
     Vector3 dir;
-    Vector3 usePosition = Vector3.zero; // 플레이어가 오브젝트 사용을 확인하느 캡슐의 아래 지점
+    Vector3 usePosition = Vector3.zero; // 플레이어가 오브젝트 사용을 확인하느 캡슐의 아래 지점 (플레이어 로컬 좌표 기준)
     float useRedius = 0.5f;             // 캡슐의 반지름
     float useHeight = 2.0f;             // 캡슐의 높이
 
@@ -38,7 +38,7 @@ public class Player : MonoBehaviour, IUser
         groundChecker.onGrounded += OnGround;
         anima = GetComponent<Animator>();
 
-        usePosition = transform.forward;        // 기본적으로 플레이어의 앞
+        usePosition = Vector3.forward;        // 기본적으로 플레이어의 앞(플레이어 로컬 좌표 기준)
     }
 
     private void OnEnable()
@@ -155,7 +155,7 @@ public class Player : MonoBehaviour, IUser
     {
         anima.SetTrigger("Use");        // 아이템 사용 애니메이션 재생
 
-        Vector3 newUsePosition = transform.rotation * usePosition;
+        Vector3 newUsePosition = transform.rotation * usePosition;  // usePosition(로컬좌표)에 회전을 곱해서 월드좌표로 변환 됨
 
         //onObjectUse?.Invoke();
         Collider[] colliders = Physics.OverlapCapsule(      // 캡슐 모양에 겹치는 컬라이더가 있는지 체크
