@@ -191,13 +191,15 @@ public class Player : MonoBehaviour, IFly, IDead
 
     public void Die()
     {
-        inputActions.Player.Disable();      // 플레이어 조작 금지
+        inputActions.Player.Disable();      // 플레이어 입력처리 안함
 
-        rigid.constraints = RigidbodyConstraints.None;
-        rigid.angularDrag = 0.0f;       // 
-        rigid.AddForceAtPosition(-transform.forward, transform.position + transform.up * 2.0f, ForceMode.Impulse);
-        rigid.AddTorque(transform.up * 1.0f, ForceMode.Impulse);    // Y축 방향으로 회전주기(ForceMode.Impulse)
+        rigid.constraints = RigidbodyConstraints.None;  // 모든 회전이 가능하도록 고정
+        rigid.angularDrag = 0.0f;       // 회전 마찰력 0으로 만들기
+        rigid.AddForceAtPosition(-transform.forward, transform.position + transform.up * 2.0f, ForceMode.Impulse);  // 넘어질떄 머리쯤을 밀어서 뒤로 넘어지도록 만들기
+        rigid.AddTorque(transform.up * 1.0f, ForceMode.Impulse);    // 넘어질때 돌면서 넘어지기
 
         anima.SetTrigger("Die");
+
+        OnDie?.Invoke();        // 죽엇을 때 다른 클래스에서 해야할 일들을 실행 시키기
     }
 }
