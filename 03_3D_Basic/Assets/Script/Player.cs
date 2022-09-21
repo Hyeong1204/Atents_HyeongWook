@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEditor;
 
-public class Player : MonoBehaviour, IUser
+public class Player : MonoBehaviour, IFly, IDead
 {
     PlayerInputActions inputActions;            // PlayerInputActions 타입이고 inputActions 이름을 가진 변수를 선언
     Rigidbody rigid;
@@ -29,6 +29,7 @@ public class Player : MonoBehaviour, IUser
     float useHeight = 2.0f;             // 캡슐의 높이
 
     public Action onObjectUse { get; set; }
+    public Action OnDie {get; set;}
 
     private void Awake()
     {
@@ -182,5 +183,21 @@ public class Player : MonoBehaviour, IUser
     }
 
 
+    public void Fly(Vector3 flayVector)
+    {
+        rigid.velocity = Vector3.zero;
+        rigid.AddForce(flayVector, ForceMode.Impulse);
+    }
 
+    public void Die()
+    {
+        inputActions.Player.Disable();      // 플레이어 조작 금지
+
+        rigid.constraints = RigidbodyConstraints.None;
+        rigid.angularDrag = 0.0f;       // 
+        rigid.AddForceAtPosition(-transform.forward, transform.position + transform.up * 2.0f, ForceMode.Impulse);
+        rigid.AddTorque(transform.up * 1.0f, ForceMode.Impulse);    // Y축 방향으로 회전주기(ForceMode.Impulse)
+
+        anima.SetTrigger("Die");
+    }
 }

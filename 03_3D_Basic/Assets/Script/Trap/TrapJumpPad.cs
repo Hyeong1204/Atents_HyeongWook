@@ -9,8 +9,8 @@ public class TrapJumpPad : TrapBase
 
     protected override void TrapActivate(GameObject target)
     {
-        Rigidbody rigid = target.GetComponent<Rigidbody>();
-        rigid.velocity = Vector3.zero;
-        rigid.AddForce(transform.up * power, ForceMode.Impulse);
+        IFly fly = target.GetComponent<IFly>();
+        fly.Fly(transform.up);
+        
     }
 }
