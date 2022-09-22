@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class TrapSticky : TrapBase
 {
@@ -13,14 +12,21 @@ public class TrapSticky : TrapBase
     float originalSpeed = 0.0f;
 
     Player player = null;
+    ParticleSystem ps;
+    private void Awake()
+    {
+        ps = transform.GetChild(1).GetComponent<ParticleSystem>();
+    }
 
     protected override void TrapActivate(GameObject target)
     {
-        if(player == null)
+        if (player == null)
         {
-        player = target.GetComponent<Player>();
-        originalSpeed = player.moveSpeed;
-        player.moveSpeed *= speedDebuff;
+            ps.Simulate(0);
+            ps.Play();
+            player = target.GetComponent<Player>();
+            originalSpeed = player.moveSpeed;
+            player.moveSpeed *= speedDebuff;
         }
         else
         {
