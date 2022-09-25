@@ -5197,7 +5197,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1800
+  m_Name: pb_Mesh-1844
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -6650,7 +6650,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBC25\uBA39\uC5B4\uC73C\uB7EC \uAC00\uC57C"
+  m_text: "\uD55C\uAD6D\uC5B4 \uD14C\uC2A4\uD2B8"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 05f24bdbd20785e4ab79168f345781a2, type: 2}
   m_sharedMaterial: {fileID: -1508448900758811332, guid: 05f24bdbd20785e4ab79168f345781a2, type: 2}
@@ -7013,6 +7013,10 @@ PrefabInstance:
       propertyPath: turnSpeed
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 1517767070624586461, guid: d61bb49bf390a27469da7c47b8548dee, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 8616428011776270326, guid: 560b69c35d0344140937f121b79af3f4, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d61bb49bf390a27469da7c47b8548dee, type: 3}
 --- !u!1001 &723818265074925037

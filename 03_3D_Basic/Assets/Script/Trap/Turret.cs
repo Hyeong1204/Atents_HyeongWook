@@ -5,16 +5,26 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
+    public GameObject bulletPrefab;
+
 
     public float turnSpeed = 2.0f;
     public float sightRadius = 5.0f;
 
     Transform target = null;
     Transform barrelBody;
+    RaycastHit hit;
+    float maxDistance = 5.0f;
+
 
     float currentAngle = 0.0f;
     float TargetAngle = 0.0f;
     Vector3 initialForward;
+    Vector3 dir;
+
+
+    bool targetin = false;
+    bool targetOn = false;
     
 
     private void Awake()
@@ -58,7 +68,7 @@ public class Turret : MonoBehaviour
             ////barrelBody.LookAt(target);
 
             // 각도를 사용하느 경우 (등속도로 회전)
-            Vector3 dir = (target.position - barrelBody.position);
+            dir = (target.position - barrelBody.position);
             dir.y = 0.0f;
 
             TargetAngle = Vector3.SignedAngle(initialForward, dir, barrelBody.up);
@@ -78,6 +88,26 @@ public class Turret : MonoBehaviour
 
             barrelBody.rotation = Quaternion.LookRotation(targetDir);
         }
+
+        if (targetin)
+        {
+            if (Physics.Raycast(barrelBody.position, barrelBody.forward, out hit, maxDistance))
+            {
+                if (!targetOn)
+                {
+                    StartCoroutine(BulletFire());
+                    targetOn = true;
+                }
+            }
+            else
+            {
+                if (targetOn)
+                {
+                    StopAllCoroutines();
+                    targetOn = false;
+                }
+            }
+        }
     }
 
 
@@ -87,6 +117,7 @@ public class Turret : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             target = other.transform;
+            targetin = true;
         }
     }
 
@@ -95,9 +126,19 @@ public class Turret : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             target = null;
+            targetin = false;
         }
     }
 
+    IEnumerator BulletFire()
+    {
+        while (true)
+        {
+            GameObject obj = Instantiate(bulletPrefab, barrelBody.position, Quaternion.LookRotation(dir));
+            obj.transform.Translate(0, 0, 1.5f);        // barrelBody의 z축으로 1.5만큼 이동후 생성
 
+            yield return new WaitForSeconds(1.0f);
+        }
+    }
 
 }
