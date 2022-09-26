@@ -5,8 +5,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Bullet : MonoBehaviour
 {
-    float moveSpeed = 20.0f;
-    float killTime = 2.0f;
+    float moveSpeed = 20.0f;    // 총알 속도
+    float killTime = 2.0f;      // 디스폰 시간
 
     Rigidbody rigid;
 
@@ -19,8 +19,7 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(this.gameObject, killTime);
-        rigid.velocity = transform.forward * moveSpeed;
+        rigid.velocity = transform.forward * moveSpeed;     // 리지드 바디에 velocity를 앞 방향으로 moveSpeed속도로 발사;
     }
 
     private void FixedUpdate()
@@ -37,20 +36,10 @@ public class Bullet : MonoBehaviour
             IDead deadTarget = collision.gameObject.GetComponent<IDead>();
             if (deadTarget != null)
             {
-                deadTarget.Die();
+                deadTarget.Die();       // 플레이어 죽이기
             }
         }
+        Destroy(this.gameObject, killTime);     // 벽이나 플레이어에 충돌하면 2초 후에 디스폰
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            IDead deadTarget = other.gameObject.GetComponent<IDead>();
-            if (deadTarget != null)
-            {
-                deadTarget.Die();
-            }
-        }
-    }
 }

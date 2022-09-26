@@ -6,30 +6,31 @@ using UnityEngine;
 public class Turret : MonoBehaviour
 {
     public GameObject bulletPrefab;
-    float fireAngle = 10.0f;
+    float fireAngle = 10.0f;            // 플레이어와 총구에 각도가 10도 미만이면
 
-    public float turnSpeed = 2.0f;
-    public float sightRadius = 5.0f;
+    public float turnSpeed = 2.0f;      // 총구 회전 속도
+    public float sightRadius = 5.0f;    // 콜라이더 반지름
 
     Transform fireTransforem;
 
 
-    Transform target = null;
+    Transform target = null;        // 플레이어가 사정거리 안에 들어왔다. 없으면 null, 있으면 !null
     Transform barrelBody;
-    RaycastHit hit;
+    //RaycastHit hit;
     // float maxDistance = 5.0f;
 
 
     float currentAngle = 0.0f;
-    float TargetAngle = 0.0f;
+    float TargetAngle = 0.0f;       // 플레이어와 터렛의 각도
     Vector3 initialForward;
-    Vector3 dir;
+    Vector3 dir;                    // 터렛과 플레이어의 방향
 
 
-     bool targetin = false;
-     bool targetOn = false;
+     //bool targetin = false;
+     //bool targetOn = false;
+    bool isFiring = false;
 
-    IEnumerator fireCoroutine;
+    IEnumerator fireCoroutine;      // 코루틴을 담는 변수;
 
     private void Awake()
     {
@@ -45,7 +46,7 @@ public class Turret : MonoBehaviour
         SphereCollider collider = GetComponent<SphereCollider>();
         collider.radius = sightRadius;
 
-        StartCoroutine(fireCoroutine);
+        //StartCoroutine(fireCoroutine);
     }
 
     private void OnValidate()       // 인스펙터 창에서 값이 성공적으로 변경 되었을 때 호출되는 함수
@@ -63,8 +64,6 @@ public class Turret : MonoBehaviour
     private void Update()
     {
         LookTarget();
-
-        
 
         //if (targetin)
         //{
@@ -94,7 +93,7 @@ public class Turret : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             target = other.transform;
-            targetin = true;
+            //targetin = true;
         }
     }
 
@@ -102,8 +101,9 @@ public class Turret : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            target = null;
-            targetin = false;
+            target = null;                  // 범 위에서 나가면 target null로 만들어라
+            //targetin = false;
+            StopCoroutine(fireCoroutine);   // fireCoroutine 코루틴 종료
         }
     }
 
@@ -143,6 +143,15 @@ public class Turret : MonoBehaviour
             Vector3 targetDir = Quaternion.Euler(0, currentAngle, 0) * initialForward;
 
             barrelBody.rotation = Quaternion.LookRotation(targetDir);
+
+            if (!isFiring && IsInFireAngle())
+            {
+                FireStart();
+            }
+            if(isFiring && !IsInFireAngle())
+            {
+                FireStop();
+            }
         }
     }
 
@@ -155,10 +164,20 @@ public class Turret : MonoBehaviour
 
     bool IsInFireAngle()
     {
+        Vector3 targetDir = target.position - barrelBody.forward;
+        return Vector3.Angle(barrelBody.forward, targetDir) < fireAngle;
+    }
 
-        bool result = false;
+    void FireStart()
+    {
+        isFiring = true;
+        StartCoroutine(fireCoroutine);
+    }
 
-        return result;
+    void FireStop()
+    {
+        isFiring = false;
+        StopCoroutine(fireCoroutine);
     }
 
     IEnumerator PeriodFire()
