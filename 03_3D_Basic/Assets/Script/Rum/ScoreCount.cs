@@ -19,8 +19,8 @@ public class ScoreCount : MonoBehaviour
 
     private void Start()
     {
-        Gool gool = FindObjectOfType<Gool>();
-        gool.ScoreTime += Score;
+        Goal goal = FindObjectOfType<Goal>();
+        goal.ScoreTime += Score;
     }
 
     private void Update()
@@ -34,9 +34,9 @@ public class ScoreCount : MonoBehaviour
         }
     }
 
-    void Score(bool gool)
+    void Score(bool goal)
     {
-        if (gool)
+        if (goal)
         {
             TimeStop = false;
         }

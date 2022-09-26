@@ -11,6 +11,9 @@ public class Turret : MonoBehaviour
     public float turnSpeed = 2.0f;
     public float sightRadius = 5.0f;
 
+    Transform fireTransforem;
+
+
     Transform target = null;
     Transform barrelBody;
     RaycastHit hit;
@@ -25,11 +28,15 @@ public class Turret : MonoBehaviour
 
     bool targetin = false;
     bool targetOn = false;
-    
+
+    IEnumerator fireCoroutine;
 
     private void Awake()
     {
         barrelBody = transform.GetChild(2);
+        fireTransforem = barrelBody.GetChild(1);
+
+        fireCoroutine = PeriodFire();
     }
 
     private void Start()
@@ -37,6 +44,8 @@ public class Turret : MonoBehaviour
         initialForward = transform.forward;
         SphereCollider collider = GetComponent<SphereCollider>();
         collider.radius = sightRadius;
+
+        StartCoroutine(fireCoroutine);
     }
 
     private void OnValidate()       // 인스펙터 창에서 값이 성공적으로 변경 되었을 때 호출되는 함수
@@ -52,6 +61,53 @@ public class Turret : MonoBehaviour
 
 
     private void Update()
+    {
+        LookTarget();
+
+        
+
+        //if (targetin)
+        //{
+        //    if (Physics.Raycast(barrelBody.position, barrelBody.forward, out hit, maxDistance))
+        //    {
+        //        if (!targetOn)
+        //        {
+        //            StartCoroutine(BulletFire());
+        //            targetOn = true;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (targetOn)
+        //        {
+        //            StopAllCoroutines();
+        //            targetOn = false;
+        //        }
+        //    }
+        //}
+    }
+
+    
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            target = other.transform;
+            targetin = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            target = null;
+            targetin = false;
+        }
+    }
+
+    private void LookTarget()
     {
         if (target != null)
         {
@@ -88,47 +144,25 @@ public class Turret : MonoBehaviour
 
             barrelBody.rotation = Quaternion.LookRotation(targetDir);
         }
-
-        if (targetin)
-        {
-            if (Physics.Raycast(barrelBody.position, barrelBody.forward, out hit, maxDistance))
-            {
-                if (!targetOn)
-                {
-                    StartCoroutine(BulletFire());
-                    targetOn = true;
-                }
-            }
-            else
-            {
-                if (targetOn)
-                {
-                    StopAllCoroutines();
-                    targetOn = false;
-                }
-            }
-        }
     }
 
-
-
-    private void OnTriggerEnter(Collider other)
+    void Fire()
     {
-        if (other.CompareTag("Player"))
+        // 총알을 발사한다.
+        // 총알 프리팹. 총알이 발사될 방향과 위치. 총알이 발사되는 주기.
+        Instantiate(bulletPrefab, fireTransforem.position, fireTransforem.rotation);
+    }
+
+    IEnumerator PeriodFire()
+    {
+        while (true)
         {
-            target = other.transform;
-            targetin = true;
+            Fire();
+
+            yield return new WaitForSeconds(1.0f);
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            target = null;
-            targetin = false;
-        }
-    }
 
     IEnumerator BulletFire()
     {

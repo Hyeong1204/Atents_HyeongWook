@@ -20,11 +20,12 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         Destroy(this.gameObject, killTime);
+        rigid.velocity = transform.forward * moveSpeed;
     }
 
     private void FixedUpdate()
     {
-        rigid.MovePosition(transform.position + moveSpeed * Time.fixedDeltaTime * transform.forward);
+        //rigid.MovePosition(transform.position + moveSpeed * Time.fixedDeltaTime * transform.forward);
     }
     
     

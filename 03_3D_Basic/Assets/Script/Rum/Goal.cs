@@ -3,23 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gool : MonoBehaviour
+public class Goal : MonoBehaviour
 {
     public Action<bool> ScoreTime;
 
-    bool targetGool = false;
+    bool targetGoal = false;
 
     private void Start()
     {
-        ScoreTime?.Invoke(targetGool);
+        ScoreTime?.Invoke(targetGoal);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            targetGool = true;
-            ScoreTime?.Invoke(targetGool);
+            targetGoal = true;
+            ScoreTime?.Invoke(targetGoal);
         }
     }
 }
