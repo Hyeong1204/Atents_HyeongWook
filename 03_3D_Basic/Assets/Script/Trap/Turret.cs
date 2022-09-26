@@ -124,7 +124,7 @@ public class Turret : MonoBehaviour
             ////barrelBody.LookAt(target);
 
             // 각도를 사용하느 경우 (등속도로 회전)
-            dir = (target.position - barrelBody.position);
+            dir = (target.position - barrelBody.position);      // 타
             dir.y = 0.0f;
 
             TargetAngle = Vector3.SignedAngle(initialForward, dir, barrelBody.up);
@@ -164,7 +164,8 @@ public class Turret : MonoBehaviour
 
     bool IsInFireAngle()
     {
-        Vector3 targetDir = target.position - barrelBody.forward;
+        Vector3 targetDir = target.position - barrelBody.position;
+        targetDir.y = 0.0f;
         return Vector3.Angle(barrelBody.forward, targetDir) < fireAngle;
     }
 
