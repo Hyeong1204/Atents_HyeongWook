@@ -6,7 +6,7 @@ using UnityEngine;
 public class Turret : MonoBehaviour
 {
     public GameObject bulletPrefab;
-
+    float fireAngle = 10.0f;
 
     public float turnSpeed = 2.0f;
     public float sightRadius = 5.0f;
@@ -17,7 +17,7 @@ public class Turret : MonoBehaviour
     Transform target = null;
     Transform barrelBody;
     RaycastHit hit;
-    float maxDistance = 5.0f;
+    // float maxDistance = 5.0f;
 
 
     float currentAngle = 0.0f;
@@ -26,8 +26,8 @@ public class Turret : MonoBehaviour
     Vector3 dir;
 
 
-    bool targetin = false;
-    bool targetOn = false;
+     bool targetin = false;
+     bool targetOn = false;
 
     IEnumerator fireCoroutine;
 
@@ -151,6 +151,14 @@ public class Turret : MonoBehaviour
         // 총알을 발사한다.
         // 총알 프리팹. 총알이 발사될 방향과 위치. 총알이 발사되는 주기.
         Instantiate(bulletPrefab, fireTransforem.position, fireTransforem.rotation);
+    }
+
+    bool IsInFireAngle()
+    {
+
+        bool result = false;
+
+        return result;
     }
 
     IEnumerator PeriodFire()
