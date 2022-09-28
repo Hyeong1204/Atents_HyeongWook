@@ -9,6 +9,7 @@ public class GameManager : Singleton<GameManager>
     public Action onGameStart;
 
     Player player;
+    ResultPanel resultPanel;
     Timer timer;
 
     bool isGameStart = false;
@@ -29,8 +30,11 @@ public class GameManager : Singleton<GameManager>
     }
     protected override void Initaialize()
     {
-        player = FindObjectOfType<Player>();
+        isGameStart = false;
         timer = FindObjectOfType<Timer>();
+        player = FindObjectOfType<Player>();
+        resultPanel = FindObjectOfType<ResultPanel>();
+        resultPanel?.gameObject.SetActive(false);       // resultPanel이 널이 아니면 실행
     }
 
     public void GameStart()
@@ -38,6 +42,15 @@ public class GameManager : Singleton<GameManager>
         if (!isGameStart)
         {
             IsGameStasrt = true;
+        }
+    }
+
+    public void ShowResultPanel()
+    {
+        if (resultPanel != null)
+        {
+            resultPanel?.gameObject.SetActive(true);
+            resultPanel.ClearTime = timer.ResultTime;
         }
     }
 }

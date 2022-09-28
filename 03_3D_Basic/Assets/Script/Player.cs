@@ -106,7 +106,6 @@ public class Player : MonoBehaviour, IFly, IDead
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        GameManager.Inst.GameStart();
 
         dir = context.ReadValue<Vector2>();     // 입력된 값을 읽어오기
 

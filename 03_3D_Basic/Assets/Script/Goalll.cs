@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Goalll : MonoBehaviour
 {
     public Action onGoalIn;
+    
+
+    public string nextSceanName;
 
     ParticleSystem[] ps;
     Transform effect;
@@ -26,8 +30,10 @@ public class Goalll : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playGoalInEffect();
-            onGoalIn?.Invoke();
+            playGoalInEffect();             // 파티클 실행
+            StartCoroutine(Wait1Second());  // 1초 이후에 결과창 열기
+
+            onGoalIn?.Invoke();             // 골인 했을 때 실행될 팜수들 실행
         }
     }
 
@@ -42,4 +48,17 @@ public class Goalll : MonoBehaviour
         //    ps[i].Play();
         //}
     }
+
+    IEnumerator Wait1Second()
+    {
+        yield return new WaitForSeconds(1.0f);
+        GameManager.Inst.ShowResultPanel();     // 결과창 열기
+    }
+
+   public void GoNextScen()
+    {
+        SceneManager.LoadScene(nextSceanName);      // 지정된 씬으로 변경
+    }
+
+
 }
