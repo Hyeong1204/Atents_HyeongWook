@@ -1,0 +1,71 @@
+{
+    "name": "BirdInputAction",
+    "maps": [
+        {
+            "name": "Bird",
+            "id": "8ad630e4-1e9b-4156-8940-d8ccbed1b9d1",
+            "actions": [
+                {
+                    "name": "Space",
+                    "type": "Button",
+                    "id": "b82b772a-15f5-4c58-a854-60bb41a5b7ba",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MouseLeft",
+                    "type": "Button",
+                    "id": "78b53655-8880-405d-935f-d973594746bc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f4f8909b-d669-489b-b7fa-2aefbf577299",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyBoard & Mouse",
+                    "action": "Space",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dc971e2c-f06e-49e4-9385-8dd21668b3ab",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyBoard & Mouse",
+                    "action": "MouseLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "keyBoard & Mouse",
+            "bindingGroup": "keyBoard & Mouse",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
