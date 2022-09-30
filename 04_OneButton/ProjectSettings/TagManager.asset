@@ -44,9 +44,12 @@ TagManager:
   - name: Background
     uniqueID: 2395977843
     locked: 0
-  - name: Groud
+  - name: Pipe
     uniqueID: 3725619239
     locked: 0
-  - name: Bird
+  - name: Groud
     uniqueID: 2437264445
+    locked: 0
+  - name: Bird
+    uniqueID: 4014721021
     locked: 0

@@ -6,16 +6,15 @@ using UnityEngine.InputSystem;
 
 public class Test_Pipe : MonoBehaviour
 {
-    public Pipe pipe;
-
     
+    public ImageNumber imageNumber;
+
 
     private void Update()
     {
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
-            pipe.transform.position = Vector3.zero;
-            //pipe.RestRandomHeight();
+            imageNumber.Number++;
         }
     }
 

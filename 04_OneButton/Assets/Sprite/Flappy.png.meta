@@ -356,7 +356,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_14
+      name: Number_Big_0
       rect:
         serializedVersion: 2
         x: 496
@@ -671,7 +671,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_34
+      name: Number_Big_2
       rect:
         serializedVersion: 2
         x: 292
@@ -692,7 +692,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_35
+      name: Number_Big_3
       rect:
         serializedVersion: 2
         x: 306
@@ -713,7 +713,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_36
+      name: Number_Big_4
       rect:
         serializedVersion: 2
         x: 320
@@ -734,7 +734,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_37
+      name: Number_Big_5
       rect:
         serializedVersion: 2
         x: 334
@@ -755,7 +755,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_38
+      name: Number_Big_6
       rect:
         serializedVersion: 2
         x: 292
@@ -776,7 +776,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_39
+      name: Number_Big_7
       rect:
         serializedVersion: 2
         x: 306
@@ -797,7 +797,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_40
+      name: Number_Big_8
       rect:
         serializedVersion: 2
         x: 320
@@ -818,7 +818,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_41
+      name: Number_Big_9
       rect:
         serializedVersion: 2
         x: 334
@@ -1448,12 +1448,12 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_71
+      name: Number_Big_1
       rect:
         serializedVersion: 2
-        x: 136
+        x: 134
         y: 39
-        width: 8
+        width: 12
         height: 18
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1672,20 +1672,23 @@ TextureImporter:
       Flappy_69: -9685224
       Flappy_60: -1799228901
       Flappy_67: -1402197935
+      Number_Big_0: 148821910
       Backgroind_Day: 1844813612
       Flappy_16: 1046640437
       Flappy_73: 78636554
       Flappy_17: 1489515990
       Flappy_22: 50808530
-      Flappy_40: 949601896
+      Number_Big_6: -1484187231
       Backgroind_Ground: -2088727674
       Flappy_6: 1774064094
       Bird1_2: 1158832688
       Flappy_56: -1765794181
       Flappy_79: -1820557305
+      Number_Big_3: -57824268
       Flappy_59: 1431070785
       Flappy_23: 453249988
       Text_GameOver: 2009832740
+      Number_Big_9: 1546184757
       Flappy_21: 170875690
       Text_GetReady: 1333589786
       Flappy_9: 1744216445
@@ -1695,14 +1698,15 @@ TextureImporter:
       Flappy_65: 262741087
       Flappy_15: 2009448112
       Flappy_70: -1993590939
+      Number_Big_5: -828609980
+      Number_Big_4: 1655038743
       Flappy_57: -1918771264
       Flappy_47: 1016413880
-      Flappy_14: 148821910
       Backgroind_: 1118044456
       Flappy_7: 576033107
       Flappy_50: 1216215929
       Flappy_30: -522434836
-      Flappy_38: -1484187231
+      Flappy_51: -1289036358
       Flappy_13: 1331218773
       Flappy_29: -950018934
       Flappy_31: -10269527
@@ -1711,23 +1715,20 @@ TextureImporter:
       Flappy_25: -1053749227
       Flappy_52: -1309775389
       Flappy_64: 322267825
-      Flappy_37: -828609980
+      Flappy_77: -995654762
       Flappy_44: 451952493
       Flappy_46: 1015122113
-      Flappy_51: -1289036358
-      Flappy_77: -995654762
-      Flappy_32: -1530981335
+      Number_Big_7: 1270717762
       Flappy_78: -1114000637
+      Flappy_32: -1530981335
       Flappy_5: -493483985
-      Flappy_41: 1546184757
-      Flappy_39: 1270717762
+      Number_Big_2: 967545525
+      Number_Big_8: 949601896
       Flappy_26: 1128506429
       Pipe_Bottom: 1932356770
       Flappy_18: 441297319
-      Flappy_36: 1655038743
       Flappy_10: -403895275
       Bird1_1: -328159493
-      Flappy_71: -223046907
       Flappy_8: 897242898
       Flappy_20: -907307684
       Flappy_55: -1124334182
@@ -1737,9 +1738,8 @@ TextureImporter:
       Flappy_63: -1352072280
       Flappy_4: 1492071571
       Flappy_68: -1569347483
-      Flappy_34: 967545525
+      Number_Big_1: -223046907
       Flappy_66: -1655323601
-      Flappy_35: -57824268
       Flappy_49: -1042338375
       Flappy_3: -1488349132
       Flappy_19: 694886687
