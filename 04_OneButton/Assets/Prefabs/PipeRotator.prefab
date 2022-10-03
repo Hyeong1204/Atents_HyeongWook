@@ -59,7 +59,7 @@ MonoBehaviour:
   - {fileID: 2675273385725261707}
   - {fileID: 2675273384534819258}
   - {fileID: 2675273385159396197}
-  pipeMoveSpeed: 5
+  pipeMoveSpeed: 20
 --- !u!1 &4713212421287586961
 GameObject:
   m_ObjectHideFlags: 0

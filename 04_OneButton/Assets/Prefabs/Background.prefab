@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bgSlots: []
-  scrollingSpeed: 5
+  scrollingSpeed: 20
   width: 8.4
 --- !u!1 &7816560121108389799
 GameObject:
