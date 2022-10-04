@@ -5,21 +5,23 @@ using UnityEngine.UI;
 
 public class ImageNumber : MonoBehaviour
 {
+    public GameObject digitPrefab;
+
+    int expectedLength = 6;
     public Sprite[] numberImages;
     Transform[] numberTransform;
 
-    float currentScore = 0.0f;
-    float scoreTime = 70.0f;
+    
     public int MaxScore = 0;
 
-    Image[] disgits;
+    List<Image> digits;        // 0번째가 1의 자리 , 1번째가 10의 자리
 
     private void Awake()
     {
-        disgits = new Image[transform.childCount];
+        digits = new List<Image>(transform.childCount);
         for (int i = 0; i < transform.childCount; i++)
         {
-            disgits[i] = transform.GetChild(i).GetComponent<Image>();
+            digits.Add(transform.GetChild(i).GetComponent<Image>());
         }
 
         numberTransform = new Transform[transform.childCount];
@@ -36,41 +38,66 @@ public class ImageNumber : MonoBehaviour
         get => number;
         set
         {
-            number = value;
-
-            int mod = number % 10;
-            int mod2 = (number / 10) % 10;
-            int mod3 = number / 100;
-
-            if(number >= 10)
+            if (number != value)        // 값이 변경되었을 때만 실행
             {
-                numberTransform[1].gameObject.SetActive(true);
-            }
-            if(number >= 100)
-            {
-                numberTransform[0].gameObject.SetActive(true);
-            }
+                int teampNum = value;
+
+                List<int> remainders = new List<int>(expectedLength);        // 자료구조를 만들 때는 기본 크기를 잡아주는 편이 좋다
+
+                // 자리수별로 숫자 분리하기
+                while(teampNum != 0)                // teampNum가 123일때
+                {
+                    remainders.Add(teampNum % 10);  // 3 -> 2 -> 1
+                    teampNum /= 10;                 // 12 -> 1 -> 0
+                }
 
 
-            disgits[transform.childCount - 1].sprite = numberImages[mod];
-            disgits[transform.childCount - 2].sprite = numberImages[mod2];
-            disgits[transform.childCount - 3].sprite = numberImages[mod3];
+                // 자리수에 맞게 digits 증가 또는 감소
+                int diff = remainders.Count - digits.Count;
+                if(diff > 0)
+                {
+                    // digits 증가, 나머지들의 자리수가 더 길음
+                    for (int i = 0; i < diff; i++)
+                    {
+                        GameObject obj = Instantiate(digitPrefab, transform);
+                        obj.name = $"Digit{Mathf.Pow(10, digits.Count)}";
+                        digits.Add(obj.GetComponent<Image>());
+                    }
+                }
+                else if (diff < 0)
+                {
+                    // digits 감소. 나머지들의 자리수가 더 작음
+                    for(int i = digits.Count + diff; i< digits.Count; i++)
+                    {
+                        digits[i].gameObject.SetActive(false);
+                    }
+                }
+
+
+                for(int i = 0; i < remainders.Count; i++)
+                {
+                    digits[i].sprite = numberImages[remainders[i]];
+                    digits[i].gameObject.SetActive(true);
+                }
+
+                number = value;
+            }
         }
     }
 
     private void Start()
     {
-        currentScore = 0.0f;
+        
     }
 
-    private void Update()
-    {
-        if (currentScore < MaxScore)
-        {
-            currentScore += Time.deltaTime * scoreTime;
-            currentScore = Mathf.Min(currentScore, MaxScore);
-            Number = (int)currentScore;
-        }
+    //private void Update()
+    //{
+    //    if (currentScore < MaxScore)
+    //    {
+    //        currentScore += Time.deltaTime * scoreTime;
+    //        currentScore = Mathf.Min(currentScore, MaxScore);
+    //        Number = (int)currentScore;
+    //    }
 
-    }
+    //}
 }

@@ -14,7 +14,7 @@ public class Test_Pipe : MonoBehaviour
     {
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
-            imageNumber.MaxScore += 10;
+            imageNumber.number = 123465;
         }
     }
 
