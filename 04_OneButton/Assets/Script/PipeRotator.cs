@@ -10,7 +10,7 @@ public class PipeRotator : MonoBehaviour
     /// <summary>
     /// 움직일 파이프
     /// </summary>
-    public Pipe[] bgslot;
+    public Pipe[] pipes;
 
     /// <summary>
     /// 파이프 끝 위치
@@ -31,7 +31,7 @@ public class PipeRotator : MonoBehaviour
     {
         endPoiunt = transform.GetChild(transform.childCount - 2);       // endPoiunt 구하기
         startPoiunt = transform.GetChild(transform.childCount - 1);     // startPoiunt 구하기
-        bgslot = GetComponentsInChildren<Pipe>();       // 자식으로 있는 Pipe 모두 찾기
+        pipes = GetComponentsInChildren<Pipe>();       // 자식으로 있는 Pipe 모두 찾기
     }
 
     private void FixedUpdate()
@@ -49,15 +49,23 @@ public class PipeRotator : MonoBehaviour
         //    }
         //}
 
-        for (int i = 0; i < bgslot.Length; i++)     //bgslot에 있는 모든 bgslot를 하나씩 처리하기
+        for (int i = 0; i < pipes.Length; i++)     //bgslot에 있는 모든 bgslot를 하나씩 처리하기
         {
-            bgslot[i].MoveLeft(pipeMoveSpeed * Time.fixedDeltaTime);    // 파이프를 계속 왼쪽으로 이동 시키기
+            pipes[i].MoveLeft(pipeMoveSpeed * Time.fixedDeltaTime);    // 파이프를 계속 왼쪽으로 이동 시키기
 
-            if(endPoiunt.position.x > bgslot[i].transform.position.x)   // 파이프 위치가 bgslot[i].transform.position.x보다 왼쪽인지 체크
+            if(endPoiunt.position.x > pipes[i].transform.position.x)   // 파이프 위치가 bgslot[i].transform.position.x보다 왼쪽인지 체크
             {
-                //bgslot[i].RestRandomHeight();
-                bgslot[i].transform.position = new Vector2(startPoiunt.position.x, bgslot[i].RandomHeight);
+                    //bgslot[i].RestRandomHeight();
+                    pipes[i].transform.position = new Vector2(startPoiunt.position.x, pipes[i].RandomHeight);
             }
+        }
+    }
+
+    public void SetPipeScoreDelegate(Action<int> del)
+    {
+        foreach(Pipe pipe in pipes)
+        {
+            pipe.onScored += del;
         }
     }
 }

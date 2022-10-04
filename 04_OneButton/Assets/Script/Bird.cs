@@ -28,6 +28,14 @@ public class Bird : MonoBehaviour
     bool isDead = false;
 
     /// <summary>
+    /// 새가 죽었는지 살았는지 확인하는 프로퍼티
+    /// </summary>
+    public bool IsDead
+    {
+        get => isDead;
+    }
+
+    /// <summary>
     /// 죽었을 때 실행될 델리게이트
     /// </summary>
     public Action onDead;

@@ -13,7 +13,8 @@ public class Pipe : MonoBehaviour
     /// <summary>
     /// 플레이어가 파이프를 통과하면 실행될 델리게이트
     /// </summary>
-    public System.Action onScored;
+    public System.Action<int> onScored;
+    public int point = 10;
 
     /// <summary>
     /// 랜덤한 위치를 반환하는 프로퍼티
@@ -58,7 +59,11 @@ public class Pipe : MonoBehaviour
     {
         if (collision.CompareTag("Player"))     // 플레이어가 통과 했다면
         {
-            onScored?.Invoke();         // 델리게이트 실행
+            Bird bird = collision.GetComponent<Bird>();
+            if (bird != null && !bird.IsDead)    // 살아있을 때만 점수 증가
+            {
+                onScored?.Invoke(point);         // 델리게이트 실행
+            }
         }
     }
 }

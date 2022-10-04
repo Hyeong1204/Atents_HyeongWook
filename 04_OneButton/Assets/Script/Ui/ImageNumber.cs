@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 public class ImageNumber : MonoBehaviour
 {
-    public int expectedLength = 9;
-    public GameObject digitPrefab;
-    public Sprite[] numberImages = new Sprite[10];
+    public int expectedLength = 9;          // 예상되는 자리수
+    public GameObject digitPrefab;          // 숫자 하나를 표현할 프리펩
+    public Sprite[] numberImages = new Sprite[10];      // 숫자 0~9까지 있는 스프라이트
 
     List<Image> digits; // 0번째가 1자리, 1번째가 10자리
     List<int> remainders;
 
-    float numberChangeSpeed = 200.0f;       // 숫자 이미지가 변하는 속도
+    public float numberChangeSpeed = 2.0f;       // 숫자 이미지가 변하는 속도
     float currentNumber = 0.0f;             // 현재 보여질 값
 
     public int maxNumber = 0;               // 도달할 목표 값
@@ -84,8 +84,9 @@ public class ImageNumber : MonoBehaviour
         if(Number != maxNumber)     // Number가 maxNumber와 같아졌는지 확인, 다를 때만 실행
         {
             float dir = (currentNumber > maxNumber) ? -1 : 1;       // 삼항 연산자. 조건식이 참일때 -1, 거짓일때 1. 변화하는 방향 구하기
+            float speed = numberChangeSpeed; // * Mathf.Pow(10, digits.Count);
 
-            currentNumber += dir * Time.deltaTime * numberChangeSpeed;      // 방향에 따라 초당 numberChangeSpeed만큼 currentNumber 변화
+            currentNumber += dir * Time.deltaTime * speed;      // 방향에 따라 초당 numberChangeSpeed만큼 currentNumber 변화
             if (dir > 0)
             {
                 currentNumber = Mathf.Min(currentNumber, maxNumber);        // 방향이 증가일 때 목표인 maxNumber 넘친 경우 maxNumber로 설정
