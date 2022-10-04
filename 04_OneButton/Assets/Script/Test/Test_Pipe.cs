@@ -22,11 +22,11 @@ public class Test_Pipe : MonoBehaviour
     {
         if (Text != "")
         {
-            imageNumber.Number = int.Parse(Text);
+            imageNumber.maxNumber = int.Parse(Text);
         }
         else
         {
-            imageNumber.Number = 0;
+            imageNumber.maxNumber = 0;
         }
     }
 
