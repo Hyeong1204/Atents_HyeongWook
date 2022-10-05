@@ -9,6 +9,7 @@ public class ImageNumber : MonoBehaviour
     public int expectedLength = 9;          // 예상되는 자리수
     public GameObject digitPrefab;          // 숫자 하나를 표현할 프리펩
     public Sprite[] numberImages = new Sprite[10];      // 숫자 0~9까지 있는 스프라이트
+    public bool isInstanceSet = false;      // 숫자를 즉시 세팅할 것인지 천천히 증가하게 할 것인지 설정(true면 숫자를 즉시 설정)
 
     List<Image> digits; // 0번째가 1자리, 1번째가 10자리
     List<int> remainders;
@@ -81,7 +82,7 @@ public class ImageNumber : MonoBehaviour
 
     private void Update()
     {
-        if(Number != maxNumber)     // Number가 maxNumber와 같아졌는지 확인, 다를 때만 실행
+        if (Number != maxNumber)     // Number가 maxNumber와 같아졌는지 확인, 다를 때만 실행
         {
             float dir = (currentNumber > maxNumber) ? -1 : 1;       // 삼항 연산자. 조건식이 참일때 -1, 거짓일때 1. 변화하는 방향 구하기
             float speed = numberChangeSpeed; // * Mathf.Pow(10, digits.Count);
@@ -98,7 +99,13 @@ public class ImageNumber : MonoBehaviour
 
             remainders.Clear();             // 리스트 비우기
 
+            if (isInstanceSet)
+            {
+                currentNumber = maxNumber;
+            }
+
             Number = (int)currentNumber;    // Number에 (int)currentNumber(소수점 제거) 넣기
+
         }
     }
 
