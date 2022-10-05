@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    public ImageNumber socreUI;
+    ImageNumber socreUI;
     PipeRotator pipeRotator;
     Bird player;
 
     int score = 0;
     public Bird Player => player;
 
-    private int Score
+    public int Score
     {
         get => score;
         set
@@ -26,6 +27,7 @@ public class GameManager : Singleton<GameManager>
         player = FindObjectOfType<Bird>();
         pipeRotator = FindObjectOfType<PipeRotator>();
         pipeRotator.SetPipeScoreDelegate(AddScore);
+        socreUI = GameObject.FindGameObjectWithTag("Score").GetComponent<ImageNumber>();
     }
 
     void AddScore(int point)
