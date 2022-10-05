@@ -6,8 +6,10 @@ public class GameManager : Singleton<GameManager>
 {
     public ImageNumber socreUI;
     PipeRotator pipeRotator;
+    Bird player;
 
     int score = 0;
+    public Bird Player => player;
 
     private int Score
     {
@@ -21,6 +23,7 @@ public class GameManager : Singleton<GameManager>
 
     protected override void Initaialize()
     {
+        player = FindObjectOfType<Bird>();
         pipeRotator = FindObjectOfType<PipeRotator>();
         pipeRotator.SetPipeScoreDelegate(AddScore);
     }
