@@ -9,14 +9,15 @@ public class GameManager : Singleton<GameManager>
 
     int score = 0;
 
-    //public int Score
-    //{
-    //    get => score;
-    //    set
-    //    {
-    //        score = value;
-    //    }
-    //}
+    private int Score
+    {
+        get => score;
+        set
+        {
+            score = value;
+            socreUI.maxNumber = score;
+        }
+    }
 
     protected override void Initaialize()
     {
@@ -26,7 +27,12 @@ public class GameManager : Singleton<GameManager>
 
     void AddScore(int point)
     {
-        score += point;
-        socreUI.maxNumber = score;
+        Score += point;
+        
+    }
+
+    public void TestSetScore(int newScore)
+    {
+        Score = newScore;
     }
 }
