@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3273065661482007643}
   - component: {fileID: 3273065661482007642}
   m_Layer: 5
-  m_Name: ImageNumber
+  m_Name: ImageNumber _Middle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,18 +78,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   expectedLength: 6
-  digitPrefab: {fileID: 6670724315687654683, guid: 2ce34c4af9277cf42b737ca299d39e2c, type: 3}
+  digitPrefab: {fileID: 6670724315687654683, guid: 0749cc4ff14a0d04ebdd9a08bf41e39d, type: 3}
   numberImages:
-  - {fileID: 148821910, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
-  - {fileID: -223046907, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
-  - {fileID: 967545525, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
-  - {fileID: -57824268, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
-  - {fileID: 1655038743, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
-  - {fileID: -828609980, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
-  - {fileID: -1484187231, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
-  - {fileID: 1270717762, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
-  - {fileID: 949601896, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
-  - {fileID: 1546184757, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  - {fileID: 1216215929, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  - {fileID: 78636554, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  - {fileID: -1114000637, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  - {fileID: -1429151518, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  - {fileID: 1492071571, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  - {fileID: -493483985, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  - {fileID: 576033107, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  - {fileID: 1744216445, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  - {fileID: 2074271484, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  - {fileID: -1219210285, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  numberChangeSpeed: 2
   maxNumber: 0
 --- !u!1001 &8214406895271495064
 PrefabInstance:
@@ -98,6 +99,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3273065661482007640}
     m_Modifications:
+    - target: {fileID: 6670724315687654661, guid: 2ce34c4af9277cf42b737ca299d39e2c, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1216215929, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
     - target: {fileID: 6670724315687654682, guid: 2ce34c4af9277cf42b737ca299d39e2c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -128,11 +133,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6670724315687654682, guid: 2ce34c4af9277cf42b737ca299d39e2c, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 60
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 6670724315687654682, guid: 2ce34c4af9277cf42b737ca299d39e2c, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 90
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 6670724315687654682, guid: 2ce34c4af9277cf42b737ca299d39e2c, type: 3}
       propertyPath: m_LocalPosition.x

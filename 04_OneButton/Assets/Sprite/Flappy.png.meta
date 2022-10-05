@@ -293,7 +293,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Number_MIddle_8
+      name: Number_MIddle_7
       rect:
         serializedVersion: 2
         x: 505
@@ -902,7 +902,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Number_MIddle_
+      name: Number_MIddle_8
       rect:
         serializedVersion: 2
         x: 293
@@ -1712,11 +1712,11 @@ TextureImporter:
       Medal_Platinum: 1016413880
       Flappy_21: 170875690
       Text_GetReady: 1333589786
+      Number_MIddle_7: 1744216445
       Number_Small_7: -1655323601
       Number_Big_4: 1655038743
       Number_Small_0: -1765794181
       Flappy_15: 2009448112
-      Number_MIddle_: 2074271484
       Number_Big_5: -828609980
       Button_Rank: -10269527
       Number_MIddle_3: -1429151518
@@ -1770,7 +1770,7 @@ TextureImporter:
       Flappy_28: 2040088988
       Number_Small_6: 262741087
       Bird1_3: 991635760
-      Number_MIddle_8: 1744216445
+      Number_MIddle_8: 2074271484
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
