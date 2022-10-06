@@ -24,8 +24,9 @@ public class ResultPanel : MonoBehaviour
     public void RefreshScore()
     {
         int playerScore = GameManager.Inst.Score;
-        score.maxNumber = playerScore;
-        
+        score.maxNumber = playerScore;                          // 현재 점수 설정
+        bestScore.maxNumber = GameManager.Inst.BestScore;       // 최고 점수 설정 (새가 죽을 때 최고점수는 자동으로 갱신 됨)
+
         // 100점 이상이면 브론즈 메달
         // 200점 이상이면 실버 메달
         // 300점 이상이면 골드 메달
