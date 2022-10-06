@@ -10,12 +10,22 @@ public class GameManager : Singleton<GameManager>
     Bird player;
 
     int score = 0;
+    int bestScore = 0;
     public Bird Player => player;
+
+    public int BesScore
+    {
+        get => bestScore;
+        private set
+        {
+            bestScore = value;
+        }
+    }
 
     public int Score
     {
         get => score;
-        set
+        private set
         {
             score = value;
             socreUI.maxNumber = score;
@@ -28,6 +38,8 @@ public class GameManager : Singleton<GameManager>
         pipeRotator = FindObjectOfType<PipeRotator>();
         pipeRotator.SetPipeScoreDelegate(AddScore);
         socreUI = GameObject.FindGameObjectWithTag("Score").GetComponent<ImageNumber>();
+
+        LoadGameDate();
     }
 
     void AddScore(int point)
@@ -39,5 +51,24 @@ public class GameManager : Singleton<GameManager>
     public void TestSetScore(int newScore)
     {
         Score = newScore;
+    }
+
+    void SaveGameDate()
+    {
+
+    }
+
+    void LoadGameDate()
+    {
+
+    }
+
+    public void BestScoreUpdate()
+    {
+        if(bestScore < Score)
+        {
+            bestScore = Score;
+            SaveGameDate();
+        }
     }
 }
