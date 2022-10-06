@@ -15,12 +15,18 @@ using UnityEngine.SceneManagement;
 // where 이하에 있는 조건을 만족시켜야 한다.(T는 컴포넌트를 상속받은 타입이어야 한다.)
 public class Singleton<T> : MonoBehaviour where T : Component
 {
+    private static bool isShutDown = false;
     private static T _instance = null;
 
     public static T Inst
     {
         get
         {
+            if (isShutDown)
+            {
+                Debug.LogWarning($"{typeof(T)}싱글톤 이미 삭제 되었음");
+                return null;
+            }
             if(_instance == null)
             {
                 // 한번도 호출된 적이 없다.
@@ -60,6 +66,16 @@ public class Singleton<T> : MonoBehaviour where T : Component
                 Destroy(this.gameObject); // 내가 아닌 같은 종류의 오브젝트가 있으면 바로 삭제
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        isShutDown = true;
+    }
+
+    private void OnApplicationQuit()
+    {
+        isShutDown = true;
     }
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)

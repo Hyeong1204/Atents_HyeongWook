@@ -19,7 +19,7 @@ public class Pipe : MonoBehaviour
     /// <summary>
     /// 랜덤한 위치를 반환하는 프로퍼티
     /// </summary>
-    public float RandomHeight { get => Random.Range(minHeight, maxHeight); }
+    public float RandomHeight { get => Random.Range(minHeight, maxHeight); }    // get 할때마다 랜덤으로 부여
 
 
     private void Awake()

@@ -4,15 +4,23 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using System;
 
 public class GameManager : Singleton<GameManager>
 {
     ImageNumber socreUI;
     PipeRotator pipeRotator;
     Bird player;
+    public Action onNewMark;            // 최고점수가 갱신 될때 실행될 델리게이트
+    public Action onChangRank;
 
     int score = 0;
     int bestScore = 0;
+
+    const int RankCount = 5;
+    int[] highScores = new int[RankCount];                   // 0번째 1등 4번째 꼴등
+    string[] highScorerName = new string[RankCount];        // 0번째 1등 4번째 꼴등
+
     public Bird Player => player;
 
     public int BestScore
@@ -34,10 +42,14 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public int[] HighScores => highScores;
+    public string[] HighScorerName => highScorerName;
+
     protected override void Initaialize()
     {
         player = FindObjectOfType<Bird>();
         player.onDead += BestScoreUpdate;       // 새가 죽을 때 최고 점수 갱신 시도
+        player.onDead += RankUpdate;            // 새가 죽을 때 랭크 갱신
 
         pipeRotator = FindObjectOfType<PipeRotator>();
         pipeRotator.SetPipeScoreDelegate(AddScore);
@@ -93,10 +105,32 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     void BestScoreUpdate()
     {
-        if(BestScore < Score)
+        if(BestScore < Score)               // Score가 BestScore보다 높으면
         {
-            BestScore = Score;
-            SaveGameDate();
+            onNewMark?.Invoke();            // 델리게이트 사용 (ResultPanel로 이동)
+            BestScore = Score;              
+            SaveGameDate();                 // SaveGameDate 함수 사용하여 저장하기
         }
+    }
+
+    void RankUpdate()
+    {
+        for(int i = 0; i < RankCount; i++)  // 한 단계씩 비교해서 Score가 더 크면
+        {
+            if (highScores[i] < Score)      // 새 Score가 더 크면
+            {
+                for(int j = RankCount -1;j > i; j--)        // 그 아래 단계는 하나씩 뒤로 밀고
+                {
+                    highScores[j] = highScores[j - 1];
+                    highScorerName[j] = highScorerName[j - 1];
+                }
+                highScores[i] = Score;      // 새 Score 넣기
+                highScorerName[i] = "";
+
+                onChangRank?.Invoke();
+                break;
+            }
+        }
+        //highScorerName;
     }
 }
