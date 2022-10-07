@@ -12,26 +12,19 @@ public class GameManager : Singleton<GameManager>
     PipeRotator pipeRotator;
     Bird player;
     public Action onNewMark;            // 최고점수가 갱신 될때 실행될 델리게이트
-    public Action onChangRank;
+    public Action onRankRefresh;        // 랭크 화면 갱신 요청
+    public Action<int> onRankUpdate;         // 랭크 새기록 추가
 
     int score = 0;
-    int bestScore = 0;
-
+    
     const int RankCount = 5;
     int[] highScores = new int[RankCount];                   // 0번째 1등 4번째 꼴등
     string[] highScorerName = new string[RankCount];        // 0번째 1등 4번째 꼴등
 
     public Bird Player => player;
 
-    public int BestScore
-    {
-        get => bestScore;
-        private set
-        {
-            bestScore = value;
-        }
-    }
-
+    public int BestScore => highScores[0];
+    
     public int Score
     {
         get => score;
@@ -48,7 +41,6 @@ public class GameManager : Singleton<GameManager>
     protected override void Initaialize()
     {
         player = FindObjectOfType<Bird>();
-        player.onDead += BestScoreUpdate;       // 새가 죽을 때 최고 점수 갱신 시도
         player.onDead += RankUpdate;            // 새가 죽을 때 랭크 갱신
 
         pipeRotator = FindObjectOfType<PipeRotator>();
@@ -71,15 +63,15 @@ public class GameManager : Singleton<GameManager>
     void SaveGameDate()         // 데이터 저장하기
     {
         SaveData saveDate = new();          // 저장할 클래스 생성
-        saveDate.bestScore = BestScore;     // 저장할 데이터 넣기
-        saveDate.name = "Test";
+        saveDate.highScore = highScores;     // 저장할 데이터 넣기
+        saveDate.highScorerName = highScorerName;
 
         string json = JsonUtility.ToJson(saveDate);             // 클래스를 문자열로 변환
         string path = $"{Application.dataPath}/Save/";          // path에 파일 경로 넣기
 
         if (!Directory.Exists(path))                            // path경로에 파일이 있는지 판단
         {
-            Directory.CreateDirectory(path);                    // 업다면 파일 생성
+            Directory.CreateDirectory(path);                    // 없다면 파일 생성
         }
 
         string fullPath = $"{path}Test.json";                   // fullPath에 파일경로 + 파일 이름(확장자까지)저장
@@ -91,31 +83,27 @@ public class GameManager : Singleton<GameManager>
         string path = $"{Application.dataPath}/Save/";          // 파일 경로
         string fullPath = $"{path}Test.json";                   // 파일 경로 + 파일 이름
 
-        BestScore = 0;     // 기본 값 설정
         if (Directory.Exists(path) && File.Exists(fullPath))    // 파일 경로안에 폴더가 있고 그 해당 파일까지 있으면
         {
             string json = File.ReadAllText(fullPath);           // 파일에 있는 내용을 문자열로 받아오기
             SaveData loadDate = JsonUtility.FromJson<SaveData>(json);       // loadDate에 SaveData타입으로 json내용 넣기
-            BestScore = loadDate.bestScore;                     // loadDate.bestScore에 있는 데이터를 BestScore에 넣기
+            highScores = loadDate.highScore;                     // loadDate.highScore에 있는 데이터를 highScores에 넣기
+            highScorerName = loadDate.highScorerName;
         }
-    }
-
-    /// <summary>
-    /// 최고 점수 저장와 득점자 이름 추가
-    /// </summary>
-    void BestScoreUpdate()
-    {
-        if(BestScore < Score)               // Score가 BestScore보다 높으면
+        else
         {
-            onNewMark?.Invoke();            // 델리게이트 사용 (ResultPanel로 이동)
-            BestScore = Score;              
-            SaveGameDate();                 // SaveGameDate 함수 사용하여 저장하기
+            highScores = new int[] { 0, 0, 0, 0, 0 };
+            highScorerName = new string[] { "임시 이름1", "임시 이름2", "임시 이름3", "임시 이름4", "임시 이름5" };
         }
     }
 
     void RankUpdate()
     {
-        for(int i = 0; i < RankCount; i++)  // 한 단계씩 비교해서 Score가 더 크면
+        if (BestScore < Score)               // Score가 BestScore보다 높으면
+        {
+            onNewMark?.Invoke();            // 델리게이트 사용 (ResultPanel로 이동)
+        }
+            for (int i = 0; i < RankCount; i++)  // 한 단계씩 비교해서 Score가 더 크면
         {
             if (highScores[i] < Score)      // 새 Score가 더 크면
             {
@@ -125,12 +113,14 @@ public class GameManager : Singleton<GameManager>
                     highScorerName[j] = highScorerName[j - 1];
                 }
                 highScores[i] = Score;      // 새 Score 넣기
-                highScorerName[i] = "";
+                //highScorerName[i] = $"{DateTime.Now.ToString("YY:MM:dd")}";
+                onRankUpdate?.Invoke(i);
 
-                onChangRank?.Invoke();
+                SaveGameDate();                 // SaveGameDate 함수 사용하여 저장하기
                 break;
             }
         }
         //highScorerName;
+        onRankRefresh?.Invoke();
     }
 }

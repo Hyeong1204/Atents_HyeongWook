@@ -11,7 +11,7 @@ public class RankLine : MonoBehaviour
     private void Awake()
     {
         scoreText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        nameText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        nameText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
     }
 
     public void SetDate(int score, string name)
