@@ -94,7 +94,7 @@ public class GameManager : Singleton<GameManager>
         else
         {
             highScores = new int[] { 0, 0, 0, 0, 0 };
-            highScorerName = new string[] { "임시 이름1", "임시 이름2", "임시 이름3", "임시 이름4", "임시 이름5" };
+            highScorerName = new string[] { "???", "???", "???", "???", "???" };
         }
     }
 

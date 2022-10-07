@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3273065661482007642}
   m_Layer: 5
   m_Name: ImageNumber_Big
-  m_TagString: Untagged
+  m_TagString: Score
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -90,6 +90,8 @@ MonoBehaviour:
   - {fileID: 1270717762, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
   - {fileID: 949601896, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
   - {fileID: 1546184757, guid: ebe87df91a4415444b379ffe54a2cb87, type: 3}
+  isInstanceSet: 0
+  numberChangeSpeed: 200
   maxNumber: 0
 --- !u!1001 &8214406895271495064
 PrefabInstance:

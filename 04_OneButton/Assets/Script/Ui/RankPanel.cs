@@ -11,6 +11,10 @@ public class RankPanel : MonoBehaviour
     CanvasGroup canvasGroup;
 
     int rank;
+    public int Rank => rank;
+
+    bool inputNameCompleted = false;
+    public bool InputNameCompleted => inputNameCompleted;
 
     private void Awake()
     {
@@ -35,7 +39,7 @@ public class RankPanel : MonoBehaviour
         if (temp != null)
         {
             temp.onRankRefresh -= RankDataRefresh;
-            GameManager.Inst.onRankUpdate -= EnableNameInput;
+            temp.onRankUpdate -= EnableNameInput;
         }
     }
 
@@ -63,11 +67,12 @@ public class RankPanel : MonoBehaviour
 
     private void EnableNameInput(int index)     // 랭킹의 점수에 맞게 이름 TMP_InputField창이 그 위치에 가게 하는 함수
     {
-        Open();
+        inputNameCompleted = false;
+        StartCoroutine(OpenDelay());
         rank = index;           // 순위 저장
         inputField.transform.position = new Vector3(inputField.transform.position.x, rankLine[rank].transform.position.y, inputField.transform.position.z);     // 순위 위치에 생성
         inputField.gameObject.SetActive(true);
-    } 
+    }
 
     void OnNameInputEnd(string text)            // TMP_InputField의 값이 입력되면 실행됨
     {
@@ -77,5 +82,12 @@ public class RankPanel : MonoBehaviour
             temp.SetHighScorerName(rank, text);     // 그 순위에 맞게 이름을 저장
         }
         inputField.gameObject.SetActive(false);
+        inputNameCompleted = true;
+    }
+
+    IEnumerator OpenDelay()
+    {
+        yield return new WaitForSeconds(2.0f);
+        Open();
     }
 }
