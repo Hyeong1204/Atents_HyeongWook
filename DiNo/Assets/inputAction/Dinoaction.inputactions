@@ -1,0 +1,46 @@
+{
+    "name": "Dinoaction",
+    "maps": [
+        {
+            "name": "Dino",
+            "id": "29ee2f8c-4f20-44a7-9a32-e707011ca463",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "ec9cbe7c-43a1-4404-9c83-356e5cda2c71",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "513a8f11-ddd8-44bc-979d-a817591752b3",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "KeyBoard",
+            "bindingGroup": "KeyBoard",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
