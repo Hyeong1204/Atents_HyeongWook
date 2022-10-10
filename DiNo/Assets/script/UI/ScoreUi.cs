@@ -31,11 +31,22 @@ public class ScoreUi : MonoBehaviour
         hiScoreText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
     }
 
+    private void OnDisable()
+    {
+        GameManager temp = GameManager.Inst;
+        if(temp != null)
+        {
+            temp.onbestScoreUpdate -= UpdateHiScore;
+            temp.Dino.isDie -= StopScore;
+        }
+    }
+
     private void Start()
     {
         GameManager.Inst.Dino.isDie += StopScore;
+        GameManager.Inst.onbestScoreUpdate += UpdateHiScore;
         hiScore = GameManager.Inst.HiScore;
-        hiScoreText.text = hiScore.ToString();
+        hiScoreText.text = $"Hi {hiScore}";
         updateScore = true;
     }
 
@@ -48,6 +59,12 @@ public class ScoreUi : MonoBehaviour
     void StopScore()
     {
         updateScore = false;
-        GameManager.Inst.Score = (int)score;
+        GameManager.Inst.Score = (int)score;        // 게임 매니저의 score에 넣기
+        GameManager.Inst.BestScoreUpdate();         // 최고 점수 갱신확인
+    }
+
+    void UpdateHiScore(int score)
+    {
+        hiScoreText.text = $"Hi {hiScore}";
     }
 }

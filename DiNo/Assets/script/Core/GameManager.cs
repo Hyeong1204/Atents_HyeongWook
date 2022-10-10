@@ -22,10 +22,11 @@ public class GameManager : Singleton<GameManager>
 
     public Dino Dino { get => dino; }
 
+    public System.Action<int> onbestScoreUpdate;
+
     protected override void Initaialize()
     {
         dino = FindObjectOfType<Dino>();
-        dino.isDie += BestScoreUpdate;
         LoadDateUpdate();
     }
 
@@ -64,11 +65,12 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    void BestScoreUpdate()          // 최고점수 갱신
+    public void BestScoreUpdate()          // 최고점수 갱신
     {
         if(hiScore < score)
         {
             hiScore = score;
+            onbestScoreUpdate?.Invoke(hiScore);
 
             SaveDateUpdate();       // 세이브 하기
         }
