@@ -130,4 +130,10 @@ public class GameManager : Singleton<GameManager>
         SaveGameDate();                 // SaveGameDate 함수 사용하여 저장하기
         onRankRefresh?.Invoke();        // UI 표시 갱신 (랭킹 UI)
     }
+
+    public void GameStart()
+    {
+        player.OnGameStart();
+        pipeRotator.OnGameStart();
+    }
 }

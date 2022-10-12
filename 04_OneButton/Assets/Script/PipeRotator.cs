@@ -25,7 +25,8 @@ public class PipeRotator : MonoBehaviour
     /// <summary>
     /// 파이프가 움직이는 속도
     /// </summary>
-    public float pipeMoveSpeed = 5.0f;       
+    public float pipeMoveSpeed = 5.0f;
+    float currentPipeMoveSpeed = 0.0f;
 
     private void Awake()
     {
@@ -51,7 +52,7 @@ public class PipeRotator : MonoBehaviour
 
         for (int i = 0; i < pipes.Length; i++)     //bgslot에 있는 모든 bgslot를 하나씩 처리하기
         {
-            pipes[i].MoveLeft(pipeMoveSpeed * Time.fixedDeltaTime);    // 파이프를 계속 왼쪽으로 이동 시키기
+            pipes[i].MoveLeft(currentPipeMoveSpeed * Time.fixedDeltaTime);    // 파이프를 계속 왼쪽으로 이동 시키기
 
             if(endPoiunt.position.x > pipes[i].transform.position.x)   // 파이프 위치가 bgslot[i].transform.position.x보다 왼쪽인지 체크
             {
@@ -67,5 +68,10 @@ public class PipeRotator : MonoBehaviour
         {
             pipe.onScored += del;
         }
+    }
+
+    public void OnGameStart()
+    {
+        currentPipeMoveSpeed = pipeMoveSpeed;
     }
 }

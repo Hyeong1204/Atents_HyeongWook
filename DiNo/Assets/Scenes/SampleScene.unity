@@ -516,6 +516,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3675271203592598392, guid: e1f4e5bf47231cc49bc2744542796af8, type: 3}
+      propertyPath: m_Name
+      value: Sky
+      objectReference: {fileID: 0}
     - target: {fileID: 3675271203630009336, guid: e1f4e5bf47231cc49bc2744542796af8, type: 3}
       propertyPath: m_Name
       value: BakcGround

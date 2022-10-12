@@ -49,7 +49,8 @@ public class Bird : MonoBehaviour
     }
     private void Start()
     {
-        isDead = false;         // 살아있다고 표시
+        isDead = true;         // 살아있다고 표시
+        rigid.simulated = false;
     }
 
     private void OnEnable()     // 오브젝트가 활성화 될 때
@@ -125,5 +126,11 @@ public class Bird : MonoBehaviour
 
             Debug.Log("Die");
         }
+    }
+
+    public void OnGameStart()
+    {
+        isDead = false;
+        rigid.simulated = true;
     }
 }

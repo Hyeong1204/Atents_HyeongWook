@@ -566,7 +566,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_28
+      name: Title Tap
       rect:
         serializedVersion: 2
         x: 292
@@ -1747,6 +1747,7 @@ TextureImporter:
       Flappy_26: 1128506429
       Pipe_Bottom: 1932356770
       Number_Small_8: -1569347483
+      Title Tap: 2040088988
       Flappy_18: 441297319
       Flappy_10: -403895275
       Bird1_1: -328159493
@@ -1767,7 +1768,6 @@ TextureImporter:
       Flappy_19: 694886687
       Flappy_27: 1766009560
       Pipe_Top: -1011490652
-      Flappy_28: 2040088988
       Number_Small_6: 262741087
       Bird1_3: 991635760
       Number_MIddle_8: 2074271484
