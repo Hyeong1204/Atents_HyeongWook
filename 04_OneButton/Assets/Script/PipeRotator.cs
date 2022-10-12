@@ -26,7 +26,7 @@ public class PipeRotator : MonoBehaviour
     /// 파이프가 움직이는 속도
     /// </summary>
     public float pipeMoveSpeed = 5.0f;
-    float currentPipeMoveSpeed = 0.0f;
+    float currentPipeMoveSpeed = 0.0f;          // 일단 파이프가 안움직이도록 속도를 0으로 함
 
     private void Awake()
     {
@@ -62,6 +62,10 @@ public class PipeRotator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 파이프 별로 득점했을 때 점수를 올려주는 함수등록
+    /// </summary>
+    /// <param name="del">하나의 파이프가 득점 상황에서 실행될 함수 또는 델리게이트</param>
     public void AddPipeScoreDelegate(Action<int> del)
     {
         foreach(Pipe pipe in pipes)
@@ -70,8 +74,12 @@ public class PipeRotator : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// 게임이 시작될 때 실행될 함수
+    /// </summary>
     public void OnGameStart()
     {
-        currentPipeMoveSpeed = pipeMoveSpeed;
+        currentPipeMoveSpeed = pipeMoveSpeed;       // 실제 움직여야 할 속도로 설정
     }
 }

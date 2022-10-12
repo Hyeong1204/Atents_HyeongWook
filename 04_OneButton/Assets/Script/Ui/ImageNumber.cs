@@ -13,6 +13,7 @@ public class ImageNumber : MonoBehaviour
 
     List<Image> digits; // 0번째가 1자리, 1번째가 10자리
     List<int> remainders;
+    CanvasGroup canvasGroup;
 
     public float numberChangeSpeed = 2.0f;       // 숫자 이미지가 변하는 속도
     float currentNumber = 0.0f;             // 현재 보여질 값
@@ -78,6 +79,7 @@ public class ImageNumber : MonoBehaviour
             digits.Add(transform.GetChild(i).GetComponent<Image>());
         }
         remainders = new List<int>(expectedLength); // 자료구조를 만들 때는 기본 크기를 잡아주는 편이 좋다.
+        canvasGroup = GetComponent<CanvasGroup>();
     }
 
     private void Update()

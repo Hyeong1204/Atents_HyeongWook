@@ -5,12 +5,15 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using System;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : Singleton<GameManager>
 {
     ImageNumber socreUI;
     PipeRotator pipeRotator;
     Bird player;
+    ImageNumber imageNumber;
+    ScoreUI scoreUI;
     public Action onNewMark;            // 최고점수가 갱신 될때 실행될 델리게이트
     public Action onRankRefresh;        // 랭크 화면 갱신 요청
     public Action<int> onRankUpdate;         // 랭크 새기록 추가
@@ -46,7 +49,9 @@ public class GameManager : Singleton<GameManager>
         pipeRotator = FindObjectOfType<PipeRotator>();
         pipeRotator.AddPipeScoreDelegate(AddScore);
         socreUI = GameObject.FindGameObjectWithTag("Score").GetComponent<ImageNumber>();
+        imageNumber = FindObjectOfType<ImageNumber>();
         Score = 0;
+        scoreUI = FindObjectOfType<ScoreUI>();
 
         LoadGameDate();         // 신 로드와 동시에 데이타 파일 로드하기
     }
@@ -133,7 +138,8 @@ public class GameManager : Singleton<GameManager>
 
     public void GameStart()
     {
-        player.OnGameStart();
+        player.OnGameStart();           // 플레이어와 파이프로테이터에게 게임이 시작되었을 때 실행할 코드를 실행시킴
         pipeRotator.OnGameStart();
+        scoreUI.OnGameStart();
     }
 }

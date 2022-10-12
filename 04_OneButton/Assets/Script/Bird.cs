@@ -114,6 +114,15 @@ public class Bird : MonoBehaviour
         rigid.velocity = Vector2.up * jumpPower;    // 위쪽 방향으로 점프력만큼 velocity 변경
     }
 
+    /// <summary>
+    /// 게임이 실행이 되었을 때 실행될 함수
+    /// </summary>
+    public void OnGameStart()
+    {
+        isDead = false;             // 새를 살아있는 상태로 만듬
+        rigid.simulated = true;     // 리디드 바디 물리 시뮬레이션 켜기 (끄면 모든 물리를 다 무시함)
+    }
+
     // 테스트 함수 ----------------------------------------------------------------------------------
     public void TestDie()
     {
@@ -128,9 +137,4 @@ public class Bird : MonoBehaviour
         }
     }
 
-    public void OnGameStart()
-    {
-        isDead = false;
-        rigid.simulated = true;
-    }
 }
