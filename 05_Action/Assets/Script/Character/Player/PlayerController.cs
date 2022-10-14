@@ -119,7 +119,6 @@ public class PlayerController : MonoBehaviour
             currntSpeed = walkSpeed;    // 이동 속도를 걷는 속도로 변경
             if (moveDir != Vector3.zero)
             {
-
                 anima.SetFloat("Speed", 0.3f);      // 움직이는 중일때만 Walk모드면 걷는 애니메이션
             }
         }
