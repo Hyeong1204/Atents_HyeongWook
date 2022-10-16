@@ -568,6 +568,7 @@ MonoBehaviour:
   - {fileID: 576607948}
   - {fileID: 27588676}
   moveSpeed: 3
+  rotateSpeed: 10
 --- !u!1001 &497400037284296622
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -622,6 +623,10 @@ PrefabInstance:
     - target: {fileID: 498023401839253796, guid: b0c3ed05da8552c428d503c23b41ef5e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1242235338225121911, guid: b0c3ed05da8552c428d503c23b41ef5e, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1242235338225121911, guid: b0c3ed05da8552c428d503c23b41ef5e, type: 3}
       propertyPath: m_Constraints

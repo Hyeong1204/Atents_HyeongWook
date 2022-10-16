@@ -45,16 +45,18 @@ public class Slime : MonoBehaviour
         {
             if (currentWayPoint < wayPoint.Length)
             {
-                if(Vector3.Distance(rigid.position, wayPoint[currentWayPoint].position) < 0.02 * moveSpeed)         // 다음 wayPoint까지의 거리가 0.02 * moveSpeed 보다 작으면
+                if((rigid.position - wayPoint[currentWayPoint].position).sqrMagnitude < 0.002 * moveSpeed)         // 다음 wayPoint까지의 거리가 0.02 * moveSpeed 보다 작으면
                 {
-                    rigid.position = wayPoint[currentWayPoint].position;            // 현재 포지션을 wayPoint으로 바꾸기
                     StartCoroutine(MvoeStop());                     // 잠시 멈췄다가 움직이는 코루틴 시작
+                    rigid.velocity = Vector3.zero;                  // 멈췄을때 관성 지우기
+                    rigid.position = wayPoint[currentWayPoint].position;            // 현재 포지션을 wayPoint으로 바꾸기
                     currentWayPoint++;
-                     
-                    if(currentWayPoint >= wayPoint.Length)          // 다음 웨이 포인트가 없으면 시작점으로
-                    {
-                        currentWayPoint = 0;                        // 처음 지점으로
-                    }
+
+                    currentWayPoint %= wayPoint.Length;               
+                    //if(currentWayPoint >= wayPoint.Length)          // 다음 웨이 포인트가 없으면 시작점으로
+                    //{
+                    //    currentWayPoint = 0;                        // 처음 지점으로
+                    //}
 
                     dir = (wayPoint[currentWayPoint].position - transform.position).normalized;     // 다음 진행 방향
                     targetRotation = Quaternion.LookRotation(dir);              // 다음지점 바라보기
