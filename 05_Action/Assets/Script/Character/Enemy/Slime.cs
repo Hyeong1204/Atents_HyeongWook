@@ -15,14 +15,11 @@ public class Slime : MonoBehaviour
     public float moveSpeed = 3.0f;      // 적의 이동 속도
 
     Transform moveTarget;               // 지금 적이 이동할 목표 지점
-    Vector3 lookDir;                    // 지금 적이 이동하는 방향(바라보는 방향)
-    float moveSpeedPerSecond;           // 초당 이동속도 (계속 연산되는 부분이라 한번만 계산한 후 저장해 놓는 용도)
 
     EnemyState state;                   // 현재 적의 상태(대기 상태 or 순찰 상태)
     public float waitTime = 1.0f;       // 목적지에 도착했을 때 기달리는 시간
     float waitTimer;                    // 남아있는 기다려야 하는 시간
 
-    Rigidbody rigid;
     Animator anima;
     NavMeshAgent agent;
 
@@ -49,8 +46,6 @@ public class Slime : MonoBehaviour
         set
         {
             moveTarget = value;
-            //lookDir = (moveTarget.position - transform.position).normalized;        // lookDir도 함께 갱신
-            //agent.SetDestination(moveTarget.position);
         }
     }
 
@@ -111,15 +106,13 @@ public class Slime : MonoBehaviour
 
     private void Awake()
     {
-        rigid = GetComponent<Rigidbody>();
         anima = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
     }
 
     private void Start()
     {
-        moveSpeedPerSecond = moveSpeed * Time.fixedDeltaTime;       // 자주 사용하는 연산 미리 계산해서 저장해 놓기
-
+        agent.speed = moveSpeed;
         if (waypoints != null)      // waypoints 가 없을 때를 대비한 코드
         {
             MoveTarget = waypoints.Current;
@@ -144,16 +137,15 @@ public class Slime : MonoBehaviour
     /// </summary>
     void Update_Patrol()
     {
-        // 이동 처리
-        //rigid.MovePosition(transform.position + moveSpeedPerSecond * lookDir);                              // 위치 변경
-        //rigid.rotation = Quaternion.Slerp(rigid.rotation, Quaternion.LookRotation(lookDir), 0.2f);          // 이동하는 방향 바라보기
-
-        //if ((transform.position - MoveTarget.position).sqrMagnitude < 0.02f)         // 도착 확인
-        //{
-        //    transform.position = MoveTarget.position;     // 정확한 웨이포인트 지점에 이동 시키기 위해 강제 이동
-        //    MoveTarget = waypoints.MoveNext();            // 다음 웨이포인트 지점을 MoveTarget으로 설정
-        //    State = EnemyState.Wait;
-        //}
+        // 도착 확인
+        // agent.pathPending : 경로 계산이 진행중인지 확인. true면 아직 경로 계산중
+        // agent.remainingDistance : 도착지점까지 남아있는 거리
+        // agent.remainingDistance : 도착지점에 도착했다고 인정되는 거리
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)    // 경로 계산이 완료 됐고
+        {
+            MoveTarget = waypoints.MoveNext();
+            State = EnemyState.Wait;
+        }
     }
 
     /// <summary>
