@@ -164,21 +164,66 @@ public class Slime : MonoBehaviour
         WaitTimer -= Time.fixedDeltaTime;       // 시간 지속적으로 감소
     }
 
+    /// <summary>
+    /// 플레이어를 감지하는 함수
+    /// </summary>
+    /// <returns>적이 플레이어를 감지하면 true, 아니면 false</returns>
     bool SearchPlayer()
     {
         bool result = false;
+
+        // 특정 범위안에 존재하는지 확인
         Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
         if(colliders.Length > 0)
         {
-            // player가 시야범위안에 들어왔다.
-            Vector3 playerPos = colliders[0].transform.position;
-            float angle = Vector3.Angle(transform.forward, playerPos - transform.position);
-            if (sightHalfAngle > angle)
+            // player가 몬스터 주변에 있다.
+            Vector3 playerPos = colliders[0].transform.position;            // 플레이어 위치
+            Vector3 toPlayerDir = playerPos - transform.position;           // 플레이어로 가는 방향
+           
+            if (IsInSightAngle(toPlayerDir))
             {
                 // player가 시야각 안에 들어왔다.
-                result = true;
+                if (!IsSightBlocked(toPlayerDir))
+                {
+                    // 시야가 다른 물체로 인해 막히이 않았다.
+                    result = true;
+                }
+                
             }
+        }
+        return result;
+    }
 
+    /// <summary>
+    /// 대상이 시야각안에 들어와 있는지 확인하는 함수
+    /// </summary>
+    /// <param name="toTargetDir">대상으로 가는 방향 벡터</param>
+    /// <returns>대상이 있다면 true</returns>
+    bool IsInSightAngle(Vector3 toTargetDir)
+    {
+        float angle = Vector3.Angle(transform.forward, toTargetDir);    // forward 벡터와 플레이어로 가는 방향 벡터의 시야각 구하기
+        return sightHalfAngle > angle;
+    }
+
+    /// <summary>
+    /// 플레이어를 바라보는 시야가 막혔는지 확인하는 함수
+    /// </summary>
+    /// <param name="toTargetDir">대상으로 가는 방향 벡터</param>
+    /// <returns>방해하는 물건이 없다면 false</returns>
+    bool IsSightBlocked(Vector3 toTargetDir)
+    {
+        bool result = true;
+        // 레이 만들기 : 시점점 = 적의 위치 + 적의 눈높이, 방항 = 적에서 플레이어로 가는 방향
+        Ray ray = new(transform.position + transform.up * 0.5f, toTargetDir);
+        if (Physics.Raycast(ray, out RaycastHit hit, sightRange))
+        {
+            // 레이에 부딪친 컬라이더가 있다.
+            if (hit.collider.CompareTag("Player"))
+            {
+                // 컬라이더가 player면
+                result = false;
+                return result;
+            }
         }
         return result;
     }
@@ -197,17 +242,20 @@ public class Slime : MonoBehaviour
         Handles.DrawLine(transform.position, transform.position + forward);         // 몬스터의 앞 방향
 
         Handles.color = Color.green;
+        Handles.DrawWireDisc(transform.position, transform.up, sightRange);         // 시야 반경만큼 원 그리기
+
         if (SearchPlayer())
         {
             Handles.color = Color.red;
         }
-        Handles.DrawWireDisc(transform.position, transform.up, sightRange);         // 시야 반경만큼 원 그리기
 
-        Handles.color = Color.red;
         Quaternion q1 = Quaternion.AngleAxis(-sightHalfAngle, transform.up);        // up벡터를 축으로 반시계방향으로 회전
         Quaternion q2 = Quaternion.AngleAxis(sightHalfAngle, transform.up);         // up벡터를 축으로 시계방향으로 회전
-        Handles.DrawLine(transform.position, transform.position + q1 * forward);    // 중심선을 반시계방향으로 회전
-        Handles.DrawLine(transform.position, transform.position + q2 * forward);    // 중심선을 시계방향으로 회전
+
+        Handles.DrawLine(transform.position, transform.position + q1 * forward, 5.0f);    // 중심선을 반시계방향으로 회전
+        Handles.DrawLine(transform.position, transform.position + q2 * forward, 5.0f);    // 중심선을 시계방향으로 회전
+
+        Handles.DrawWireArc(transform.position, transform.up, q1 * forward, sightHalfAngle * 2, sightRange, 5.0f);
 #endif
     }
 }
