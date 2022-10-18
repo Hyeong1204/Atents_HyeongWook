@@ -2177,7 +2177,8 @@ GameObject:
   - component: {fileID: 7907713111937431575}
   - component: {fileID: 7653707384021617997}
   - component: {fileID: 1683959582563781680}
-  m_Layer: 0
+  - component: {fileID: 6443097043965523392}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2239,6 +2240,24 @@ MonoBehaviour:
   rotateSpeed: 10
   walkSpeed: 3
   runSpeed: 5
+--- !u!143 &6443097043965523392
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7419125687644775085}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1.5
+  m_Radius: 0.25
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!1 &7567584583738307256
 GameObject:
   m_ObjectHideFlags: 0

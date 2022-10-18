@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+#if UNITY_EDITOR
+using UnityEditor;      // UNITY_EDITOR라는 전처리기가 설정되어있을 때만 실행버전에 넣어라
+#endif
+
 [RequireComponent(typeof(Rigidbody))]       // 필수적으로 필요한 컴포넌트가 있을 때 자동으로 넣어주는 유니티 속성
 [RequireComponent(typeof(Animator))]
 public class Slime : MonoBehaviour
@@ -19,6 +23,8 @@ public class Slime : MonoBehaviour
     EnemyState state;                   // 현재 적의 상태(대기 상태 or 순찰 상태)
     public float waitTime = 1.0f;       // 목적지에 도착했을 때 기달리는 시간
     float waitTimer;                    // 남아있는 기다려야 하는 시간
+
+    public float sightRange = 10.0f;
 
     Animator anima;
     NavMeshAgent agent;
@@ -154,5 +160,41 @@ public class Slime : MonoBehaviour
     void Update_Wait()
     {
         WaitTimer -= Time.fixedDeltaTime;       // 시간 지속적으로 감소
+    }
+
+    bool SearchPlayer()
+    {
+        bool result = false;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
+        if(colliders.Length > 0)
+        {
+            result = true;
+        }
+        else
+        {
+            result = false;
+        }
+        return result;
+    }
+
+    public void Test()
+    {
+        SearchPlayer();
+    }
+
+    private void OnDrawGizmos()
+    {
+#if UNITY_EDITOR
+        //Gizmos.DrawWireSphere(transform.position, sightRange);
+        Handles.color = Color.red;
+        Handles.DrawLine(transform.position, transform.position + transform.forward * sightRange);
+
+        Handles.color = Color.green;
+        if (SearchPlayer())
+        {
+            Handles.color = Color.red;
+        }
+        Handles.DrawWireDisc(transform.position, transform.up, sightRange);
+#endif
     }
 }
