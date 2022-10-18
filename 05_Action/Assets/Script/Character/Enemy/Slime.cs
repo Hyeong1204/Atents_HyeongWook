@@ -24,8 +24,10 @@ public class Slime : MonoBehaviour
     public float waitTime = 1.0f;       // 목적지에 도착했을 때 기달리는 시간
     float waitTimer;                    // 남아있는 기다려야 하는 시간
 
+    // 추적 관련 변슈 ------------------------------------------------------
     public float sightRange = 10.0f;
-
+    public float sightHalfAngle = 50.0f;
+    // --------------------------------------------------------------------
     Animator anima;
     NavMeshAgent agent;
 
@@ -168,11 +170,15 @@ public class Slime : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
         if(colliders.Length > 0)
         {
-            result = true;
-        }
-        else
-        {
-            result = false;
+            // player가 시야범위안에 들어왔다.
+            Vector3 playerPos = colliders[0].transform.position;
+            float angle = Vector3.Angle(transform.forward, playerPos - transform.position);
+            if (sightHalfAngle > angle)
+            {
+                // player가 시야각 안에 들어왔다.
+                result = true;
+            }
+
         }
         return result;
     }
@@ -186,15 +192,22 @@ public class Slime : MonoBehaviour
     {
 #if UNITY_EDITOR
         //Gizmos.DrawWireSphere(transform.position, sightRange);
-        Handles.color = Color.red;
-        Handles.DrawLine(transform.position, transform.position + transform.forward * sightRange);
+        Vector3 forward = transform.forward * sightRange;
+
+        Handles.DrawLine(transform.position, transform.position + forward);         // 몬스터의 앞 방향
 
         Handles.color = Color.green;
         if (SearchPlayer())
         {
             Handles.color = Color.red;
         }
-        Handles.DrawWireDisc(transform.position, transform.up, sightRange);
+        Handles.DrawWireDisc(transform.position, transform.up, sightRange);         // 시야 반경만큼 원 그리기
+
+        Handles.color = Color.red;
+        Quaternion q1 = Quaternion.AngleAxis(-sightHalfAngle, transform.up);        // up벡터를 축으로 반시계방향으로 회전
+        Quaternion q2 = Quaternion.AngleAxis(sightHalfAngle, transform.up);         // up벡터를 축으로 시계방향으로 회전
+        Handles.DrawLine(transform.position, transform.position + q1 * forward);    // 중심선을 반시계방향으로 회전
+        Handles.DrawLine(transform.position, transform.position + q2 * forward);    // 중심선을 시계방향으로 회전
 #endif
     }
 }
