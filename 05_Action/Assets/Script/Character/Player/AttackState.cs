@@ -40,9 +40,11 @@ public class AttackState : StateMachineBehaviour
     //    
     //}
 
-    // OnStateMachineExit is called when exiting a state machine via its Exit Node
-    //override public void OnStateMachineExit(Animator animator, int stateMachinePathHash)
-    //{
-    //    
-    //}
+    //onstatemachineexit is called when exiting a state machine via its exit node
+    // 이 상태머신이 Exit로 갈 때 실행
+    public override void OnStateMachineExit(Animator animator, int stateMachinePathHash)
+    {
+        animator.SetInteger("ComboState", 0);       // 콤보 상태 리셋
+        animator.ResetTrigger("Attack");            // 엍택 트리거도 초기화
+    }
 }

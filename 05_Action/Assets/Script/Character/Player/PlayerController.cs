@@ -46,12 +46,15 @@ public class PlayerController : MonoBehaviour
         playerInput.Player.Move.performed += OnMove;        // 액션과 함수 연결
         playerInput.Player.Move.canceled += OnMove;
         playerInput.Player.Dash.performed += OnDash;        // 액션과 대쉬 함수 연결
+        playerInput.Player.Attack.performed += OnAttack;
         //playerInput.Player.Dash.canceled += OnDash;
     }
+
 
     private void OnDisable()
     {
         //playerInput.Player.Dash.canceled -= OnDash;
+        playerInput.Player.Attack.performed -= OnAttack;
         playerInput.Player.Dash.performed -= OnDash;        // 액션과 대쉬 함수 해재
         playerInput.Player.Move.canceled -= OnMove;         // 역션과 함수 연결 해제
         playerInput.Player.Move.performed -= OnMove;
@@ -137,5 +140,19 @@ public class PlayerController : MonoBehaviour
     {
         // transform.rotation에서 targetRotation으로 초당 1/rotateSpeed씩 보간
         transform.rotation = Quaternion.Slerp(transform.rotation, targerRotation, Time.deltaTime * rotateSpeed);
+    }
+
+    /// <summary>
+    /// 스페이스나 키나 마우스 왼클릭 했을 때 실행
+    /// </summary>
+    /// <param name="_"></param>
+    private void OnAttack(InputAction.CallbackContext _)
+    {
+        // anima.GetCurrentAnimatorStateInfo(0).normalizedTime; 현재 재생중인 애니메이션의 진행 상태를 알려줌 (0~1)
+
+        int comboState = anima.GetInteger("ComboState");        // ComboState를 애니메이터에서 읽어와서
+        comboState++;       // 콤보 상태 1증가 시키기
+        anima.SetInteger("ComboState", comboState);             // 애니메이터에 증가된 콤보 상태 설정
+        anima.SetTrigger("Attack");                             // Attack 트리거 발동
     }
 }
