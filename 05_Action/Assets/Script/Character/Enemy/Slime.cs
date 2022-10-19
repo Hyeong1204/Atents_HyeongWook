@@ -18,15 +18,16 @@ public class Slime : MonoBehaviour
     public WayPoints waypoints;
     public float moveSpeed = 3.0f;      // 적의 이동 속도
 
-    Transform moveTarget;               // 지금 적이 이동할 목표 지점
+    Transform wayPointTarget;               // 지금 적이 이동할 목표 지점
 
-    EnemyState state;                   // 현재 적의 상태(대기 상태 or 순찰 상태)
+    EnemyState state = EnemyState.Patrol;                   // 현재 적의 상태(대기 상태 or 순찰 상태)
     public float waitTime = 1.0f;       // 목적지에 도착했을 때 기달리는 시간
     float waitTimer;                    // 남아있는 기다려야 하는 시간
 
     // 추적 관련 변슈 ------------------------------------------------------
-    public float sightRange = 10.0f;
-    public float sightHalfAngle = 50.0f;
+    public float sightRange = 10.0f;                // 시야 범위
+    public float sightHalfAngle = 50.0f;            // 시야각의 절반
+    Transform chaseTarget;                          // 추적할 플레이어의 트랜스폼
     // --------------------------------------------------------------------
     Animator anima;
     NavMeshAgent agent;
@@ -37,7 +38,8 @@ public class Slime : MonoBehaviour
     protected enum EnemyState
     {
         Wait = 0,       // 대기 상태
-        Patrol          // 순찰 상태
+        Patrol,         // 순찰 상태
+        Chase           // 추적 상태
     }
 
     /// <summary>
@@ -46,14 +48,14 @@ public class Slime : MonoBehaviour
     Action StateUpdate;
 
     /// <summary>
-    /// 이동할 목적지를 나타내는 프로퍼티
+    /// 이동할 목적지(웨이 포인트)를 나타내는 프로퍼티
     /// </summary>
-    protected Transform MoveTarget
+    protected Transform WayPointTarget
     {
-        get => moveTarget;
+        get => wayPointTarget;
         set
         {
-            moveTarget = value;
+            wayPointTarget = value;
         }
     }
 
@@ -65,33 +67,41 @@ public class Slime : MonoBehaviour
         get => state;
         set
         {
-            //switch (state)      // 이전 상태(상태를 나가면서 해야할 일 처리
-            //{
-            //    case EnemyState.Wait:
-            //        break;
-            //    case EnemyState.Patrol:
-            //        break;
-            //    default:
-            //        break;
-            //}
-
-            state = value;
-            switch (state)      // 새로운 상태(새로운 상태로 들어가면서 해야할 일 처리
+            if (state != value)
             {
-                case EnemyState.Wait:
-                    agent.isStopped = true;
-                    waitTimer = waitTime;           // 타이머 초기화
-                    anima.SetTrigger("Stop");       // Idle 애니메이션 재생
-                    StateUpdate = Update_Wait;      // FixedUpdate에서 실행될 델리게이트 변경
-                    break;
-                case EnemyState.Patrol:
-                    agent.isStopped = false;
-                    agent.SetDestination(moveTarget.position);
-                    anima.SetTrigger("Move");       // Move 애니메이션 재생
-                    StateUpdate = Update_Patrol;    // FixedUpdate에서 실행될 델리게이트 변경
-                    break;
-                default:
-                    break;
+                //switch (state)      // 이전 상태(상태를 나가면서 해야할 일 처리
+                //{
+                //    case EnemyState.Wait:
+                //        break;
+                //    case EnemyState.Patrol:
+                //        break;
+                //    default:
+                //        break;
+                //}
+
+                state = value;
+                switch (state)      // 새로운 상태(새로운 상태로 들어가면서 해야할 일 처리
+                {
+                    case EnemyState.Wait:
+                        agent.isStopped = true;
+                        waitTimer = waitTime;           // 타이머 초기화
+                        anima.SetTrigger("Stop");       // Idle 애니메이션 재생
+                        StateUpdate = Update_Wait;      // FixedUpdate에서 실행될 델리게이트 변경
+                        break;
+                    case EnemyState.Patrol:
+                        agent.isStopped = false;
+                        agent.SetDestination(wayPointTarget.position);
+                        anima.SetTrigger("Move");       // Move 애니메이션 재생
+                        StateUpdate = Update_Patrol;    // FixedUpdate에서 실행될 델리게이트 변경
+                        break;
+                    case EnemyState.Chase:
+                        agent.isStopped = false;
+                        anima.SetTrigger("Move");       // Move 애니메이션 재생
+                        StateUpdate = Update_Chase;     // FixedUpdate에서 실행될 델리게이트 변경
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -123,11 +133,11 @@ public class Slime : MonoBehaviour
         agent.speed = moveSpeed;
         if (waypoints != null)      // waypoints 가 없을 때를 대비한 코드
         {
-            MoveTarget = waypoints.Current;
+            WayPointTarget = waypoints.Current;
         }
         else
         {
-            MoveTarget = transform;
+            WayPointTarget = transform;
         }
 
         // 값 초기화 작업
@@ -137,6 +147,11 @@ public class Slime : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (SearchPlayer())     // 매번 추적대상을 찾기
+        {
+            State = EnemyState.Chase;       // 추적 대상이 있으면 추적 상태로 변경
+        }
+
         StateUpdate();
     }
 
@@ -151,7 +166,7 @@ public class Slime : MonoBehaviour
         // agent.remainingDistance : 도착지점에 도착했다고 인정되는 거리
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)    // 경로 계산이 완료 됐고
         {
-            MoveTarget = waypoints.MoveNext();
+            WayPointTarget = waypoints.MoveNext();
             State = EnemyState.Wait;
         }
     }
@@ -165,12 +180,28 @@ public class Slime : MonoBehaviour
     }
 
     /// <summary>
+    /// Chase 상태일 때 실행될 업데이트 함수
+    /// </summary>
+    void Update_Chase()
+    {
+        if (chaseTarget != null)        // 추적 대상이 있는지 확인
+        {
+            agent.SetDestination(chaseTarget.position);     // 추적 대상이 있으면 추적 대상의 위치로 이동
+        }
+        else
+        {
+            State = EnemyState.Wait;            // 추적 대상이 없으면 잠시 대기
+        }
+    }
+
+    /// <summary>
     /// 플레이어를 감지하는 함수
     /// </summary>
     /// <returns>적이 플레이어를 감지하면 true, 아니면 false</returns>
     bool SearchPlayer()
     {
         bool result = false;
+        chaseTarget = null;
 
         // 특정 범위안에 존재하는지 확인
         Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
@@ -186,9 +217,9 @@ public class Slime : MonoBehaviour
                 if (!IsSightBlocked(toPlayerDir))
                 {
                     // 시야가 다른 물체로 인해 막히이 않았다.
+                    chaseTarget = colliders[0].transform;   // 추적할 플레이어 저장
                     result = true;
-                }
-                
+                }                
             }
         }
         return result;
@@ -222,7 +253,6 @@ public class Slime : MonoBehaviour
             {
                 // 컬라이더가 player면
                 result = false;
-                return result;
             }
         }
         return result;

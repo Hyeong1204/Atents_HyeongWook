@@ -167,6 +167,8 @@ MonoBehaviour:
   waypoints: {fileID: 0}
   moveSpeed: 3
   waitTime: 1
+  sightRange: 10
+  sightHalfAngle: 50
 --- !u!195 &148194114
 NavMeshAgent:
   m_ObjectHideFlags: 0

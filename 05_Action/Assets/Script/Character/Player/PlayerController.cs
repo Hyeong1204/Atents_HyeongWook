@@ -8,12 +8,13 @@ public class PlayerController : MonoBehaviour
 {
     PlayerInputAction playerInput;
     Animator anima;
+    CharacterController cc;
 
     public float rotateSpeed = 180.0f;              // 회전속도
     public float walkSpeed = 3.0f;                 // 걷는 이동속도
     public float runSpeed = 5.0f;                  // 달리는 이동속도
 
-    float currntSpeed = 3.0f;                      // 현재 이동속도
+    float currentSpeed = 3.0f;                      // 현재 이동속도
 
     /// <summary>
     /// 이동 상태를 나타내는 enum
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         playerInput = new PlayerInputAction();
         anima = GetComponent<Animator>();
+        cc = GetComponent<CharacterController>();
     }
 
     private void OnEnable()
@@ -58,7 +60,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        Move();
+        //cc.Move(currntSpeed * Time.deltaTime * moveDir);
+        cc.Move(currentSpeed * Time.deltaTime * moveDir);
+
         Rotate();
     }
 
@@ -106,7 +110,7 @@ public class PlayerController : MonoBehaviour
         {
             // Walk모드면 Run모드로 전환
             moveMode = MoveMode.Run;
-            currntSpeed = runSpeed;     // 이동 속도를 달리는 속도로 변경
+            currentSpeed = runSpeed;     // 이동 속도를 달리는 속도로 변경
             if (moveDir != Vector3.zero)
             {
                 anima.SetFloat("Speed", 1.0f);      // 움직이는 중일때만 Run모드면 달리는 애니메이션
@@ -116,7 +120,7 @@ public class PlayerController : MonoBehaviour
         {
             // Run모드면 Walk모드로 전환
             moveMode = MoveMode.Walk;
-            currntSpeed = walkSpeed;    // 이동 속도를 걷는 속도로 변경
+            currentSpeed = walkSpeed;    // 이동 속도를 걷는 속도로 변경
             if (moveDir != Vector3.zero)
             {
                 anima.SetFloat("Speed", 0.3f);      // 움직이는 중일때만 Walk모드면 걷는 애니메이션
@@ -124,9 +128,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Move()
+    void OnMove()
     {
-        transform.Translate(Time.deltaTime * currntSpeed * moveDir, Space.World);     // 초당 moveSpeed의 속도로 movDir방향으로 이동 (월드 스페이스 기준)
+        transform.Translate(Time.deltaTime * currentSpeed * moveDir, Space.World);     // 초당 moveSpeed의 속도로 movDir방향으로 이동 (월드 스페이스 기준)
     }
 
     void Rotate()
