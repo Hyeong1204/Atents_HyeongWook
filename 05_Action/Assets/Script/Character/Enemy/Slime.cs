@@ -115,7 +115,7 @@ public class Slime : MonoBehaviour
         set
         {
             waitTimer = value;
-            if (waitTimer < 0)      // 남은 시간이 다 되면
+            if (waypoints != null && waitTimer < 0)      // 남은 시간이 다 되면
             {
                 State = EnemyState.Patrol;      // Patrol 상태로 전환
             }
