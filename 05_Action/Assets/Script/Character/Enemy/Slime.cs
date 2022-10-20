@@ -138,11 +138,14 @@ public class Slime : MonoBehaviour, IHealth, IBattle
             if (hp != value)
             {
                 hp = value;
-                onHealthChage?.Invoke();
                 if (hp < 0)
                 {
                     Die();
                 }
+
+                hp = Mathf.Clamp(hp, 0.0f, maxHP);
+
+                onHealthChage?.Invoke(hp/maxHP);
             }
         }
     }
@@ -157,7 +160,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     /// <summary>
     /// HP가 변경될 때 실행될 델리게이트
     /// </summary>
-    public Action onHealthChage { get; set; }
+    public Action<float> onHealthChage { get; set; }
 
     /// <summary>
     /// 죽었을 때 실행될 델리게이트
@@ -309,7 +312,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         SearchPlayer();
     }
 
-    void Test_HP_Change()
+    void Test_HP_Change(float ratino)
     {
         UnityEngine.Debug.Log($"{gameObject.name}이 피해를 받았습니다. 현재 HP : {hp}");
     }

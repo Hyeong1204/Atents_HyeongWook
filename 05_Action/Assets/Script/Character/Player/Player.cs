@@ -37,12 +37,15 @@ public class Player : MonoBehaviour, IBattle, IHealth
             if (hp != value)
             {
                 hp = value;
-                onHealthChage?.Invoke();
 
                 if (hp < 0)
                 {
                     Die();
                 }
+
+                hp = Mathf.Clamp(hp, 0.0f, maxHP);
+
+                onHealthChage?.Invoke(hp/maxHP);
             }
         }
     }
@@ -51,7 +54,7 @@ public class Player : MonoBehaviour, IBattle, IHealth
     // -------------------------------------------------------------------------------------------------------------------
 
     // 델리게이트 ---------------------------------------------------------------------------------------------------------
-    public Action onHealthChage { get; set; }
+    public Action<float> onHealthChage { get; set; }
     public Action onDie { get; set; }
 
     // -------------------------------------------------------------------------------------------------------------------
@@ -74,7 +77,7 @@ public class Player : MonoBehaviour, IBattle, IHealth
         onDie += Test_Die;
     }
 
-    void Test_HP_Change()
+    void Test_HP_Change(float ratino)
     {
         Debug.Log($"{gameObject.name}이 피해를 받았습니다. 현재 HP : {hp}");
     }
