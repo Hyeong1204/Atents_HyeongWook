@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Diagnostics;
 
 #if UNITY_EDITOR
 using UnityEditor;      // UNITY_EDITOR라는 전처리기가 설정되어있을 때만 실행버전에 넣어라
@@ -10,7 +11,7 @@ using UnityEditor;      // UNITY_EDITOR라는 전처리기가 설정되어있을
 
 [RequireComponent(typeof(Rigidbody))]       // 필수적으로 필요한 컴포넌트가 있을 때 자동으로 넣어주는 유니티 속성
 [RequireComponent(typeof(Animator))]
-public class Slime : MonoBehaviour
+public class Slime : MonoBehaviour, IHealth, IBattle
 {
     /// <summary>
     /// 적이 순찰할 웨이포인트
@@ -24,7 +25,14 @@ public class Slime : MonoBehaviour
     public float waitTime = 1.0f;       // 목적지에 도착했을 때 기달리는 시간
     float waitTimer;                    // 남아있는 기다려야 하는 시간
 
-    // 추적 관련 변슈 ------------------------------------------------------
+    // 몬스터 스탯 관련 변수 -----------------------------------------------------
+    public float maxHP = 100.0f;
+    public float attackPower = 10.0f;
+    public float defencePower = 3.0f;
+    float hp = 100.0f;
+    // -------------------------------------------------------------------------
+
+    // 추적 관련 변수 ------------------------------------------------------
     public float sightRange = 10.0f;                // 시야 범위
     public float sightHalfAngle = 50.0f;            // 시야각의 절반
     Transform chaseTarget;                          // 추적할 플레이어의 트랜스폼
@@ -122,6 +130,40 @@ public class Slime : MonoBehaviour
         }
     }
 
+    public float HP
+    {
+        get => hp;
+        set
+        {
+            if (hp != value)
+            {
+                hp = value;
+                onHealthChage?.Invoke();
+                if (hp < 0)
+                {
+                    Die();
+                }
+            }
+        }
+    }
+
+    public float MaxHP => maxHP;
+
+
+    public float AttackPower => attackPower;
+
+    public float DefencePower => defencePower;
+
+    /// <summary>
+    /// HP가 변경될 때 실행될 델리게이트
+    /// </summary>
+    public Action onHealthChage { get; set; }
+
+    /// <summary>
+    /// 죽었을 때 실행될 델리게이트
+    /// </summary>
+    public Action onDie { get; set; }
+
     private void Awake()
     {
         anima = GetComponent<Animator>();
@@ -143,6 +185,10 @@ public class Slime : MonoBehaviour
         // 값 초기화 작업
         State = EnemyState.Wait;      // 기본 상태 설정(wait)
         anima.ResetTrigger("Stop");     // 트리거가 쌓이는걸 방지
+
+        // 테스트 코드
+        onHealthChage += Test_HP_Change;
+        onDie += Test_Die;
     }
 
     private void FixedUpdate()
@@ -205,12 +251,12 @@ public class Slime : MonoBehaviour
 
         // 특정 범위안에 존재하는지 확인
         Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
-        if(colliders.Length > 0)
+        if (colliders.Length > 0)
         {
             // player가 몬스터 주변에 있다.
             Vector3 playerPos = colliders[0].transform.position;            // 플레이어 위치
             Vector3 toPlayerDir = playerPos - transform.position;           // 플레이어로 가는 방향
-           
+
             if (IsInSightAngle(toPlayerDir))
             {
                 // player가 시야각 안에 들어왔다.
@@ -219,7 +265,7 @@ public class Slime : MonoBehaviour
                     // 시야가 다른 물체로 인해 막히이 않았다.
                     chaseTarget = colliders[0].transform;   // 추적할 플레이어 저장
                     result = true;
-                }                
+                }
             }
         }
         return result;
@@ -263,6 +309,17 @@ public class Slime : MonoBehaviour
         SearchPlayer();
     }
 
+    void Test_HP_Change()
+    {
+        UnityEngine.Debug.Log($"{gameObject.name}이 피해를 받았습니다. 현재 HP : {hp}");
+    }
+
+    void Test_Die()
+{
+        UnityEngine.Debug.Log($"{gameObject.name}이 죽었습니다. ");
+    }
+
+
     private void OnDrawGizmos()
     {
 #if UNITY_EDITOR
@@ -287,5 +344,20 @@ public class Slime : MonoBehaviour
 
         Handles.DrawWireArc(transform.position, transform.up, q1 * forward, sightHalfAngle * 2, sightRange, 5.0f);
 #endif
+    }
+
+    public void Die()
+    {
+        onDie?.Invoke();
+    }
+
+    public void Attact(IBattle target)
+    {
+        target?.Defence(attackPower);
+    }
+
+    public void Defence(float damage)
+    {
+        HP -= (damage - DefencePower);
     }
 }
