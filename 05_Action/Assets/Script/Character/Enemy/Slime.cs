@@ -24,6 +24,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     EnemyState state = EnemyState.Patrol;                   // 현재 적의 상태(대기 상태 or 순찰 상태)
     public float waitTime = 1.0f;       // 목적지에 도착했을 때 기달리는 시간
     float waitTimer;                    // 남아있는 기다려야 하는 시간
+    bool isAlive = true;
 
     // 몬스터 스탯 관련 변수 -----------------------------------------------------
     public float maxHP = 100.0f;
@@ -137,15 +138,18 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         {
             if (hp != value)
             {
-                hp = value;
-                if (hp < 0)
+                if (hp > value)
                 {
-                    Die();
+                    hp = value;
+                    if (isAlive && hp < 0)
+                    {
+                        Die();
+                    }
                 }
 
                 hp = Mathf.Clamp(hp, 0.0f, maxHP);
 
-                onHealthChage?.Invoke(hp/maxHP);
+                onHealthChage?.Invoke(hp / maxHP);
             }
         }
     }
@@ -188,6 +192,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         // 값 초기화 작업
         State = EnemyState.Wait;      // 기본 상태 설정(wait)
         anima.ResetTrigger("Stop");     // 트리거가 쌓이는걸 방지
+        isAlive = true;
 
         // 테스트 코드
         onHealthChage += Test_HP_Change;
@@ -352,6 +357,8 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     public void Die()
     {
         onDie?.Invoke();
+        anima.SetTrigger("Die");
+        isAlive = false;
     }
 
     public void Attact(IBattle target)
@@ -361,6 +368,10 @@ public class Slime : MonoBehaviour, IHealth, IBattle
 
     public void Defence(float damage)
     {
-        HP -= (damage - DefencePower);
+        if (isAlive)
+        {
+            anima.SetTrigger("Hit");
+            HP -= (damage - DefencePower);
+        }
     }
 }
