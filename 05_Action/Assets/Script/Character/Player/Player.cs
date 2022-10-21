@@ -74,7 +74,7 @@ public class Player : MonoBehaviour, IBattle, IHealth
 
     private void Start()
     {
-        hp = maxHP;
+        HP = maxHP;
 
         // 테스트용
         onHealthChage += Test_HP_Change;
