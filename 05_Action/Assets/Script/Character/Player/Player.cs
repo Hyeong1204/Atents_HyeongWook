@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class Player : MonoBehaviour, IBattle, IHealth
@@ -14,6 +16,7 @@ public class Player : MonoBehaviour, IBattle, IHealth
     /// 무기가 붙어있을 게임오브젝
     /// </summary>
     Transform weapon_r;
+    Transform weapon_l;
 
     /// <summary>
     /// 무기가 데미지를 주는 영역의(리치) 트리거
@@ -62,6 +65,7 @@ public class Player : MonoBehaviour, IBattle, IHealth
     private void Awake()
     {
         weapon_r = GetComponentInChildren<WeaponPosition>().transform;          // 자식중에 WeaponPosition컴포넌트 찾기
+        weapon_l = GetComponentInChildren<ShieldPosition>().transform;          // 자식중에 ShieldPosition컴포넌트 찾기
 
         // 장비 교체가 일어나면 새로 해줘야함
         weaponPs = weapon_r.GetComponentInChildren<ParticleSystem>();           // weapon_r에 자식중에 ParticleSystem찾기
@@ -138,6 +142,16 @@ public class Player : MonoBehaviour, IBattle, IHealth
     }
 
     /// <summary>
+    /// 무기와 방패를 표시하거나 표시하지 않는 함수
+    /// </summary>
+    /// <param name="isShow">true면 포시하고 false면 표시하지 않는다.</param>
+    public void ShowWeaponAndSheild(bool isShow)
+    {
+        weapon_r.gameObject.SetActive(isShow);
+        weapon_l.gameObject.SetActive(isShow);
+    }
+
+    /// <summary>
     /// 방어용 함수
     /// </summary>
     /// <param name="damage">현재 입은 데미지</param>
@@ -154,4 +168,5 @@ public class Player : MonoBehaviour, IBattle, IHealth
     {
         onDie?.Invoke();
     }
+
 }

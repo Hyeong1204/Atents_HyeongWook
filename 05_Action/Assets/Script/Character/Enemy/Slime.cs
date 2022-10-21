@@ -24,7 +24,6 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     EnemyState state = EnemyState.Patrol;                   // 현재 적의 상태(대기 상태 or 순찰 상태)
     public float waitTime = 1.0f;       // 목적지에 도착했을 때 기달리는 시간
     float waitTimer;                    // 남아있는 기다려야 하는 시간
-    bool isAlive = true;
 
     // 몬스터 스탯 관련 변수 -----------------------------------------------------
     public float maxHP = 100.0f;
@@ -48,7 +47,8 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     {
         Wait = 0,       // 대기 상태
         Patrol,         // 순찰 상태
-        Chase           // 추적 상태
+        Chase,          // 추적 상태
+        Dead            // 사망 상태
     }
 
     /// <summary>
@@ -108,6 +108,11 @@ public class Slime : MonoBehaviour, IHealth, IBattle
                         anima.SetTrigger("Move");       // Move 애니메이션 재생
                         StateUpdate = Update_Chase;     // FixedUpdate에서 실행될 델리게이트 변경
                         break;
+                    case EnemyState.Dead:
+                        agent.isStopped = true;         // 길찾기 중지
+                        anima.SetTrigger("Die");        // 사망 애니메이션 재생
+                        StateUpdate = Update_Dead;      // FixedUpdate에서 실행될 델리게이트 변경
+                        break;
                     default:
                         break;
                 }
@@ -141,7 +146,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
                 if (hp > value)
                 {
                     hp = value;
-                    if (isAlive && hp < 0)
+                    if (State != EnemyState.Dead && hp < 0)
                     {
                         Die();
                     }
@@ -192,7 +197,6 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         // 값 초기화 작업
         State = EnemyState.Wait;      // 기본 상태 설정(wait)
         anima.ResetTrigger("Stop");     // 트리거가 쌓이는걸 방지
-        isAlive = true;
 
         // 테스트 코드
         onHealthChage += Test_HP_Change;
@@ -201,7 +205,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
 
     private void FixedUpdate()
     {
-        if (SearchPlayer())     // 매번 추적대상을 찾기
+        if (State != EnemyState.Dead && SearchPlayer())     // 매번 추적대상을 찾기
         {
             State = EnemyState.Chase;       // 추적 대상이 있으면 추적 상태로 변경
         }
@@ -246,6 +250,14 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         {
             State = EnemyState.Wait;            // 추적 대상이 없으면 잠시 대기
         }
+    }
+
+    /// <summary>
+    /// Dead 상태일 때 실행될 업데이트 함수
+    /// </summary>
+    void Update_Dead()
+    {
+
     }
 
     /// <summary>
@@ -356,9 +368,8 @@ public class Slime : MonoBehaviour, IHealth, IBattle
 
     public void Die()
     {
+        State = EnemyState.Dead;
         onDie?.Invoke();
-        anima.SetTrigger("Die");
-        isAlive = false;
     }
 
     public void Attact(IBattle target)
@@ -368,7 +379,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
 
     public void Defence(float damage)
     {
-        if (isAlive)
+        if (State != EnemyState.Dead)
         {
             anima.SetTrigger("Hit");
             HP -= (damage - DefencePower);
