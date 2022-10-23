@@ -19,6 +19,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     public WayPoints waypoints;
     public float moveSpeed = 3.0f;      // 적의 이동 속도
 
+    public GameObject dieEffect;            // 몬스터 소멸 이펙트
     Transform wayPointTarget;               // 지금 적이 이동할 목표 지점
 
     EnemyState state = EnemyState.Patrol;                   // 현재 적의 상태(대기 상태 or 순찰 상태)
@@ -39,6 +40,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     // --------------------------------------------------------------------
     Animator anima;
     NavMeshAgent agent;
+    Collider badycollider;
 
     /// <summary>
     /// 적의 상태를 나타내기 위한 enum
@@ -111,6 +113,8 @@ public class Slime : MonoBehaviour, IHealth, IBattle
                     case EnemyState.Dead:
                         agent.isStopped = true;         // 길찾기 중지
                         anima.SetTrigger("Die");        // 사망 애니메이션 재생
+                        badycollider.enabled = false;
+                        StartCoroutine(EnemyDie());
                         StateUpdate = Update_Dead;      // FixedUpdate에서 실행될 델리게이트 변경
                         break;
                     default:
@@ -180,6 +184,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     {
         anima = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        badycollider = GetComponent<Collider>();
     }
 
     private void Start()
@@ -384,5 +389,13 @@ public class Slime : MonoBehaviour, IHealth, IBattle
             anima.SetTrigger("Hit");
             HP -= (damage - DefencePower);
         }
+    }
+
+    IEnumerator EnemyDie()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        Instantiate(dieEffect, transform.position, Quaternion.identity);
+        Destroy(this.gameObject);
     }
 }
