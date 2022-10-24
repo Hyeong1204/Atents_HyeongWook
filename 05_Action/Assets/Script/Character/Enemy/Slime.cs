@@ -114,9 +114,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
                     case EnemyState.Dead:
                         agent.isStopped = true;         // 길찾기 중지
                         anima.SetTrigger("Die");        // 사망 애니메이션 재생
-                        StartCoroutine(DeadRepresent());
-
-                        
+                        StartCoroutine(DeadRepresent());// 사망 연출 코루틴 실행(서서이 가라앉는 연출)
 
                         StateUpdate = Update_Dead;      // FixedUpdate에서 실행될 델리게이트 변경
                         break;
@@ -388,13 +386,14 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     /// <returns></returns>
     IEnumerator DeadRepresent()
     {
-        dieEffect.Play();               // 사망 이펙트 재생    
         dieEffect.transform.parent = null;
         Enemy_HP_Bar hpBar = GetComponentInChildren<Enemy_HP_Bar>();
         Destroy(hpBar.gameObject);
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.0f);
+        dieEffect.Play();               // 사망 이펙트 재생    
 
+        yield return new WaitForSeconds(1.5f);
         agent.enabled = false;          // 네브메쉬 에이전트 컴포넌트 끄기
         badycollider.enabled = false;   // 컬라이더 컴포넌트 끄기
         rigid.isKinematic = false;      // 키네마틱 끄기

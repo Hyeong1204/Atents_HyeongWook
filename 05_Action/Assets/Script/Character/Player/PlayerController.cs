@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     PlayerInputAction playerInput;
     Animator anima;
     CharacterController cc;
+    Player player;
 
     public float rotateSpeed = 180.0f;              // 회전속도
     public float walkSpeed = 3.0f;                 // 걷는 이동속도
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour
         playerInput = new PlayerInputAction();
         anima = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
+        player = GetComponent<Player>();
     }
 
     private void OnEnable()
@@ -63,10 +65,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        //cc.Move(currntSpeed * Time.deltaTime * moveDir);
-        cc.Move(currentSpeed * Time.deltaTime * moveDir);
+        if (player.IsAlive)         //살아있을 때만 업데이트
+        {
+            //cc.Move(currntSpeed * Time.deltaTime * moveDir);
+            cc.Move(currentSpeed * Time.deltaTime * moveDir);
 
-        Rotate();
+            Rotate();
+        }
     }
 
     /// <summary>
@@ -81,7 +86,7 @@ public class PlayerController : MonoBehaviour
         moveDir.y = 0.0f;
         moveDir.x = dir.x;
 
-        if (!context.canceled)      // 입력이 들어왔을 때만 실행되는 코드
+        if (!context.canceled && player.IsAlive)      // 살아있고 입력이 들어왔을 때만 실행되는 코드
         {
             Quaternion cameraYRotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);  // 카메라의 y축 회전만 분리
             moveDir = cameraYRotation * moveDir;        // 카메라의 y축 회전을 moveDir에 곱한다. => moveDir과 카메라가 xz평면상에서 바라보는 방향을 일치시킴
@@ -99,6 +104,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            moveDir = Vector3.zero;
             anima.SetFloat("Speed", 0.0f);          // 입력이 안들어 왔으면 대기 애니메이션
         }
     }
@@ -149,10 +155,12 @@ public class PlayerController : MonoBehaviour
     private void OnAttack(InputAction.CallbackContext _)
     {
         // anima.GetCurrentAnimatorStateInfo(0).normalizedTime; 현재 재생중인 애니메이션의 진행 상태를 알려줌 (0~1)
-
-        int comboState = anima.GetInteger("ComboState");        // ComboState를 애니메이터에서 읽어와서
-        comboState++;       // 콤보 상태 1증가 시키기
-        anima.SetInteger("ComboState", comboState);             // 애니메이터에 증가된 콤보 상태 설정
-        anima.SetTrigger("Attack");                             // Attack 트리거 발동
+        if(player.IsAlive)       // 살아있으면 공격
+        {
+            int comboState = anima.GetInteger("ComboState");        // ComboState를 애니메이터에서 읽어와서
+            comboState++;       // 콤보 상태 1증가 시키기
+            anima.SetInteger("ComboState", comboState);             // 애니메이터에 증가된 콤보 상태 설정
+            anima.SetTrigger("Attack");                             // Attack 트리거 발동
+        }
     }
 }

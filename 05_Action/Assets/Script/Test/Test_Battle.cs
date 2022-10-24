@@ -15,7 +15,7 @@ public class Test_Battle : Test_Base
 
     protected override void Test1(InputAction.CallbackContext obj)
     {
-        player.Defence(10.0f);
+        player.Defence(60.0f);
     }
 
     protected override void Test2(InputAction.CallbackContext obj)
