@@ -19,7 +19,6 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     public WayPoints waypoints;
     public float moveSpeed = 3.0f;      // 적의 이동 속도
 
-    public GameObject dieEffect;            // 몬스터 소멸 이펙트
     Transform wayPointTarget;               // 지금 적이 이동할 목표 지점
 
     EnemyState state = EnemyState.Patrol;                   // 현재 적의 상태(대기 상태 or 순찰 상태)
@@ -27,10 +26,11 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     float waitTimer;                    // 남아있는 기다려야 하는 시간
 
     // 몬스터 스탯 관련 변수 -----------------------------------------------------
-    public float maxHP = 100.0f;
-    public float attackPower = 10.0f;
-    public float defencePower = 3.0f;
-    float hp = 100.0f;
+    public float maxHP = 100.0f;        // 최대 HP 
+    public float attackPower = 10.0f;   // 공격력
+    public float defencePower = 3.0f;   // 방어력
+    float hp = 100.0f;                  // 현재 HP
+    ParticleSystem dieEffect;           // 죽을 때표시될 이펙트
     // -------------------------------------------------------------------------
 
     // 추적 관련 변수 ------------------------------------------------------
@@ -40,7 +40,8 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     // --------------------------------------------------------------------
     Animator anima;
     NavMeshAgent agent;
-    Collider badycollider;
+    SphereCollider badycollider;
+    Rigidbody rigid;
 
     /// <summary>
     /// 적의 상태를 나타내기 위한 enum
@@ -113,8 +114,10 @@ public class Slime : MonoBehaviour, IHealth, IBattle
                     case EnemyState.Dead:
                         agent.isStopped = true;         // 길찾기 중지
                         anima.SetTrigger("Die");        // 사망 애니메이션 재생
-                        badycollider.enabled = false;
-                        StartCoroutine(EnemyDie());
+                        StartCoroutine(DeadRepresent());
+
+                        
+
                         StateUpdate = Update_Dead;      // FixedUpdate에서 실행될 델리게이트 변경
                         break;
                     default:
@@ -184,7 +187,9 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     {
         anima = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        badycollider = GetComponent<Collider>();
+        badycollider = GetComponent<SphereCollider>();
+        dieEffect = GetComponentInChildren<ParticleSystem>();
+        rigid = GetComponent<Rigidbody>();
     }
 
     private void Start()
@@ -377,6 +382,29 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         onDie?.Invoke();
     }
 
+    /// <summary>
+    /// 사망 연출용 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DeadRepresent()
+    {
+        dieEffect.Play();               // 사망 이펙트 재생    
+        dieEffect.transform.parent = null;
+        Enemy_HP_Bar hpBar = GetComponentInChildren<Enemy_HP_Bar>();
+        Destroy(hpBar.gameObject);
+
+        yield return new WaitForSeconds(1.5f);
+
+        agent.enabled = false;          // 네브메쉬 에이전트 컴포넌트 끄기
+        badycollider.enabled = false;   // 컬라이더 컴포넌트 끄기
+        rigid.isKinematic = false;      // 키네마틱 끄기
+        rigid.drag = 10.0f;             // 마찰력 10으로 설정
+
+        yield return new WaitForSeconds(1.5f);
+        Destroy(dieEffect.gameObject);
+        Destroy(this.gameObject);
+    }
+
     public void Attact(IBattle target)
     {
         target?.Defence(attackPower);
@@ -391,11 +419,5 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         }
     }
 
-    IEnumerator EnemyDie()
-    {
-        yield return new WaitForSeconds(2.0f);
-
-        Instantiate(dieEffect, transform.position, Quaternion.identity);
-        Destroy(this.gameObject);
-    }
+   
 }
