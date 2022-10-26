@@ -32,7 +32,7 @@ public class FollowCamera : MonoBehaviour
         }
         else
         {
-            transform.position = Vector3.Lerp(transform.position, diePosition, Time.deltaTime * 2.5f);
+            transform.position = Vector3.Slerp(transform.position, diePosition, Time.deltaTime * 2.5f);
             
             transform.rotation = Quaternion.Lerp(transform.rotation, dieRotation, Time.deltaTime * 2.5f);
         }
