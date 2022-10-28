@@ -22,4 +22,9 @@ public class Test_Battle : Test_Base
     {
         player.HP = player.MaxHP;
     }
+
+    protected override void Test3(InputAction.CallbackContext obj)
+    {
+        GameObject Obj = ItemFactory.MakeItem(ItemIDCode.Ruby);
+    }
 }

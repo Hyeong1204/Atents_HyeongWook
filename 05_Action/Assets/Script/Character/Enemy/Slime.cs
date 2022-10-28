@@ -33,9 +33,6 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     ParticleSystem dieEffect;           // 죽을 때표시될 이펙트
     // -------------------------------------------------------------------------
 
-    // 드랍 아이템 관련 변수 ---------------------------------------------------------
-    public GameObject[] dropItemPrefeb;
-
     // 추적 관련 변수 ------------------------------------------------------
     public float sightRange = 10.0f;                // 시야 범위
     public float sightHalfAngle = 50.0f;            // 시야각의 절반
@@ -424,7 +421,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
 
    void MakeDropItem()
     {
-        int slect = 0;
+        uint slect = 0;
         float percentage = UnityEngine.Random.Range(0.0f, 1.0f);
         if(percentage < 0.5f)
         {
@@ -442,6 +439,8 @@ public class Slime : MonoBehaviour, IHealth, IBattle
             slect = 2;
         }
 
-        Instantiate(dropItemPrefeb[slect], transform.position, Quaternion.identity);
+        GameObject obj = ItemFactory.MakeItem(slect);
+        obj.transform.position = transform.position;
+        obj.transform.rotation = transform.rotation;
     }
 }
