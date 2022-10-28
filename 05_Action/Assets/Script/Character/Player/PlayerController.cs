@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour
         playerInput.Player.Move.canceled += OnMove;
         playerInput.Player.Dash.performed += OnDash;        // 액션과 대쉬 함수 연결
         playerInput.Player.Attack.performed += OnAttack;
+        playerInput.Player.Pickup.performed += OnPickup;
         //playerInput.Player.Dash.canceled += OnDash;
     }
 
@@ -56,6 +58,7 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         //playerInput.Player.Dash.canceled -= OnDash;
+        playerInput.Player.Pickup.performed -= OnPickup;
         playerInput.Player.Attack.performed -= OnAttack;
         playerInput.Player.Dash.performed -= OnDash;        // 액션과 대쉬 함수 해재
         playerInput.Player.Move.canceled -= OnMove;         // 역션과 함수 연결 해제
@@ -107,6 +110,15 @@ public class PlayerController : MonoBehaviour
             moveDir = Vector3.zero;
             anima.SetFloat("Speed", 0.0f);          // 입력이 안들어 왔으면 대기 애니메이션
         }
+    }
+
+    /// <summary>
+    /// 아이템 획득 버튼을 눌렀을 때 실행
+    /// </summary>
+    /// <param name="_"></param>
+    private void OnPickup(InputAction.CallbackContext _)
+    {
+        player.ItemPickup();
     }
 
     /// <summary>

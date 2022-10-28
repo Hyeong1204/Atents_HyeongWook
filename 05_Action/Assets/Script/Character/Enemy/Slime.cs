@@ -33,6 +33,9 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     ParticleSystem dieEffect;           // 죽을 때표시될 이펙트
     // -------------------------------------------------------------------------
 
+    // 드랍 아이템 관련 변수 ---------------------------------------------------------
+    public GameObject[] dropItemPrefeb;
+
     // 추적 관련 변수 ------------------------------------------------------
     public float sightRange = 10.0f;                // 시야 범위
     public float sightHalfAngle = 50.0f;            // 시야각의 절반
@@ -378,6 +381,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     {
         State = EnemyState.Dead;
         onDie?.Invoke();
+        MakeDropItem();
     }
 
     /// <summary>
@@ -389,13 +393,13 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         dieEffect.transform.parent = null;
         Enemy_HP_Bar hpBar = GetComponentInChildren<Enemy_HP_Bar>();
         Destroy(hpBar.gameObject);
+        badycollider.enabled = false;   // 컬라이더 컴포넌트 끄기
 
         yield return new WaitForSeconds(1.0f);
         dieEffect.Play();               // 사망 이펙트 재생    
 
         yield return new WaitForSeconds(1.5f);
         agent.enabled = false;          // 네브메쉬 에이전트 컴포넌트 끄기
-        badycollider.enabled = false;   // 컬라이더 컴포넌트 끄기
         rigid.isKinematic = false;      // 키네마틱 끄기
         rigid.drag = 10.0f;             // 마찰력 10으로 설정
 
@@ -418,5 +422,26 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         }
     }
 
-   
+   void MakeDropItem()
+    {
+        int slect = 0;
+        float percentage = UnityEngine.Random.Range(0.0f, 1.0f);
+        if(percentage < 0.5f)
+        {
+            // 50%
+            slect = 0;
+        }
+        else if(percentage < 0.8f)
+        {
+            // 30%
+            slect = 1;
+        }
+        else
+        {
+            // 20%
+            slect = 2;
+        }
+
+        Instantiate(dropItemPrefeb[slect], transform.position, Quaternion.identity);
+    }
 }

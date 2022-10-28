@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Xml.Serialization;
 using UnityEngine;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 public class Player : MonoBehaviour, IBattle, IHealth
 {
     /// <summary>
@@ -29,6 +31,8 @@ public class Player : MonoBehaviour, IBattle, IHealth
     public float maxHP = 100.0f;        // 최댜 HP
     float hp = 100.0f;                  // 현재 HP
     bool isAlive = true;                // 살아 있는지 죽어있는지 표시
+
+    public float itemPickupRange = 2.0f;
 
     // 프로퍼티 ----------------------------------------------------------------------------------------------------------
     public float AttackPower => attackPower;
@@ -183,4 +187,25 @@ public class Player : MonoBehaviour, IBattle, IHealth
         onDie?.Invoke();
     }
 
+    /// <summary>
+    /// 플레이어 주변의 아이템을 획득하는 함수
+    /// </summary>
+    public void ItemPickup()
+    {
+        Collider[] items = Physics.OverlapSphere(transform.position, itemPickupRange, LayerMask.GetMask("Item"));
+
+        foreach(var item in items)
+        {
+            Destroy(item.gameObject);
+        }
+    }
+
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Handles.color = Color.yellow;
+        Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
+    }
+#endif
 }
