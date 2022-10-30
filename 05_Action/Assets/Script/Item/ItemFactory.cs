@@ -32,4 +32,64 @@ public class ItemFactory
     {
         return MakeItem((ItemIDCode)id);
     }
+
+    public static GameObject MakeItem(ItemIDCode code, Vector3 postion)
+    {
+        GameObject obj = MakeItem(code);
+        obj.transform.position = postion;
+
+        return obj;
+    }
+
+    public static GameObject MakeItem(ItemIDCode code, Vector3 position, bool randomNoise)
+    {
+        Vector3 randomDir = new Vector3(Random.Range(0.1f, 0.5f), 0.0f, Random.Range(0.1f, 0.5f));
+
+        GameObject obj = MakeItem(code, position);
+        if (randomNoise)            // 노이즈가 true면 
+        {
+            obj.transform.position += randomDir;
+        }
+
+        return obj;
+    }
+
+    public static GameObject MakeItems(ItemIDCode code, int count)
+    {
+        GameObject obj = null;
+        for(int i = 0; i < count; i++)
+        {
+            obj = MakeItem(code);
+        }
+        
+        return obj;
+    }
+
+    public static GameObject MakeItems(ItemIDCode code, Vector3 position, int count)
+    {
+        GameObject obj = null;
+        for (int i = 0; i < count; i++)
+        {
+            obj = MakeItem(code, position);
+        }
+
+        return obj;
+    }
+
+    public static GameObject MakeItem(ItemIDCode code, Vector3 position, int count, bool randomNoise)
+    {
+        GameObject obj = null;
+
+        for (int i = 0; i < count; i++)
+        {
+            obj = MakeItem(code, position);
+            if (randomNoise)
+            {
+                Vector3 randomDir = new Vector3(Random.Range(0.1f, 0.5f), 0.0f, Random.Range(0.1f, 0.5f));
+                obj.transform.position += randomDir;
+            }
+        }
+
+        return obj;
+    }
 }

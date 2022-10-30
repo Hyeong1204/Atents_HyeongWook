@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 public class Test_Battle : Test_Base
 {
     Player player;
+    public bool noise = false;
+    public int count = 0;
 
     private void Start()
     {
@@ -23,8 +25,18 @@ public class Test_Battle : Test_Base
         player.HP = player.MaxHP;
     }
 
-    protected override void Test3(InputAction.CallbackContext obj)
+    protected override void Test3(InputAction.CallbackContext _)
     {
-        GameObject Obj = ItemFactory.MakeItem(ItemIDCode.Ruby);
+        ItemFactory.MakeItems(ItemIDCode.Ruby, new Vector3(1, 0, 1), count);
+    }
+
+    protected override void Test4(InputAction.CallbackContext _)
+    {
+        ItemFactory.MakeItem(ItemIDCode.Ruby, new Vector3(1, 0, 1), count, noise);
+    }
+
+    protected override void Test5(InputAction.CallbackContext _)
+    {
+        ItemFactory.MakeItems(ItemIDCode.Emerald, count);
     }
 }
