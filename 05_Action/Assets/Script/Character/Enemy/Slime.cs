@@ -436,44 +436,50 @@ public class Slime : MonoBehaviour, IHealth, IBattle
 
    void MakeDropItem()
     {
-        int slect = 0;
-        float percentage = UnityEngine.Random.Range(0.0f, 1.0f);
-        if(percentage < 0.5f)
+        float percentage = UnityEngine.Random.Range(0.0f, 1.0f);        // 드랍할 아이템을 결정하기 위한 랜덤 숫자 가져오기
+        int slect = 0;      // 드랍할 (내가 가지고 있는) 아이템의 인덱스
+        float max = 0;      // 가장 드랍할 확률이 높은 아이템을 찾기 위한 임시값
+        for (int i = 0; i < dropItems.Length; i++)
         {
-            // 50%
-            slect = 0;
-        }
-        else if(percentage < 0.8f)
-        {
-            // 30%
-            slect = 1;
-        }
-        else
-        {
-            // 20%
-            slect = 2;
+            if(max < dropItems[i].dropPercentage)
+            {
+                max = dropItems[i].dropPercentage;      // 가장 드랍 확률이 높은 아이템 찾기
+                slect = i;                              // slect의 디폴트 값은 가장 드랍 확률이 높은 아이템
+            }
         }
 
-        GameObject obj = ItemFactory.MakeItem(slect);
-        obj.transform.position = transform.position;
-        obj.transform.rotation = transform.rotation;
+        float checkPercentage = 0.0f;                   // 아이템의 드랍 확률을 누적하는 임식 값
+        for (int i = 0; i < dropItems.Length; i++)
+        {
+            checkPercentage += dropItems[i].dropPercentage;     // checkPercentage를 단계별로 계속 누적
+            if (percentage <= checkPercentage)                  // checkPercentage와 percentage 비교 (랜덤 숫자가 누적된 확률보다 낮은지 확인, 낮으면 해당 아이템 생성)
+            {
+                slect = i;          // 생성할 아이템 결정
+                break;              // for문 종료
+            }
+        }
+
+        GameObject obj = ItemFactory.MakeItem(dropItems[slect].id, transform.position);     // 선택된 아이템 생성
     }
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        // 드랍 아이템의 드랍 확률의 합을 1로 만들기
-        float total = 0.0f;
-        foreach (var item in dropItems)
+        if (State != EnemyState.Dead)
         {
-            total += item.dropPercentage;           // 전체 합 구하기
-        }
-
-        if (total > 0)
-        {
-            for (int i = 0; i < dropItems.Length; i++)
+            // 드랍 아이템의 드랍 확률의 합을 1로 만들기
+            float total = 0.0f;
+            foreach (var item in dropItems)
             {
-                dropItems[i].dropPercentage /= total;   // 전체 합으로 나누어서 최종합을 1로 만들기
+                total += item.dropPercentage;           // 전체 합 구하기
+            }
+
+            if (total > 0)          // 안걸러주면 NaN 뜸
+            {
+                for (int i = 0; i < dropItems.Length; i++)
+                {
+                    dropItems[i].dropPercentage /= total;   // 전체 합으로 나누어서 최종합을 1로 만들기
+                }
             }
         }
     }

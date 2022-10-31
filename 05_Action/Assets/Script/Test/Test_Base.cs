@@ -33,27 +33,27 @@ public class Test_Base : MonoBehaviour
         input.Test.Disable();
     }
 
-    protected virtual void Test1(InputAction.CallbackContext obj)
+    protected virtual void Test1(InputAction.CallbackContext _)
     {
         
     }
 
-    protected virtual void Test2(InputAction.CallbackContext obj)
+    protected virtual void Test2(InputAction.CallbackContext _)
     {
 
     }
 
-    protected virtual void Test3(InputAction.CallbackContext obj)
+    protected virtual void Test3(InputAction.CallbackContext _)
     {
 
     }
 
-    protected virtual void Test4(InputAction.CallbackContext obj)
+    protected virtual void Test4(InputAction.CallbackContext _)
     {
 
     }
 
-    protected virtual void Test5(InputAction.CallbackContext obj)
+    protected virtual void Test5(InputAction.CallbackContext _)
     {
 
     }
