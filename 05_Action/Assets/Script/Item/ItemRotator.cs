@@ -29,6 +29,8 @@ public class ItemRotator : MonoBehaviour
         transform.Rotate(0, Time.deltaTime * rotateSpeed * 1.0f, 0);        // 제자리에서 빙글빙글 돌리기
 
         runningTime += Time.deltaTime;          // 시간 계속누적 ( 한번 왕복하는데 3.141592..........초만큼 이동)
+        newPosition.x = transform.parent.position.x;            // 보모의 x,z 위치는 계속적용
+        newPosition.z = transform.parent.position.z;
         newPosition.y = minHeight + (1 - Mathf.Cos(runningTime)) * halfDiff; // 높이값은 cos 그래프를 이용해서 계산
         transform.position = newPosition;       // 계산이 끄난 newPostion으로 위치 옮기기
         //runningTime += Time.deltaTime * moveSpeed;                          // 1초에 1 x moveSpeed 만큼 증가

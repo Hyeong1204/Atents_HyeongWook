@@ -27,12 +27,12 @@ public class Test_Battle : Test_Base
 
     protected override void Test3(InputAction.CallbackContext _)
     {
-        ItemFactory.MakeItems(ItemIDCode.Ruby, new Vector3(1, 0, 1), count);
+        ItemFactory.MakeItem(ItemIDCode.Ruby, new Vector3(1, 0, 1), noise);
     }
 
     protected override void Test4(InputAction.CallbackContext _)
     {
-        ItemFactory.MakeItem(ItemIDCode.Ruby, new Vector3(1, 0, 1), count, noise);
+        ItemFactory.MakeItems(ItemIDCode.Ruby, count, new Vector3(1, 0, 1), noise);
     }
 
     protected override void Test5(InputAction.CallbackContext _)

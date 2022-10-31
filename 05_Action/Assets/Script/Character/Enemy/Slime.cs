@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Diagnostics;
+using UnityEditor.Timeline;
 
 #if UNITY_EDITOR
 using UnityEditor;      // UNITY_EDITOR라는 전처리기가 설정되어있을 때만 실행버전에 넣어라
@@ -38,10 +39,24 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     public float sightHalfAngle = 50.0f;            // 시야각의 절반
     Transform chaseTarget;                          // 추적할 플레이어의 트랜스폼
     // --------------------------------------------------------------------
+
+    // 아이템 드랍용 데이터 -------------------------------------------------------
+    [Serializable]
+    public struct ItemDropInfo            // 드랍 아이템 정보
+    {
+        public ItemIDCode id;             // 아이템 종류
+
+        [Range(0.0f, 1.0f)]
+        public float dropPercentage;      // 아이템 드랍 확률
+    }
+
+    public ItemDropInfo[] dropItems;      // 이 몬스터가 드랍할 아이템의 종류
+
     Animator anima;
     NavMeshAgent agent;
     SphereCollider badycollider;
     Rigidbody rigid;
+
 
     /// <summary>
     /// 적의 상태를 나타내기 위한 enum
@@ -421,7 +436,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
 
    void MakeDropItem()
     {
-        uint slect = 0;
+        int slect = 0;
         float percentage = UnityEngine.Random.Range(0.0f, 1.0f);
         if(percentage < 0.5f)
         {
@@ -443,4 +458,24 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         obj.transform.position = transform.position;
         obj.transform.rotation = transform.rotation;
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        // 드랍 아이템의 드랍 확률의 합을 1로 만들기
+        float total = 0.0f;
+        foreach (var item in dropItems)
+        {
+            total += item.dropPercentage;           // 전체 합 구하기
+        }
+
+        if (total > 0)
+        {
+            for (int i = 0; i < dropItems.Length; i++)
+            {
+                dropItems[i].dropPercentage /= total;   // 전체 합으로 나누어서 최종합을 1로 만들기
+            }
+        }
+    }
+#endif
 }
