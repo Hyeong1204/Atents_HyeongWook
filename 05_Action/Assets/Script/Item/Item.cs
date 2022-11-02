@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 /// <summary>
 /// 아이템 1개를 표현할 클래스
@@ -16,4 +17,5 @@ public class Item : MonoBehaviour
     }
     // 플레이어가 아이템 근처에서 획득 버튼을 누르면 플레이어가 아이템을 습득한다.
 
+    
 }
