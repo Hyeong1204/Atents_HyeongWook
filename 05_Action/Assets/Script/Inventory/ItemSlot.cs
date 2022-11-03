@@ -93,29 +93,34 @@ public class ItemSlot
     /// <summary>
     /// 이 슬롯에 아이템 갯수를 증가시키는 함수
     /// </summary>
+    /// <param name="overCount">넘친 갯수</param>
     /// <param name="count">증가 시킬 아이템 갯수</param>
-    /// <returns>최대치를 넘어선 수. 리턴이 0이면 전부 다 증가시켰거나 실패한 상황</returns>
-    public uint IncreaseSlotItem(uint count = 1)
+    /// <returns>증가 성공 여부, 다 넣는 것에 성공하면 true, 넘치면 false</returns>
+    public bool IncreaseSlotItem(out uint overCount, uint count = 1)
     {
-        int overCount = 0;  // 아이템을 추가하려고 하는데 넘친 갯수
+        bool result;
+        int over = 0;  // 아이템을 추가하려고 하는데 넘친 갯수
         
         //overCount = (int)ItemData.maxStackCount < ItemCount? (int)ItemCount - (int)ItemData.maxStackCount : 0;
-        overCount = (int)(ItemCount + count) - (int)ItemData.maxStackCount;
-        if (overCount > 0)
+        over = (int)(ItemCount + count) - (int)ItemData.maxStackCount;     // 넘친 갯수 계산
+        if (over > 0)
         {
             // 아이템 최대 갯수를 넘쳤다.
             ItemCount = ItemData.maxStackCount;     // 최대치까지만 적용
+            overCount = (uint)over;                 // 넘친 갯수 저장
+            result = false;
         }
         else
         {
             // 충분히 추가할 수 있다.
             ItemCount += count;     // 아이템 갯수 변경
-            overCount = 0;          // uderflow 방지용
+            overCount = 0;          // uderflow 방지용. 넘친 갯수 0으로 설정
+            result = true;
             Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {count}개 만큼 증가. 현재 {ItemCount}개");
         }
-        
 
-        return (uint)overCount;
+
+        return result;
     }
 
     /// <summary>
@@ -136,6 +141,5 @@ public class ItemSlot
             ItemCount = (uint)newCount;
             Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {count}개 만큼 감소. 현재 {ItemCount}개");
         }
-
     }
 }
