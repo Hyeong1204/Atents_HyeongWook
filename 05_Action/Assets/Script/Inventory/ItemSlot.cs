@@ -67,9 +67,17 @@ public class ItemSlot
     /// <param name="count">설정된 갯수</param>
     public void AssignSlotItem(ItemData data, uint count = 1)
     {
-        ItemCount = count;
-        ItemData = data;
-        Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {ItemCount}개 설정");
+        if (data != null)       // data가 null이 아니면 파라메터대로 설정
+        {
+            ItemCount = count;
+            ItemData = data;
+            Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {ItemCount}개 설정");
+        }
+        else
+        {
+            // data가 null이면 비우는 함수 수행
+            ClearSlotItem();
+        }
     }
 
     /// <summary>
@@ -86,13 +94,28 @@ public class ItemSlot
     /// 이 슬롯에 아이템 갯수를 증가시키는 함수
     /// </summary>
     /// <param name="count">증가 시킬 아이템 갯수</param>
-    public void IncreaseSlotItem(uint count = 1)
+    /// <returns>최대치를 넘어선 수. 리턴이 0이면 전부 다 증가시켰거나 실패한 상황</returns>
+    public uint IncreaseSlotItem(uint count = 1)
     {
-        if (!IsEmpty)       // 슬롯이 비어있지 않을 떄만 가능
+        int overCount = 0;  // 아이템을 추가하려고 하는데 넘친 갯수
+        
+        //overCount = (int)ItemData.maxStackCount < ItemCount? (int)ItemCount - (int)ItemData.maxStackCount : 0;
+        overCount = (int)(ItemCount + count) - (int)ItemData.maxStackCount;
+        if (overCount > 0)
         {
-            ItemCount += count;
+            // 아이템 최대 갯수를 넘쳤다.
+            ItemCount = ItemData.maxStackCount;     // 최대치까지만 적용
+        }
+        else
+        {
+            // 충분히 추가할 수 있다.
+            ItemCount += count;     // 아이템 갯수 변경
+            overCount = 0;          // uderflow 방지용
             Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {count}개 만큼 증가. 현재 {ItemCount}개");
         }
+        
+
+        return (uint)overCount;
     }
 
     /// <summary>
@@ -101,20 +124,18 @@ public class ItemSlot
     /// <param name="count">감소시킬 아이템 갯수</param>
     public void DeCreaseSlotItem(uint count = 1)
     {
-        if (!IsEmpty)       // 슬롯이 비어있지 않을 떄만 가능
-        {
-            int newCount = (int)ItemCount - (int)count;
+        int newCount = (int)ItemCount - (int)count;
 
-            if (newCount < 1)
-            {
-                ClearSlotItem();
-                Debug.Log($"인벤토리 {slotIndex}번 슬롯을 비웁니다.");
-            }
-            else
-            {
-                ItemCount = (uint)newCount;
-                Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {count}개 만큼 감소. 현재 {ItemCount}개");
-            }
+        if (newCount < 1)
+        {
+            ClearSlotItem();
+            Debug.Log($"인벤토리 {slotIndex}번 슬롯을 비웁니다.");
         }
+        else
+        {
+            ItemCount = (uint)newCount;
+            Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {count}개 만큼 감소. 현재 {ItemCount}개");
+        }
+
     }
 }
