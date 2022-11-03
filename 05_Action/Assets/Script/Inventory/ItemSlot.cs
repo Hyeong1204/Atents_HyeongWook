@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine;
 public class ItemSlot
 {
     uint slotIndex;                   // 슬롯의 인덱스(인벤토리의 몇 번째 슬로인가?)
-    uint itemCount = 0;                // 슬롯의 들어있는 아이템 개수
+    uint itemCount = 0;               // 슬롯의 들어있는 아이템 개수
     ItemData slotItemData = null;     // 슬롯의 들어있는 아이템 (null이면 아이템이 없다)
 
     /// <summary>
@@ -22,17 +23,42 @@ public class ItemSlot
     /// <summary>
     /// 이 슬롯에 들어있는 아이템 데이터
     /// </summary>
-    public ItemData ItemData => slotItemData;
+    public ItemData ItemData
+    {
+        get => slotItemData;                    // 읽기는 누구나 가능
+        private set                             // 쓰기는 자신만 가능
+        {
+            if(slotItemData != value)           // 슬롯에 아이템이 변경이 있었을 때만
+            {
+                slotItemData = value;
+                onSlotItemChange?.Invoke();     // 델리게이트에 연결된 함수들 실행 (주로 UI 갱신용)
+            }
+        }
+    }
 
     /// <summary>
     /// 아 슬롯에 들어있는 아이템 갯수
     /// </summary>
-    public uint ItemCount => itemCount;
+    public uint ItemCount
+    {
+        get => itemCount;               // 읽기는 누구나 가능
+        private set                     // 쓰기는 자신만 가능
+        {
+            if(itemCount != value)                  // 아이템 갯수에 변경이 일어났을 때만
+            {
+                itemCount = value;
+                onSlotItemChange?.Invoke();         // 델리게이트에 연결된 함수들 실행 (주로 UI 갱신용)
+            }
+        }
+    }
 
     public ItemSlot(uint index)
     {
         slotIndex = index;
     }
+
+    // 델리게이트 -------------------------------------------------------------------------------------
+    public Action onSlotItemChange;
 
     /// <summary>
     /// 이 슬롯에 지정된 아이템을 지정된 갯수로 넣는 함수
@@ -41,9 +67,9 @@ public class ItemSlot
     /// <param name="count">설정된 갯수</param>
     public void AssignSlotItem(ItemData data, uint count = 1)
     {
-        itemCount = count;
-        slotItemData = data;
-        Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{slotItemData.itemName}\" 아이템 {ItemCount}개 설정");
+        ItemCount = count;
+        ItemData = data;
+        Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {ItemCount}개 설정");
     }
 
     /// <summary>
@@ -51,8 +77,8 @@ public class ItemSlot
     /// </summary>
     public void ClearSlotItem()
     {
-        slotItemData = null;
-        itemCount = 0;
+        ItemData = null;
+        ItemCount = 0;
         Debug.Log($"인벤토리 {slotIndex}번 슬롯을 비웁니다.");
     }
 
@@ -62,8 +88,11 @@ public class ItemSlot
     /// <param name="count">증가 시킬 아이템 갯수</param>
     public void IncreaseSlotItem(uint count = 1)
     {
-        itemCount += count;
-        Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{slotItemData.itemName}\" 아이템 {count}개 만큼 증가. 현재 {itemCount}개");
+        if (!IsEmpty)       // 슬롯이 비어있지 않을 떄만 가능
+        {
+            ItemCount += count;
+            Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {count}개 만큼 증가. 현재 {ItemCount}개");
+        }
     }
 
     /// <summary>
@@ -72,17 +101,20 @@ public class ItemSlot
     /// <param name="count">감소시킬 아이템 갯수</param>
     public void DeCreaseSlotItem(uint count = 1)
     {
-        int newCount = (int)itemCount - (int)count;
+        if (!IsEmpty)       // 슬롯이 비어있지 않을 떄만 가능
+        {
+            int newCount = (int)ItemCount - (int)count;
 
-        if (newCount < 1)
-        {
-            ClearSlotItem();
-            Debug.Log($"인벤토리 {slotIndex}번 슬롯을 비웁니다.");
-        }
-        else
-        {
-            itemCount = (uint)newCount;
-            Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{slotItemData.itemName}\" 아이템 {count}개 만큼 감소. 현재 {itemCount}개");
+            if (newCount < 1)
+            {
+                ClearSlotItem();
+                Debug.Log($"인벤토리 {slotIndex}번 슬롯을 비웁니다.");
+            }
+            else
+            {
+                ItemCount = (uint)newCount;
+                Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {count}개 만큼 감소. 현재 {ItemCount}개");
+            }
         }
     }
 }
