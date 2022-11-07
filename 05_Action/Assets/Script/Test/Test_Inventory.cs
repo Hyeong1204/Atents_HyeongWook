@@ -6,10 +6,12 @@ using UnityEngine.InputSystem;
 public class Test_Inventory : Test_Base
 {
     Inventory inven;
+    InventoryUI inventoryUI;
 
     private void Start()
     {
-        inven = new Inventory(10);
+        inven = new Inventory(6);
+        inventoryUI = FindObjectOfType<InventoryUI>();
     }
 
     protected override void Test1(InputAction.CallbackContext _)
@@ -28,15 +30,13 @@ public class Test_Inventory : Test_Base
 
     protected override void Test3(InputAction.CallbackContext _)
     {
-        inven.ClearItem(1);
-        inven.ClearItem(3);
-        inven.ClearItem(5);
+        Test_AddItemForUI();
+        inventoryUI.InitializeInventoty(inven);
     }
 
     protected override void Test4(InputAction.CallbackContext _)
     {
-        inven.RemoveItem(0);
-        inven.RemoveItem(1, 3);
+        inven.MoveItem(0, 3);
     }
 
     protected override void Test5(InputAction.CallbackContext _)
@@ -45,4 +45,23 @@ public class Test_Inventory : Test_Base
         inven.AddItem(ItemIDCode.Emerald, 8);
         inven.AddItem(ItemIDCode.Sapphire, 20);
     }
+
+    void Test_AddItemForUI()
+    {
+        inven.ClearInventory();
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Emerald);
+        inven.AddItem(ItemIDCode.Emerald);
+        inven.AddItem(ItemIDCode.Sapphire);
+
+        inven.AddItem(ItemIDCode.Ruby, 5);
+        inven.AddItem(ItemIDCode.Ruby, 5);
+        inven.AddItem(ItemIDCode.Ruby, 5);
+        inven.AddItem(ItemIDCode.Ruby, 5);
+        inven.AddItem(ItemIDCode.Ruby, 5);
+    }
+
 }
