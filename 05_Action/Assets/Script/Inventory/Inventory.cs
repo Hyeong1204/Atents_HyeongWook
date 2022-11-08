@@ -13,6 +13,10 @@ public class Inventory
     // 변수 ------------------------------------------------------------------------------------
 
     ItemSlot[] slots = null;      // 이 이벤토리가 가지고 있는 아이템 슬롯의 배열
+
+    /// <summary>
+    /// 드래그 중인 아이템을 임시 저장하는 슬롯
+    /// </summary>
     ItemSlot tempSlot = null;
 
     ItemDataManager dataManager;  // 게임 메니저가 가지는 아이템 데이터 매니저 캐싱용
@@ -214,8 +218,9 @@ public class Inventory
         // from이 적절한 인덱스이고 아이템이 들어있다. 그리고 to 는 적절한 인덱스이다.
         if (IsValidAndNotEmptySlotIndex(from) && IsValidSlotIndex(to))
         {
-            ItemSlot fromSlot = slots[from];
-            ItemSlot toSlot = slots[to];
+            ItemSlot fromSlot = (from == Inventory.TempSlotIndex) ? TempSlot : slots[from];
+            ItemSlot toSlot = (to == Inventory.TempSlotIndex) ? TempSlot : slots[to];
+
             if (fromSlot.ItemData == toSlot.ItemData)
             {
                 // from과 to가 같은 아이템을 가지고 있으면 to에다가 아이템 합치기
@@ -280,14 +285,25 @@ public class Inventory
     /// </summary>
     /// <param name="index">확인할 인덱스</param>
     /// <returns>true면 사용가능한 인덱스, false면 사용불가능한 인덱스</returns>
-    private bool IsValidSlotIndex(uint index) => (index < SlotCount);
+    private bool IsValidSlotIndex(uint index) => (index < SlotCount) || (index == TempSlotIndex);
 
     /// <summary>
     /// 파라메터로 받은 인덱스가 적절한 인덱스이면서 비어있찌 않은 것을 확인하는 함수
     /// </summary>
     /// <param name="index">확인할 인덱스</param>
     /// <returns>true면 적절한 인덱스이면서 아이템이 들어있는 함수, false면 실패</returns>
-    private bool IsValidAndNotEmptySlotIndex(uint index) => (IsValidSlotIndex(index) && !slots[index].IsEmpty);
+    private bool IsValidAndNotEmptySlotIndex(uint index)
+    {
+        if (IsValidSlotIndex(index))
+        {
+            ItemSlot testSlot = (index == TempSlotIndex) ? TempSlot : slots[index];
+
+            return !testSlot.IsEmpty;
+        }
+
+        return false;
+    }
+
 
     public void PrintInventory()        // 인벤토리에 무엇이 들었는지 출력하기
     {

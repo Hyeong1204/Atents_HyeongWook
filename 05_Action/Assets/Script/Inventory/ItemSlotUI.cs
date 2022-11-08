@@ -6,13 +6,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IPointerClickHandler ,IPointerUpHandler
+public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     // 변수  ------------------------------------------------------------------------------------------------
     private uint id;        // 몇번째 슬롯인가?
 
     protected ItemSlot itemSlot; // 이 UI와 연결된 ItemSlot
 
+    
     Image itemImage;
     TextMeshProUGUI itemCountText;
 
@@ -23,7 +24,8 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IPoint
 
     // 델리게이트  --------------------------------------------------------------------------------------------
     public Action<uint> onDragStart;
-    public Action<uint> onMouseUp;
+    public Action<uint> onDragEnd;
+    public Action<uint> onDragCanel;
 
     // 함수 --------------------------------------------------------------------------------------------------
     private void Awake()
@@ -42,6 +44,10 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IPoint
         this.id = id;
         this.itemSlot = slot;
         this.itemSlot.onSlotItemChange = Refresh;
+
+        onDragStart = null;
+        onDragEnd = null;
+        onDragCanel = null;
 
         Refresh();
     }
@@ -85,20 +91,33 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IPoint
         //eventData.button == PointerEventData.InputButton.Left : 마우스 왼쪽 버튼이 눌러져 있다.
         //eventData.button == PointerEventData.InputButton.Right : 마우스 오른쪽 버튼이 눌러져 있다.
     }
+
+    /// <summary>
+    /// EventSystems에서 드래그 시작을 감지하면 실행되는 함수
+    /// </summary>
+    /// <param name="eventData">관련 이벤트 정보들</param>
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log($"드래그 시작 : {ID}번 슬롯");
-        onDragStart?.Invoke(ID);
+        onDragStart?.Invoke(ID);        // 이 슬롯에서 드래그가 시작되었음을 알림
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    /// <summary>
+    /// EventSystems에서 종료가 감지되면 실행된는 함수
+    /// </summary>
+    /// <param name="eventData">관련 이벤트 정보들</param>
+    public void OnEndDrag(PointerEventData eventData)
     {
-        // OnPointerUp를 실해시키 위해 추가
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        Debug.Log($"마우스 업 : {ID}번 슬롯");
-        onMouseUp?.Invoke(ID);
+        GameObject obj = eventData.pointerCurrentRaycast.gameObject;        // 현재 마우스 위치에 피킹된 오브젝트가 있는지 확인
+        ItemSlotUI endSlot = obj.GetComponent<ItemSlotUI>();                // 피킹된 오브젝트에서 ItemSlotUI가져오기
+        if (endSlot != null)
+        {
+            onDragEnd?.Invoke(endSlot.ID);                                  // 피킹된 슬롯에서 드래그가 끝났음을 알림
+        }
+        else
+        {
+            Debug.Log($"드래그 실패 : {ID}번째 슬롯에서 실패");
+            onDragCanel?.Invoke(ID);                                        // 드래그가 실패 했음을 알림
+        }
     }
 }
