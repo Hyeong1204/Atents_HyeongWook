@@ -12,6 +12,7 @@ public class Test_Inventory : Test_Base
     {
         inven = new Inventory(6);
         inventoryUI = FindObjectOfType<InventoryUI>();
+        inventoryUI.InitializeInventoty(inven);
     }
 
     protected override void Test1(InputAction.CallbackContext _)
@@ -31,7 +32,6 @@ public class Test_Inventory : Test_Base
     protected override void Test3(InputAction.CallbackContext _)
     {
         Test_AddItemForUI();
-        inventoryUI.InitializeInventoty(inven);
     }
 
     protected override void Test4(InputAction.CallbackContext _)
