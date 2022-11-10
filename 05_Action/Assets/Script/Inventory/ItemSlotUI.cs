@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
@@ -26,6 +27,7 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     public Action<uint> onDragEnd;              // 드래그 끝났을 때(자신 안에서 끝)
     public Action<uint> onDragCanel;            // 드래그 실패했을 떄(자신 박에서 끝)
     public Action<uint> onClick;                // 클릭이 되었을 때
+    public Action<uint> onShiftClick;            // 쉬프트 클릭이 되었을 때
     public Action<uint> onPointerEnter;         // 마우스 포인터가 안에 들어왔을 때
     public Action<uint> onPointerExit;          // 마우스 포인터가 박으로 나갔을 때
     public Action<Vector2> onPointerMove;       // 마우스 포인터가 안에서 움직일 때
@@ -51,6 +53,7 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
         onDragEnd = null;
         onDragCanel = null;
         onClick = null;
+        onShiftClick = null;
         onPointerEnter = null;
         onPointerExit = null;
         onPointerMove = null;
@@ -136,7 +139,14 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     /// <param name="eventData">관련 이벤트 정보들</param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        onClick.Invoke(ID);
+        if(Keyboard.current.leftShiftKey.ReadValue() > 0)
+        {
+            onShiftClick?.Invoke(ID);
+        }
+        else
+        {
+            onClick?.Invoke(ID);
+        }
     }
 
     /// <summary>

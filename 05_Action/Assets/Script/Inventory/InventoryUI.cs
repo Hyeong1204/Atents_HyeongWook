@@ -24,6 +24,7 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     DetaillnfoUI detail;
 
+    ItemSpliterUI spliter;
     private void Awake()
     {
         // 컴포넌트 찾기
@@ -36,6 +37,7 @@ public class InventoryUI : MonoBehaviour
         }
         tempSlot = GetComponentInChildren<TempItemSlotUI>();
         detail = GetComponentInChildren<DetaillnfoUI>();
+        spliter = GetComponentInChildren<ItemSpliterUI>();
     }
 
     /// <summary>
@@ -85,6 +87,7 @@ public class InventoryUI : MonoBehaviour
             slotUIs[i].onDragEnd += OnItemMoveEnd;                      // 슬롯에서 드래그가 끝날 떄 실행될 함수 연결
             slotUIs[i].onDragCanel += OnItemMoveCancel;                 // 드래그가 실패했을 때 실행될 함수 연결
             slotUIs[i].onClick += OnItemMoveEnd;                        // 클릭을 했을 때 실행될 함수 연결
+            slotUIs[i].onShiftClick += OnItemSplit;                     // 쉬프트 클릭을 했을 때 실행될 함수 연결
             slotUIs[i].onPointerEnter += OnItemDetailOn;                // 마우스가 들어갔을 때 실행될 함수 연결
             slotUIs[i].onPointerExit += OnItemDetailOff;                // 마우스가 나갔을 때 실행될 함수 연결
             slotUIs[i].onPointerMove += OnPointerMove;                  // 마우스가 슬롯 안에서 움직일 때 실행될 함수 연결
@@ -95,6 +98,7 @@ public class InventoryUI : MonoBehaviour
         tempSlot.onTempSlotOpenClose += OnDetailPause;
         tempSlot.Close();           // 기본적으로 닫아 놓기
     }
+
 
     /// <summary>
     /// 슬롯에 드래그를 시작햇을 때 실행될 함수
@@ -164,5 +168,16 @@ public class InventoryUI : MonoBehaviour
     {
         detail.IsPause = isPause;       // 임시 슬롯이 열리면 상세정보 창 일시 정지
                                         // 임시 슬롯이 닫히면 상세정보 창 일시 해제
+    }
+
+    /// <summary>
+    /// 슬롯을 쉬프트 클릭했을 때 실행될 함수
+    /// </summary>
+    /// <param name="slotID"></param>
+    private void OnItemSplit(uint slotID)
+    {
+        spliter.Open(slotUIs[slotID]);
+        detail.Close();
+        detail.IsPause = true;
     }
 }
