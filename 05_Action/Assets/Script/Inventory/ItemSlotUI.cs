@@ -141,11 +141,14 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     {
         if(Keyboard.current.leftShiftKey.ReadValue() > 0)
         {
-            onShiftClick?.Invoke(ID);
+            if (ItemSlot.ItemCount > 1)
+            {
+                onShiftClick?.Invoke(ID);       // 쉬프트 클릭으로 아이템 분리
+            }
         }
         else
         {
-            onClick?.Invoke(ID);
+            onClick?.Invoke(ID);            // 들고 있던 임시 슬롯의 아이템 배치용도
         }
     }
 

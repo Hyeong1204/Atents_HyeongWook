@@ -38,6 +38,7 @@ public class InventoryUI : MonoBehaviour
         tempSlot = GetComponentInChildren<TempItemSlotUI>();
         detail = GetComponentInChildren<DetaillnfoUI>();
         spliter = GetComponentInChildren<ItemSpliterUI>();
+        spliter.OnOkClick += OnSplitOK;         // 스플리터가 가지고 있는 onOKClick 델리게이트에 함수 등록
     }
 
     /// <summary>
@@ -176,8 +177,21 @@ public class InventoryUI : MonoBehaviour
     /// <param name="slotID"></param>
     private void OnItemSplit(uint slotID)
     {
-        spliter.Open(slotUIs[slotID]);
-        detail.Close();
-        detail.IsPause = true;
+        ItemSlotUI targetSlot = slotUIs[slotID];
+        spliter.transform.position = targetSlot.transform.position + Vector3.up * 100;   // 스플릿터 창의 포지션을 targetSlot포지션의 Vector3.up * 100위치로 변경
+        spliter.Open(targetSlot);                       // 스플릿터 창 열기
+        detail.Close();                                 // 디테일 창 닫기
+        detail.IsPause = true;                          // 디테일 퍼즈 온
+    }
+
+    /// <summary>
+    /// 아이템 분리창에서 OK가 클릭되었을 때 실행되는 함수
+    /// </summary>
+    /// <param name="slotID">아이템을 분리할 슬롯</param>
+    /// <param name="count">분리할 아이템 갯수</param>
+    private void OnSplitOK(uint slotID, uint count)
+    {
+        inven.MoveItemToTempSlot(slotID, count);        // slotID 번째 슬롯에서 아이템을 count만큼 분리해서 임시슬롯에 담기
+        tempSlot.Open();                                // 임시슬롯을 보이게 만들기
     }
 }

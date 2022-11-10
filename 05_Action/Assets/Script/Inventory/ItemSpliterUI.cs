@@ -59,6 +59,11 @@ public class ItemSpliterUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// OK 버튼을 눌렀을 때 실행될 델리게이트
+    /// </summary>
+    public Action<uint, uint> OnOkClick;
+
     private void Awake()
     {
         // 각종 초기화
@@ -73,8 +78,14 @@ public class ItemSpliterUI : MonoBehaviour
         Button decrease = transform.GetChild(2).GetComponent<Button>();     // 감소버튼 컴포넌트 찾기
         decrease.onClick.AddListener(Decrease);                             // 눌러질 때 마다 ItemSplitCount 1씩 감소
 
-        Button ok = transform.GetChild(4).GetComponent<Button>();
-        Button cancel = transform.GetChild(5).GetComponent<Button>();
+        Button ok = transform.GetChild(4).GetComponent<Button>();           // ok 버튼 컴포넌트 찾기
+        ok.onClick.AddListener(() => 
+        {
+            OnOkClick?.Invoke(targetSlot.SlotIndex, ItemSplitCount);        // 어떤 슬롯에서 몇개의 아이템을 옮길지 알려주기
+            Close();                                                        // 아이템 분리창 닫기
+        });      // ok 버튼이 눌러지면 InventoryUI에 알림
+        Button cancel = transform.GetChild(5).GetComponent<Button>();       // 캔슬 버튼이 컴포넌트찾기
+        cancel.onClick.AddListener(Close);                                  // 캔슬 버튼이 눌러지면 아이템 분리창 닫기
 
         itemImage = transform.GetChild(6).GetComponent<Image>();            // 아이템 아이콘을 표시할 이미지 컴포넌트찾기
     }
