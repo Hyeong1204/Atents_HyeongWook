@@ -10,7 +10,7 @@ public class Test_Inventory : Test_Base
 
     private void Start()
     {
-        inven = new Inventory(6);
+        inven = new Inventory(null);
         inventoryUI = FindObjectOfType<InventoryUI>();
         inventoryUI.InitializeInventoty(inven);
     }

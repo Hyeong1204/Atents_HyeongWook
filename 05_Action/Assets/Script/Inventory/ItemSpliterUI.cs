@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using System;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Processors;
 
-public class ItemSpliterUI : MonoBehaviour
+public class ItemSpliterUI : MonoBehaviour, IScrollHandler
 {
     /// <summary>
     /// 분리할 갯수의 최소값
@@ -17,6 +20,9 @@ public class ItemSpliterUI : MonoBehaviour
     /// 분리할 갯수
     /// </summary>
     uint itemSplitCount = itemCountMin;
+
+    float xPos;
+    float yPos;
 
     ItemSlot targetSlot;
 
@@ -93,6 +99,10 @@ public class ItemSpliterUI : MonoBehaviour
     private void Start()
     {
         slider.minValue = itemCountMin;     // 최소값 설정
+        RectTransform rectTransform = (RectTransform)transform;
+        xPos = rectTransform.sizeDelta.x * 0.5f;
+        yPos = rectTransform.sizeDelta.y;
+
         Close();        // 시작할 때 닫고 시작하기
     }
 
@@ -140,5 +150,45 @@ public class ItemSpliterUI : MonoBehaviour
     void Decrease()
     {
         ItemSplitCount--;
+    }
+
+    /// <summary>
+    /// 마우스가 클릭되었을 때 실행될 함수
+    /// </summary>
+    /// <param name="context"></param>
+    public void OnMouseClick(InputAction.CallbackContext context)
+    {
+        Vector2 screenPos = Mouse.current.position.ReadValue();
+        if (IsAreaInside(screenPos) && gameObject.activeSelf)       // 열려있는 상태이고 마우스의 위치가 아이템 분리기 안에 있는지 밖에 있는지 확인
+        {
+            Close();                            // 밖에 있으면 닫기
+        }
+    }
+
+    /// <summary>
+    /// 마우스 휠이 움직였을 떄 실행되는 함수
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnScroll(PointerEventData eventData)
+    {
+        if(eventData.scrollDelta.y > 0)
+        {
+            Add();          // 위쪽으로 휠을 올리면 갯수 증가
+        }
+        else
+        {
+            Decrease();     // 아래쪽으로 휠을 내리면 갯수 감소
+        }
+    }
+
+    /// <summary>
+    /// 특정 스키린좌표가 아이템 분리기 안에 있는지 밖에 있는지 확인하는 함수
+    /// </summary>
+    /// <param name="screenPos">확인할 스크린 좌표</param>
+    /// <returns>true면 스크린좌표가 아이템 분리기 밖에 있다.</returns>
+    private bool IsAreaInside(Vector2 screenPos)
+    {
+        // 결과는 위치가 스크린좌표가 transform.position위치에 벗어 나면 true
+        return (screenPos.y < transform.position.y || screenPos.y > transform.position.y + yPos || screenPos.x < transform.position.x - xPos || screenPos.x > transform.position.x + xPos);
     }
 }

@@ -32,6 +32,7 @@ public class Player : MonoBehaviour, IBattle, IHealth
     float hp = 100.0f;                  // 현재 HP
     bool isAlive = true;                // 살아 있는지 죽어있는지 표시
 
+    Inventory inven;
     public float itemPickupRange = 2.0f;
 
     // 프로퍼티 ----------------------------------------------------------------------------------------------------------
@@ -86,8 +87,10 @@ public class Player : MonoBehaviour, IBattle, IHealth
         HP = maxHP;
         isAlive = true;
         // 테스트용
-        onHealthChage += Test_HP_Change;
-        onDie += Test_Die;
+        //onHealthChage += Test_HP_Change;
+        //onDie += Test_Die;
+        inven = new Inventory(this);
+        Gamemanager.Inst.InvenUI.InitializeInventoty(inven);
     }
 
     void Test_HP_Change(float ratino)
@@ -194,9 +197,13 @@ public class Player : MonoBehaviour, IBattle, IHealth
     {
         Collider[] items = Physics.OverlapSphere(transform.position, itemPickupRange, LayerMask.GetMask("Item"));
 
-        foreach(var item in items)
+        foreach(var itemCollider in items)
         {
-            Destroy(item.gameObject);
+            Item item = itemCollider.gameObject.GetComponent<Item>();
+            if (inven.AddItem(item.data))       // 추가가 성공하면
+            {
+                Destroy(itemCollider.gameObject);   // 아이템 오브젝트 삭제
+            }
         }
     }
 

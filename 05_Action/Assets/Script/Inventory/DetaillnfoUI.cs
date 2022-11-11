@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 public class DetaillnfoUI : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class DetaillnfoUI : MonoBehaviour
     /// 작동 일시 정지 확인용 변수
     /// </summary>
     bool isPause = false;
+
+    /// <summary>
+    /// 목표로 하는 알파값
+    /// </summary>
+    float targetAlpha = 0.0f;
     // 프로퍼티 ---------------------------------------------------------------------------------------
     /// <summary>
     /// 작동 일시 정지 확인용 프로퍼티
@@ -51,6 +57,21 @@ public class DetaillnfoUI : MonoBehaviour
         canvasGroup = GetComponent<CanvasGroup>();
     }
 
+    private void Update()
+    {
+        if( targetAlpha > 0)
+        {
+            // 목표 알파가 0보다 크다 => 켜지고 있는 중이다.
+            canvasGroup.alpha += Time.deltaTime * 40;
+        }
+        else
+        {
+            // 목표 알파가 0보다 작거나 같다. => 꺼지고 있는 중이다.
+            canvasGroup.alpha += -Time.deltaTime * 40;
+        }
+        canvasGroup.alpha = Mathf.Clamp(canvasGroup.alpha, 0, 1);
+    }
+
     /// <summary>
     /// 상세정보 창 열기
     /// </summary>
@@ -63,8 +84,7 @@ public class DetaillnfoUI : MonoBehaviour
             itemName.text = itemData.itemName;
             itemValue.text = itemData.value.ToString();
             itemDesc.text = itemData.itemDescription;
-
-            canvasGroup.alpha = 1;  // 알파값 모두 1로 만들어서 보이게 만들기
+            targetAlpha = 1;  // 알파값 모두 1로 만들어서 보이게 만들기
 
            MovePosistion( Mouse.current.position.ReadValue());          // 열릴 때 항상 마우스 위치를 기준으로 열기
         }
@@ -75,7 +95,7 @@ public class DetaillnfoUI : MonoBehaviour
     /// </summary>
     public void Close()
     {
-        canvasGroup.alpha = 0;  // 알파값 모두 0으로 만들어서 보이게 만들기
+        targetAlpha = 0;
     }
 
     /// <summary>

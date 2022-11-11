@@ -21,6 +21,10 @@ public class Inventory
 
     ItemDataManager dataManager;  // 게임 메니저가 가지는 아이템 데이터 매니저 캐싱용
 
+    /// <summary>
+    /// 이 인벤토리를 가지고 있는 플레이어
+    /// </summary>
+    Player owner;
 
     // 프로퍼티 --------------------------------------------------------------------------------
 
@@ -35,9 +39,13 @@ public class Inventory
     /// <returns>index번째에 있는 ItemSlot</returns>
     public ItemSlot this[uint index] => slots[index];
 
-    // 함수 ------------------------------------------------------------------------------------
+    /// <summary>
+    /// 이 인벤토리를 가지고 있는 플레이어를 확인하는 프로퍼티
+    /// </summary>
+    public Player Owner => owner;
 
-    public Inventory(int size = Default_Inventory_Size)
+    // 함수 ------------------------------------------------------------------------------------
+    public Inventory(Player owner, int size = Default_Inventory_Size)
     {
         Debug.Log("인벤토리 생성");
         slots = new ItemSlot[size];
@@ -47,6 +55,8 @@ public class Inventory
         }
         tempSlot = new ItemSlot(TempSlotIndex);
         dataManager = Gamemanager.Inst.ItemData;
+
+        this.owner = owner;
     }
 
     /// <summary>
@@ -138,7 +148,7 @@ public class Inventory
                 else
                 {
                     // 다른 종류의 아이템이 들어있다.
-                    Debug.Log($"실패 : 인벤토리 {index}번 슬롯에 다른 아이템이 들어있습닏나.");
+                    Debug.Log($"실패 : 인벤토리 {index}번 슬롯에 다른 아이템이 들어있습니다.");
                 }
             }
         }
@@ -284,7 +294,8 @@ public class Inventory
 
         for (int i = 0; i < SlotCount; i++)
         {
-            if (slots[i].ItemData == itemdata)
+            // 같은 종류의 아이템이고 빈칸이 있어야 한다.
+            if (slots[i].ItemData == itemdata && slots[i].ItemCount < slots[i].ItemData.maxStackCount)
             {
                 findSlot = slots[i];
                 // Debug.Log($"{i}번째의 {slots[i].ItemData.itemName}가 있어 {itemdata.itemName}의 갯수를 증가시킵니다.");
