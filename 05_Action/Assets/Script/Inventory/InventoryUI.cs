@@ -53,10 +53,12 @@ public class InventoryUI : MonoBehaviour
     {
         inputAction.UI.Enable();
         inputAction.UI.Click.performed += spliter.OnMouseClick;
+        inputAction.UI.Click.canceled += tempSlot.OnDrop;
     }
 
     private void OnDisable()
     {
+        inputAction.UI.Click.canceled -= tempSlot.OnDrop;
         inputAction.UI.Click.performed -= spliter.OnMouseClick;
         inputAction.UI.Disable();
     }
