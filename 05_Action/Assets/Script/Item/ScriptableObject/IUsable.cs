@@ -2,10 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemIDCode
+interface IUsable
 {
-    Ruby = 0,
-    Emerald,
-    Sapphire,
-    HealPotion
+    bool Use(GameObject target = null);
 }

@@ -142,4 +142,20 @@ public class ItemSlot
             Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {count}개 만큼 감소. 현재 {ItemCount}개");
         }
     }
+
+    /// <summary>
+    /// 이 슬롯에 있는 아이템을 사용하는 함수
+    /// </summary>
+    /// <param name="target">아이템의 효과를 받을 타겟</param>
+    public void UseSlotItem(GameObject target = null)
+    {
+        IUsable usable = ItemData as IUsable;       // 사용 가능한 아이템인지 확인
+        if(usable != null)
+        {
+            if (usable.Use(target))                 // 아이템을 사용하고 성공적으로 사용했는지 확인
+            {
+                DeCreaseSlotItem();                 // 아이ㅔㅁ 갯수 1개 감소
+            }
+        }
+    }
 }
