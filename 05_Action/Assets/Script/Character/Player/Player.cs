@@ -80,6 +80,7 @@ public class Player : MonoBehaviour, IBattle, IHealth
         // 장비 교체가 일어나면 새로 해줘야함
         weaponPs = weapon_r.GetComponentInChildren<ParticleSystem>();           // weapon_r에 자식중에 ParticleSystem찾기
         weaponBlade = weapon_r.GetComponentInChildren<Collider>();              // 무기의 충돌 영역 가져오기
+        inven = new Inventory(this);
     }
 
     private void Start()
@@ -89,7 +90,6 @@ public class Player : MonoBehaviour, IBattle, IHealth
         // 테스트용
         //onHealthChage += Test_HP_Change;
         //onDie += Test_Die;
-        inven = new Inventory(this);
         Gamemanager.Inst.InvenUI.InitializeInventoty(inven);
     }
 

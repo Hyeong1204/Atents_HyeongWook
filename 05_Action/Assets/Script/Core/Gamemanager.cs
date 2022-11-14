@@ -35,6 +35,7 @@ public class Gamemanager : Singleton<Gamemanager>
     /// </summary>
     protected override void Initaialize()
     {
+        base.Initaialize();
         itemData = GetComponent<ItemDataManager>();
         player = FindObjectOfType<Player>();        // 플리어 찾기
         inventoryUI = FindObjectOfType<InventoryUI>();
