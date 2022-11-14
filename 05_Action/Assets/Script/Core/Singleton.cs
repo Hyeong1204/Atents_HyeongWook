@@ -1,3 +1,5 @@
+#define PRINT_DEBUG_INFO
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,7 +26,9 @@ public class Singleton<T> : MonoBehaviour where T : Component
         {
             if (isShutDown)
             {
+#if PRINT_DEBUG_INFO
                 Debug.LogWarning($"{typeof(T)}싱글톤 이미 삭제 되었음");
+#endif
                 return null;
             }
             if(_instance == null)

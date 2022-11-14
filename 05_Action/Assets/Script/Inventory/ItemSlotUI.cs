@@ -32,7 +32,7 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     public Action<uint> onPointerExit;          // 마우스 포인터가 박으로 나갔을 때
     public Action<Vector2> onPointerMove;       // 마우스 포인터가 안에서 움직일 때
     // 함수 --------------------------------------------------------------------------------------------------
-    private void Awake()
+    protected virtual void Awake()
     {
         itemImage = transform.GetChild(0).GetComponent<Image>();
         itemCountText = GetComponentInChildren<TextMeshProUGUI>();
