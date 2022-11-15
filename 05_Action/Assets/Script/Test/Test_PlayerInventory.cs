@@ -21,4 +21,9 @@ public class Test_PlayerInventory : Test_Base
     {
         player.Money = 1; 
     }
+
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+        
+    }
 }

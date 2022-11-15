@@ -289,11 +289,13 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
             IConsumable iconsumable = item.data as IConsumable;
             if (iconsumable != null)
             {
-                iconsumable.Consume(this.gameObject);
-                Destroy(itemCollider.gameObject);
+                // 즉시 사용될 아이템
+                iconsumable.Consume(this.gameObject);       // 해당 아이템 사용
+                Destroy(itemCollider.gameObject);           // 아이템 오브젝트 삭제
             }
             else
             {
+                // 인벤토리에 들어갈 아이템
                 if (inven.AddItem(item.data))       // 추가가 성공하면
                 {
                     Destroy(itemCollider.gameObject);   // 아이템 오브젝트 삭제

@@ -7,5 +7,9 @@ public enum ItemIDCode
     Ruby = 0,
     Emerald,
     Sapphire,
-    HealPotion
+    HealPotion,
+    ManaPotion,
+    Coin_Glod,
+    Coin_Sliver,
+    Coin_Copper
 }

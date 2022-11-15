@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 697159c7445a4c44f919144426ac9ffb, type: 3}
   m_Name: 07_MoneyCoin_Copper
   m_EditorClassIdentifier: 
-  id: 5
-  itemName: "100\uC6D0"
-  modelprefab: {fileID: 1916254657996106281, guid: 2a8bb4c63350c514dbe57a20c51462c1, type: 3}
+  id: 7
+  itemName: "1\uC6D0"
+  modelprefab: {fileID: 1916254657996106281, guid: 8583b288bfef2974c82bd1ddc986352a, type: 3}
   itemIcon: {fileID: 21300000, guid: 4605338a5a51383478a6b8eb3707e90c, type: 3}
-  value: 100
+  value: 1
   maxStackCount: 1
-  itemDescription: 
+  itemDescription: "\uB3D9\uD654 \uD55C\uAC1C\uC5D0 1\uC6D0\uC774\uB2E4."
