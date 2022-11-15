@@ -16,7 +16,7 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     
     Image itemImage;
     TextMeshProUGUI itemCountText;
-
+    TextMeshProUGUI itemEquipText;
     // 프로퍼티 ----------------------------------------------------------------------------------------------
     public uint ID => id;
 
@@ -35,7 +35,8 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     protected virtual void Awake()
     {
         itemImage = transform.GetChild(0).GetComponent<Image>();
-        itemCountText = GetComponentInChildren<TextMeshProUGUI>();
+        itemCountText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        itemEquipText = transform.GetChild(2).GetComponent<TextMeshProUGUI>();        
     }
 
     /// <summary>
@@ -88,6 +89,17 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
             itemImage.color = Color.white;                      // 불투명화
             itemCountText.text = $"{ItemSlot.ItemCount}";       // 아이템 갯수 설정
         }
+            ClearEquipMark();
+    }
+
+    public void SetEquipMark()
+    {
+        itemEquipText.color = Color.red;
+    }
+
+    public void ClearEquipMark()
+    {
+        itemEquipText.color = Color.clear;
     }
 
     public void OnDrag(PointerEventData eventData)

@@ -11,5 +11,13 @@ public enum ItemIDCode
     ManaPotion,
     Coin_Glod,
     Coin_Sliver,
-    Coin_Copper
+    Coin_Copper,
+    IronSword,
+    SliverSword
+}
+
+public enum EquipPartType
+{
+    Weapon = 0,
+    Shield
 }
