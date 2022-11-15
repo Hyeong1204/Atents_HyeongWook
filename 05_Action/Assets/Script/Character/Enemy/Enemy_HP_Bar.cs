@@ -11,7 +11,7 @@ public class Enemy_HP_Bar : MonoBehaviour
     {
         fill = transform.GetChild(1);
         IHealth target = GetComponentInParent<IHealth>();
-        target.onHealthChage += Refresh;    // 델리게이트에 함수 연결
+        target.onHealthChange += Refresh;    // 델리게이트에 함수 연결
     }
 
     private void Refresh(float ratino)

@@ -12,7 +12,7 @@ public interface IHealth
     /// HP가 변경될 때 실행될 델리게이트용 프로퍼티
     /// 파라메터는 현재 / 최대 비율
     /// </summary>
-    Action<float> onHealthChage { get; set; }
+    Action<float> onHealthChange { get; set; }
 
     void Die();     // 죽었을 때 실행될 함수
 

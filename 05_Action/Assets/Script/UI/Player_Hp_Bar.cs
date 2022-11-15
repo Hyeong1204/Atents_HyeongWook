@@ -24,7 +24,7 @@ public class Player_Hp_Bar : MonoBehaviour
         slider.value = 1.0f;                                // 슬라이더 최대치 만들기
         maxHPText = player.MaxHP.ToString();                // 최대 HP 표시용 글자 만들기
         maxHp = player.MaxHP;                               // 치대 Hp 가져오기
-        player.onHealthChage += OnHealthChange;             // HP가 변경될 때 실행되는 델리게이트에 함수 연결
+        player.onHealthChange += OnHealthChange;             // HP가 변경될 때 실행되는 델리게이트에 함수 연결
         hpText.text = $"{maxHp} / {maxHPText}";      // 슬라이더 글자 최대치로 찍기
     }
 

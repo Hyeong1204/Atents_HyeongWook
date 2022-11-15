@@ -174,7 +174,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
 
                 hp = Mathf.Clamp(hp, 0.0f, maxHP);
 
-                onHealthChage?.Invoke(hp / maxHP);
+                onHealthChange?.Invoke(hp / maxHP);
             }
         }
     }
@@ -189,7 +189,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     /// <summary>
     /// HP가 변경될 때 실행될 델리게이트
     /// </summary>
-    public Action<float> onHealthChage { get; set; }
+    public Action<float> onHealthChange { get; set; }
 
     /// <summary>
     /// 죽었을 때 실행될 델리게이트
@@ -222,7 +222,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         anima.ResetTrigger("Stop");     // 트리거가 쌓이는걸 방지
 
         // 테스트 코드
-        onHealthChage += Test_HP_Change;
+        onHealthChange += Test_HP_Change;
         onDie += Test_Die;
     }
 

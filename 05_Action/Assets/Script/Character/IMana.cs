@@ -12,10 +12,12 @@ public interface IMana
     /// HP가 변경될 때 실행될 델리게이트용 프로퍼티
     /// 파라메터는 현재 / 최대 비율
     /// </summary>
-    Action<float> onManaChage { get; set; }
+    Action<float> onManaChange { get; set; }
 
     /// <summary>
-    /// Update 함수에서 지속적으로 마나 회복하는 함수
+    /// 마나를 지속적으로 증가시켜주는 함수. 초당 totalRegen / duration 만큼씩 회복
     /// </summary>
-    void ManaRegenerate();
+    /// <param name="duration">전체 회복량</param>
+    /// <param name="totalRenen">지속 시간</param>
+    void ManaRegenerate(float totalRenen, float duration);
 }

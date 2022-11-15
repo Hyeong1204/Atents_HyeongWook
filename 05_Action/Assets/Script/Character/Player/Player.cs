@@ -7,7 +7,7 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-public class Player : MonoBehaviour, IBattle, IHealth
+public class Player : MonoBehaviour, IBattle, IHealth, IMana
 {
     /// <summary>
     /// 무기에 붙어있는 파티클 시스템 컴포넌트
@@ -28,8 +28,12 @@ public class Player : MonoBehaviour, IBattle, IHealth
 
     public float attackPower = 10.0f;          // 공격력
     public float defencePower = 3.0f;          // 방어력
-    public float maxHP = 100.0f;        // 최댜 HP
+    public float maxHP = 100.0f;        // 최대 HP
     float hp = 100.0f;                  // 현재 HP
+
+    public float maxMP = 100.0f;        // 최대 MP
+    float mp = 100.0f;                  // 현재 MP
+    //bool isManaChange = false;
     bool isAlive = true;                // 살아 있는지 죽어있는지 표시
 
     Inventory inven;
@@ -57,16 +61,35 @@ public class Player : MonoBehaviour, IBattle, IHealth
 
                 hp = Mathf.Clamp(hp, 0.0f, maxHP);
 
-                onHealthChage?.Invoke(hp/maxHP);
+                onHealthChange?.Invoke(hp/maxHP);
+            }
+        }
+    }
+    public float MaxHP => maxHP;
+
+    public float MP
+    {
+        get => mp;
+        set
+        {
+            if(isAlive &&  mp != value)
+            {
+                mp = Mathf.Clamp(value, 0.0f, maxMP);
+
+                onManaChange?.Invoke(mp / maxMP);
             }
         }
     }
 
-    public float MaxHP => maxHP;
+    public float MaxMP => maxMP;
+
     // -------------------------------------------------------------------------------------------------------------------
 
     // 델리게이트 ---------------------------------------------------------------------------------------------------------
-    public Action<float> onHealthChage { get; set; }
+    public Action<float> onHealthChange { get; set; }
+
+    public Action<float> onManaChange { get; set; }
+
     public Action onDie { get; set; }
 
     // -------------------------------------------------------------------------------------------------------------------
@@ -191,9 +214,42 @@ public class Player : MonoBehaviour, IBattle, IHealth
     }
 
     /// <summary>
-    /// 플레이어 주변의 아이템을 획득하는 함수
+    /// 포션 사용시 마나 회복
     /// </summary>
-    public void ItemPickup()
+    public void ManaRegenerate(float totalRenen, float duration)
+    {
+        StartCoroutine(ManaRegeneration(totalRenen, duration));
+    }
+
+    IEnumerator ManaRegeneration(float totalRegen, float duration)
+    {
+        float regenPerSec = totalRegen / duration;
+        float timeElapsed = 0.0f;
+        while(timeElapsed < duration)
+        {
+            timeElapsed += Time.deltaTime;
+            MP += Time.deltaTime * regenPerSec;
+            yield return null;
+        }
+    }
+
+
+    float tick = 0.2f;
+    IEnumerator ManaRegeneration_Tick(float totalRegen, float duration)
+    {
+        int regenCount = Mathf.FloorToInt(duration / tick);
+        float regenPerTick = totalRegen / regenCount;
+        for (int i = 0; i < regenCount; i++)
+        {
+            MP += regenPerTick;
+            yield return new WaitForSeconds(tick);
+        }
+    }
+
+        /// <summary>
+        /// 플레이어 주변의 아이템을 획득하는 함수
+        /// </summary>
+        public void ItemPickup()
     {
         Collider[] items = Physics.OverlapSphere(transform.position, itemPickupRange, LayerMask.GetMask("Item"));
 
