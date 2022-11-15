@@ -14,11 +14,11 @@ public class Test_PlayerInventory : Test_Base
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-        player.MP = 20.0f;   
+        player.Money += 1000000;   
     }
 
     protected override void Test2(InputAction.CallbackContext _)
     {
-        player.MP = 120.0f;
+        player.Money = 1; 
     }
 }

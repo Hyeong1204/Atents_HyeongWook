@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Xml.Serialization;
 using UnityEngine;
+using Unity.VisualScripting;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -39,7 +40,7 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
     Inventory inven;
     public float itemPickupRange = 2.0f;
 
-    int money;
+    int money = 0;
 
     // 프로퍼티 ----------------------------------------------------------------------------------------------------------
     public float AttackPower => attackPower;
@@ -285,9 +286,18 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         foreach (var itemCollider in items)
         {
             Item item = itemCollider.gameObject.GetComponent<Item>();
-            if (inven.AddItem(item.data))       // 추가가 성공하면
+            IConsumable iconsumable = item.data as IConsumable;
+            if (iconsumable != null)
             {
-                Destroy(itemCollider.gameObject);   // 아이템 오브젝트 삭제
+                iconsumable.Consume(this.gameObject);
+                Destroy(itemCollider.gameObject);
+            }
+            else
+            {
+                if (inven.AddItem(item.data))       // 추가가 성공하면
+                {
+                    Destroy(itemCollider.gameObject);   // 아이템 오브젝트 삭제
+                }
             }
         }
     }
