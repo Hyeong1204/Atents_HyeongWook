@@ -32,7 +32,7 @@ public class Player_Mp_Bar : MonoBehaviour
         ratio = Mathf.Clamp(ratio, 0, 1);           // 숫자가 넘치는 것을 방지
         slider.value = ratio;                       // 비율에 맞춰 슬라이더 조절
 
-        float hp = maxMp * ratio;                   // 비율을 이용해서 현재 HP 계산
-        mpText.text = $"{hp} / {maxMpText}";        // Mp 출력
+        float mp = maxMp * ratio;                   // 비율을 이용해서 현재 HP 계산
+        mpText.text = $"{(int)mp} / {maxMpText}";        // Mp 출력
     }
 }

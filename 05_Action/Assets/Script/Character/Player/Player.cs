@@ -39,6 +39,8 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
     Inventory inven;
     public float itemPickupRange = 2.0f;
 
+    int money;
+
     // 프로퍼티 ----------------------------------------------------------------------------------------------------------
     public float AttackPower => attackPower;
     public float DefencePower => defencePower;
@@ -83,9 +85,24 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
 
     public float MaxMP => maxMP;
 
+    public int Money
+    {
+        get => money;
+        set
+        {
+            if(money != value)
+            {
+                money = value;
+                onMoneyChange?.Invoke(money);
+            }
+        }
+    }
+
     // -------------------------------------------------------------------------------------------------------------------
 
     // 델리게이트 ---------------------------------------------------------------------------------------------------------
+    public Action<int> onMoneyChange;       // 돈이 변경 되면 실행될 델리게이트
+
     public Action<float> onHealthChange { get; set; }
 
     public Action<float> onManaChange { get; set; }
@@ -214,46 +231,58 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
     }
 
     /// <summary>
-    /// 포션 사용시 마나 회복
+    /// 마나 회복용 함수
     /// </summary>
+    /// <param name="totalRenen">전체 회복량</param>
+    /// <param name="duration">전체 회복하는데 걸리는 시간</param>
     public void ManaRegenerate(float totalRenen, float duration)
     {
         StartCoroutine(ManaRegeneration(totalRenen, duration));
     }
 
+    /// <summary>
+    /// 마나 회복용 코루틴
+    /// </summary>
+    /// <param name="totalRegen">전체 회복량</param>
+    /// <param name="duration">전체 회복하는데 걸리는 시간</param>
+    /// <returns></returns>
     IEnumerator ManaRegeneration(float totalRegen, float duration)
     {
-        float regenPerSec = totalRegen / duration;
-        float timeElapsed = 0.0f;
-        while(timeElapsed < duration)
+        float regenPerSec = totalRegen / duration;  // 초당 회복량 계산
+        float timeElapsed = 0.0f;                   // 진행 시간 기록용
+        while(timeElapsed < duration)               // 진행시간이 duratuion을 지날 때 까지 반복
         {
-            timeElapsed += Time.deltaTime;
-            MP += Time.deltaTime * regenPerSec;
-            yield return null;
+            timeElapsed += Time.deltaTime;          // 진해시간 누적시키기
+            MP += Time.deltaTime * regenPerSec;     // MP를 1초당 회복 회복량만큼 증가
+            yield return null;                      // 다음 프레임 시작까지 대기
         }
     }
 
-
-    float tick = 0.2f;
+    /// <summary>
+    /// 틱마다 마나가 회복되는 코루틴
+    /// </summary>
+    /// /// <param name="totalRegen">전체 회복량</param>
+    /// <param name="duration">전체 회복하는데 걸리는 시간</param>
     IEnumerator ManaRegeneration_Tick(float totalRegen, float duration)
     {
-        int regenCount = Mathf.FloorToInt(duration / tick);
-        float regenPerTick = totalRegen / regenCount;
-        for (int i = 0; i < regenCount; i++)
+        float tick = 0.2f;                                      // 1번 회복하는 시간 간격(0.2초에 한번씩 회복이 발생)
+        int regenCount = Mathf.FloorToInt(duration / tick);     // 전체 회복 횟수
+        float regenPerTick = totalRegen / regenCount;           // 한 틱당 회복량
+        for (int i = 0; i < regenCount; i++)                    // 전체 반복 횟수만큼 for 진행
         {
-            MP += regenPerTick;
-            yield return new WaitForSeconds(tick);
+            MP += regenPerTick;                                 // 한 틱당 회복량을 추가
+            yield return new WaitForSeconds(tick);              // 다음 틱까지 대기
         }
     }
 
-        /// <summary>
-        /// 플레이어 주변의 아이템을 획득하는 함수
-        /// </summary>
-        public void ItemPickup()
+    /// <summary>
+    /// 플레이어 주변의 아이템을 획득하는 함수
+    /// </summary>
+    public void ItemPickup()
     {
         Collider[] items = Physics.OverlapSphere(transform.position, itemPickupRange, LayerMask.GetMask("Item"));
 
-        foreach(var itemCollider in items)
+        foreach (var itemCollider in items)
         {
             Item item = itemCollider.gameObject.GetComponent<Item>();
             if (inven.AddItem(item.data))       // 추가가 성공하면

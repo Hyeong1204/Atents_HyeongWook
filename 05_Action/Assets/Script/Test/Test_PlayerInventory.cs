@@ -10,12 +10,11 @@ public class Test_PlayerInventory : Test_Base
     private void Start()
     {
         player = FindObjectOfType<Player>();
-        player.MP = 30.0f;   
     }
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-
+        player.MP = 20.0f;   
     }
 
     protected override void Test2(InputAction.CallbackContext _)
