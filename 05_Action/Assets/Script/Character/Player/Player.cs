@@ -341,6 +341,13 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquipTarget
         Transform partTransform = GetPartTransform(part);       // 아이템이 장차될 부모 트랜스폼 가져오기
         Instantiate(itemData.equipPrefab, partTransform);       // 아이템을 생성해서 partTransform의 자식으로 붙임
         partsItems[(int)part] = itemData;                       // 아이템이 장비되었다고 표시
+
+        if(part == EquipPartType.Weapon)
+        {
+            // 장비 교체가 일어나면 새로 해줘야함
+            weaponPs = weapon_r.GetComponentInChildren<ParticleSystem>();           // weapon_r에 자식중에 ParticleSystem찾기
+            weaponBlade = weapon_r.GetComponentInChildren<Collider>();              // 무기의 충돌 영역 가져오기
+        }
     }
 
     /// <summary>
