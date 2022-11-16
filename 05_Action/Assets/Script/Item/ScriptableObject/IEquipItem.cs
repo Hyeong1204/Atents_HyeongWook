@@ -2,7 +2,10 @@ using UnityEngine;
 
 interface IEquipItem
 {
-    // 이 장비아이템이 장착될 파츠
+    // 이 장비아이템이 장착될 부위
+    /// <summary>
+    /// 이 장비 아이템이 장착될 부위
+    /// </summary>
     EquipPartType EquipPart { get; }
 
     /// <summary>
@@ -18,8 +21,9 @@ interface IEquipItem
     void UnEquipItem(GameObject target);
 
     /// <summary>
-    /// 아이템이 장뵈어있으면 해제하고 해제되었으면 장비하는 함수
+    /// 아이템을 자연스럽게 장착하고 해제하는 함수
     /// </summary>
     /// <param name="target">장비하고 해제할 대상</param>
-    void ToggleEquipItem(GameObject target);
+    /// <remarks>true면 아이템 장비, false 아이템 해제</remarks>
+    bool AutoEquipItem(GameObject target);
 }

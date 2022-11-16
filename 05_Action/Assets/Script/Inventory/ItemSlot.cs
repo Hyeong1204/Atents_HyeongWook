@@ -58,7 +58,15 @@ public class ItemSlot
     }
 
     // 델리게이트 -------------------------------------------------------------------------------------
+    /// <summary>
+    /// 슬롯의 아이템이 변경되면 실행되는 델리게이트
+    /// </summary>
     public Action onSlotItemChange;
+
+    /// <summary>
+    /// 아이템 장비되었을 때 실행되는 델리게이트
+    /// </summary>
+    public Action onSlotitemEquip;
 
     /// <summary>
     /// 이 슬롯에 지정된 아이템을 지정된 갯수로 넣는 함수
@@ -154,8 +162,11 @@ public class ItemSlot
         if (equip != null)
         {
             // 아이템 장비처리
-            equip.EquipItem(target);
-            
+            bool isEquip = equip.AutoEquipItem(target);
+            if (isEquip)
+            {
+                onSlotitemEquip?.Invoke();               // 아이템이 장비되면 델리게이트 실행
+            }
         }
         else
         {
@@ -165,7 +176,7 @@ public class ItemSlot
             {
                 if (usable.Use(target))                 // 아이템을 사용하고 성공적으로 사용했는지 확인
                 {
-                    DeCreaseSlotItem();                 // 아이ㅔㅁ 갯수 1개 감소
+                    DeCreaseSlotItem();                 // 아이템 갯수 1개 감소
                 }
             }
         }

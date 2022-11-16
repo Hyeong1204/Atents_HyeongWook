@@ -9,19 +9,4 @@ public class ItemData_Weapon : ItemData_EquipItem
     public float attacPower = 30;
 
     public new EquipPartType EquipPart => EquipPartType.Weapon;
-
-    public override void EquipItem(GameObject target)
-    {
-        
-    }
-
-    public override void ToggleEquipItem(GameObject target)
-    {
-        
-    }
-
-    public override void UnEquipItem(GameObject target)
-    {
-        
-    }
 }

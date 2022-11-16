@@ -49,7 +49,8 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
         this.id = id;
         this.itemSlot = slot;
         this.itemSlot.onSlotItemChange = Refresh;
-
+        this.ItemSlot.onSlotitemEquip = SetEquipMark;
+        
         onDragStart = null;
         onDragEnd = null;
         onDragCanel = null;
@@ -59,6 +60,8 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
         onPointerExit = null;
         onPointerMove = null;
         Refresh();
+
+        ClearEquipMark();
     }
 
     /// <summary>
@@ -89,7 +92,6 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
             itemImage.color = Color.white;                      // 불투명화
             itemCountText.text = $"{ItemSlot.ItemCount}";       // 아이템 갯수 설정
         }
-            ClearEquipMark();
     }
 
     public void SetEquipMark()
