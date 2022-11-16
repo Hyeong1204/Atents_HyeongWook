@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-public class Player : MonoBehaviour, IBattle, IHealth, IMana
+public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquipTarget
 {
     /// <summary>
     /// 무기에 붙어있는 파티클 시스템 컴포넌트
@@ -41,6 +41,8 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
     public float itemPickupRange = 2.0f;
 
     int money = 0;
+
+    ItemData_EquipItem[] partsItems;
 
     // 프로퍼티 ----------------------------------------------------------------------------------------------------------
     public float AttackPower => attackPower;
@@ -99,6 +101,15 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         }
     }
 
+    public ItemData_EquipItem[] PartsItems
+    {
+        get => partsItems;
+        //set
+        //{
+        //    partsItems = value;
+        //}
+    }
+
     // -------------------------------------------------------------------------------------------------------------------
 
     // 델리게이트 ---------------------------------------------------------------------------------------------------------
@@ -121,6 +132,9 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         // 장비 교체가 일어나면 새로 해줘야함
         weaponPs = weapon_r.GetComponentInChildren<ParticleSystem>();           // weapon_r에 자식중에 ParticleSystem찾기
         weaponBlade = weapon_r.GetComponentInChildren<Collider>();              // 무기의 충돌 영역 가져오기
+
+        partsItems = new ItemData_EquipItem[Enum.GetValues(typeof(EquipPartType)).Length];
+
         inven = new Inventory(this);
     }
 
@@ -133,6 +147,14 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         //onDie += Test_Die;
         Gamemanager.Inst.InvenUI.InitializeInventoty(inven);
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Handles.color = Color.yellow;
+        Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
+    }
+#endif
 
     void Test_HP_Change(float ratino)
     {
@@ -304,12 +326,37 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         }
     }
 
-
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
+    public void EquipItem(EquipPartType part, ItemData_EquipItem itemData)
     {
-        Handles.color = Color.yellow;
-        Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
+        Transform partTransform = GetPartTransform(part);
+        Instantiate(itemData.equipPrefab, partTransform);
+        partsItems[(int)part] = itemData;
     }
-#endif
+
+    public void UnEquipItem(EquipPartType part)
+    {
+        Transform partTransform = GetPartTransform(part);
+        
+        while(partTransform.childCount > 0)
+        {
+            Transform child = partTransform.GetChild(0);
+            child.parent = null;
+            Destroy(child);
+        }
+    }
+
+    private Transform GetPartTransform(EquipPartType part)
+    {
+        Transform result = null;
+        switch (part)
+        {
+            case EquipPartType.Weapon:
+                result = weapon_r;
+                break;
+            case EquipPartType.Shield:
+                result = weapon_l;
+                break;
+        }
+        return result;
+    }
 }

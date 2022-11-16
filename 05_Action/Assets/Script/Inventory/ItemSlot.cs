@@ -153,10 +153,13 @@ public class ItemSlot
 
         if (equip != null)
         {
-            // 아이템 장비
+            // 아이템 장비처리
+            equip.EquipItem(target);
+            
         }
         else
         {
+            // 장비 아이템이 아니다.
             IUsable usable = ItemData as IUsable;       // 사용 가능한 아이템인지 확인
             if (usable != null)
             {
@@ -166,6 +169,5 @@ public class ItemSlot
                 }
             }
         }
-
     }
 }
