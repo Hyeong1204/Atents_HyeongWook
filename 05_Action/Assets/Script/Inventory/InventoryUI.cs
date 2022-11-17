@@ -35,6 +35,12 @@ public class InventoryUI : MonoBehaviour
     /// 보유금액 표시창
     /// </summary>
     MoneyPanelUI moneyPanel;
+
+    /// <summary>
+    /// 인벤토리 창 열고 닫기 위한 캔버스 그룹
+    /// </summary>
+    CanvasGroup canvasGroup;
+
     public Player Owner => inven.Owner;
 
     private void Awake()
@@ -53,6 +59,9 @@ public class InventoryUI : MonoBehaviour
         spliter.OnOkClick += OnSplitOK;         // 스플리터가 가지고 있는 onOKClick 델리게이트에 함수 등록
 
         moneyPanel = GetComponentInChildren<MoneyPanelUI>();
+
+        canvasGroup = GetComponent<CanvasGroup>();
+
         inputAction = new PlayerInputAction();
     }
 
@@ -134,6 +143,29 @@ public class InventoryUI : MonoBehaviour
         // 돈이 변경되면 moneyPanel도 갱신되게 변경
         Owner.onMoneyChange += moneyPanel.Refresh;
         moneyPanel.Refresh(Owner.Money);
+
+        // 인벤토리 닫아 놓기
+        Close();
+    }
+
+    /// <summary>
+    /// 인벤토리 열기
+    /// </summary>
+    public void Open()
+    {
+        canvasGroup.alpha = 1;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+    }
+
+    /// <summary>
+    /// 인벤토리 닫기
+    /// </summary>
+    public void Close()
+    {
+        canvasGroup.blocksRaycasts = false;
+        canvasGroup.interactable = false;
+        canvasGroup.alpha = 0;
     }
 
     /// <summary>

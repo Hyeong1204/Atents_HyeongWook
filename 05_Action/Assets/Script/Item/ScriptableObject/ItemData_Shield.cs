@@ -8,5 +8,5 @@ public class ItemData_Shield : ItemData_EquipItem
     [Header("방패 데이터")]
     public float defencePower = 30;
 
-    public new EquipPartType EquipPart => EquipPartType.Shield;
+    public override EquipPartType EquipPart => EquipPartType.Shield;
 }

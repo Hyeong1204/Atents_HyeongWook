@@ -13,7 +13,9 @@ public enum ItemIDCode
     Coin_Sliver,
     Coin_Copper,
     IronSword,
-    SliverSword
+    SliverSword,
+    RoundShield,
+    KiteShield
 }
 
 public enum EquipPartType

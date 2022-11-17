@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: 10_RoundSheild
   m_EditorClassIdentifier: 
   id: 10
-  itemName: "\uBC29\uD3281"
+  itemName: "\uB77C\uC6B4\uB4DC\uC2E4\uB4DC"
   modelprefab: {fileID: 1916254657996106281, guid: 4d6857b1891f5af48b4538c944a7956d, type: 3}
   itemIcon: {fileID: 21300000, guid: 615f3cdaa1374bd4db14286066f31cde, type: 3}
   value: 500
   maxStackCount: 1
-  itemDescription: 
+  itemDescription: "\uBC29\uD328"
   equipPrefab: {fileID: 4796543646644090803, guid: a6866fa61da76e0458369a6536642c6f, type: 3}
   defencePower: 30
