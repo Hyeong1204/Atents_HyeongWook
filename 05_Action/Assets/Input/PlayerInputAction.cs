@@ -301,6 +301,34 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Effect"",
+            ""id"": ""f5d19990-b6af-4b6e-be26-cab409e452e2"",
+            ""actions"": [
+                {
+                    ""name"": ""CousorMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""a9a34205-629a-4722-911d-c1d318c7c4f8"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""d2ade737-599f-4916-88eb-ef024b2d8291"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyBoard&Mouse"",
+                    ""action"": ""CousorMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -338,6 +366,9 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
+        // Effect
+        m_Effect = asset.FindActionMap("Effect", throwIfNotFound: true);
+        m_Effect_CousorMove = m_Effect.FindAction("CousorMove", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -548,6 +579,39 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // Effect
+    private readonly InputActionMap m_Effect;
+    private IEffectActions m_EffectActionsCallbackInterface;
+    private readonly InputAction m_Effect_CousorMove;
+    public struct EffectActions
+    {
+        private @PlayerInputAction m_Wrapper;
+        public EffectActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @CousorMove => m_Wrapper.m_Effect_CousorMove;
+        public InputActionMap Get() { return m_Wrapper.m_Effect; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(EffectActions set) { return set.Get(); }
+        public void SetCallbacks(IEffectActions instance)
+        {
+            if (m_Wrapper.m_EffectActionsCallbackInterface != null)
+            {
+                @CousorMove.started -= m_Wrapper.m_EffectActionsCallbackInterface.OnCousorMove;
+                @CousorMove.performed -= m_Wrapper.m_EffectActionsCallbackInterface.OnCousorMove;
+                @CousorMove.canceled -= m_Wrapper.m_EffectActionsCallbackInterface.OnCousorMove;
+            }
+            m_Wrapper.m_EffectActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @CousorMove.started += instance.OnCousorMove;
+                @CousorMove.performed += instance.OnCousorMove;
+                @CousorMove.canceled += instance.OnCousorMove;
+            }
+        }
+    }
+    public EffectActions @Effect => new EffectActions(this);
     private int m_KeyBoardMouseSchemeIndex = -1;
     public InputControlScheme KeyBoardMouseScheme
     {
@@ -575,5 +639,9 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnClick(InputAction.CallbackContext context);
+    }
+    public interface IEffectActions
+    {
+        void OnCousorMove(InputAction.CallbackContext context);
     }
 }
