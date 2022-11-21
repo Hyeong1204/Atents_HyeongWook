@@ -21,6 +21,21 @@ public class ItemSlot
     public bool IsEmpty => slotItemData == null;
 
     /// <summary>
+    /// 이 슬롯의 아이템을 장비했는지 표시하는 변수
+    /// </summary>
+    bool isEquipped = false;
+
+    public bool IsEquipped
+    {
+        get => isEquipped;
+        set
+        {
+            isEquipped= value;
+            onSlotitemEquip?.Invoke(isEquipped);
+        }
+    }
+
+    /// <summary>
     /// 이 슬롯에 들어있는 아이템 데이터
     /// </summary>
     public ItemData ItemData
@@ -66,18 +81,19 @@ public class ItemSlot
     /// <summary>
     /// 아이템 장비되었을 때 실행되는 델리게이트
     /// </summary>
-    public Action onSlotitemEquip;
+    public Action<bool> onSlotitemEquip;
 
     /// <summary>
     /// 이 슬롯에 지정된 아이템을 지정된 갯수로 넣는 함수
     /// </summary>
     /// <param name="data">추가할 아이템</param>
     /// <param name="count">설정된 갯수</param>
-    public void AssignSlotItem(ItemData data, uint count = 1)
+    public void AssignSlotItem(ItemData data, bool isEquip, uint count = 1)
     {
         if (data != null)       // data가 null이 아니면 파라메터대로 설정
         {
             ItemCount = count;
+            IsEquipped = isEquip;
             ItemData = data;
             Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {ItemCount}개 설정");
         }
@@ -94,6 +110,7 @@ public class ItemSlot
     public void ClearSlotItem()
     {
         ItemData = null;
+        IsEquipped = false;
         ItemCount = 0;
         Debug.Log($"인벤토리 {slotIndex}번 슬롯을 비웁니다.");
     }
@@ -162,11 +179,7 @@ public class ItemSlot
         if (equip != null)
         {
             // 아이템 장비처리
-            bool isEquip = equip.AutoEquipItem(target);
-            if (isEquip)
-            {
-                onSlotitemEquip?.Invoke();               // 아이템이 장비되면 델리게이트 실행
-            }
+           equip.AutoEquipItem(target, this);
         }
         else
         {

@@ -286,6 +286,15 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""InventoryOnOff"",
+                    ""type"": ""Button"",
+                    ""id"": ""bb688757-aa95-4e72-9b9e-b728e3a7a1cd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -297,6 +306,17 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""KeyBoard&Mouse"",
                     ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dda37ab0-47ac-42d2-83aa-6c0a455833a0"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyBoard&Mouse"",
+                    ""action"": ""InventoryOnOff"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -366,6 +386,7 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
+        m_UI_InventoryOnOff = m_UI.FindAction("InventoryOnOff", throwIfNotFound: true);
         // Effect
         m_Effect = asset.FindActionMap("Effect", throwIfNotFound: true);
         m_Effect_CousorMove = m_Effect.FindAction("CousorMove", throwIfNotFound: true);
@@ -551,11 +572,13 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_Click;
+    private readonly InputAction m_UI_InventoryOnOff;
     public struct UIActions
     {
         private @PlayerInputAction m_Wrapper;
         public UIActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
         public InputAction @Click => m_Wrapper.m_UI_Click;
+        public InputAction @InventoryOnOff => m_Wrapper.m_UI_InventoryOnOff;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -568,6 +591,9 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
                 @Click.started -= m_Wrapper.m_UIActionsCallbackInterface.OnClick;
                 @Click.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnClick;
                 @Click.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnClick;
+                @InventoryOnOff.started -= m_Wrapper.m_UIActionsCallbackInterface.OnInventoryOnOff;
+                @InventoryOnOff.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnInventoryOnOff;
+                @InventoryOnOff.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnInventoryOnOff;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -575,6 +601,9 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
                 @Click.started += instance.OnClick;
                 @Click.performed += instance.OnClick;
                 @Click.canceled += instance.OnClick;
+                @InventoryOnOff.started += instance.OnInventoryOnOff;
+                @InventoryOnOff.performed += instance.OnInventoryOnOff;
+                @InventoryOnOff.canceled += instance.OnInventoryOnOff;
             }
         }
     }
@@ -639,6 +668,7 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnClick(InputAction.CallbackContext context);
+        void OnInventoryOnOff(InputAction.CallbackContext context);
     }
     public interface IEffectActions
     {

@@ -70,10 +70,12 @@ public class InventoryUI : MonoBehaviour
         inputAction.UI.Enable();
         inputAction.UI.Click.performed += spliter.OnMouseClick;
         inputAction.UI.Click.canceled += tempSlot.OnDrop;
+        inputAction.UI.InventoryOnOff.performed += InvnentoryShortCut;
     }
 
     private void OnDisable()
     {
+        inputAction.UI.InventoryOnOff.performed -= InvnentoryShortCut;
         inputAction.UI.Click.canceled -= tempSlot.OnDrop;
         inputAction.UI.Click.performed -= spliter.OnMouseClick;
         inputAction.UI.Disable();
@@ -166,6 +168,18 @@ public class InventoryUI : MonoBehaviour
         canvasGroup.blocksRaycasts = false;
         canvasGroup.interactable = false;
         canvasGroup.alpha = 0;
+    }
+
+    private void InvnentoryShortCut(InputAction.CallbackContext _)
+    {
+        if (canvasGroup.interactable)       // 인벤토리가 열려있는지 닫혀있는지 확인
+        {
+            Close();        // 열려있으면 닫기
+        }
+        else
+        {
+            Open();         // 닫혀있으면 열기
+        }
     }
 
     /// <summary>
