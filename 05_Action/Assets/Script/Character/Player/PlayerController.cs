@@ -35,6 +35,13 @@ public class PlayerController : MonoBehaviour
     Vector3 moveDir = Vector3.zero;                 // 입력으로 지정된 바로보는 방향
     Quaternion targerRotation = Quaternion.identity;        // 최종 회전 목표
 
+    private void Start()
+    {
+        InventoryUI invenui = Gamemanager.Inst.InvenUI;
+        invenui.onInevntoryOpen += () => playerInput.Player.Disable();
+        invenui.onInevntoryClose += () => playerInput.Player.Enable();
+    }
+
     private void Awake()
     {
         playerInput = new PlayerInputAction();

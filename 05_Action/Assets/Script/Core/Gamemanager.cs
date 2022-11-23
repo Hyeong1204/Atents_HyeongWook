@@ -14,6 +14,9 @@ public class Gamemanager : Singleton<Gamemanager>
     /// </summary>
     ItemDataManager itemData;
 
+    /// <summary>
+    /// 인벤토리 UI
+    /// </summary>
     InventoryUI inventoryUI;
 
     // 프로퍼티 -------------------------------------------------------------------------------
@@ -26,6 +29,7 @@ public class Gamemanager : Singleton<Gamemanager>
     /// 아이템 데이터 메니저(읽전용) 프로퍼티
     /// </summary>
     public ItemDataManager ItemData => itemData;
+
 
     public InventoryUI InvenUI => inventoryUI;
 

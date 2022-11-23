@@ -41,7 +41,15 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     CanvasGroup canvasGroup;
 
+    /// <summary>
+    /// 인벤토리 창 닫기용 버튼
+    /// </summary>
+    Button closeButton;
+
     public Player Owner => inven.Owner;
+
+    public Action onInevntoryOpen; 
+    public Action onInevntoryClose;
 
     private void Awake()
     {
@@ -61,6 +69,9 @@ public class InventoryUI : MonoBehaviour
         moneyPanel = GetComponentInChildren<MoneyPanelUI>();
 
         canvasGroup = GetComponent<CanvasGroup>();
+
+        closeButton = transform.GetChild(5).GetComponent<Button>();
+        closeButton.onClick.AddListener(Close);
 
         inputAction = new PlayerInputAction();
     }
@@ -158,6 +169,8 @@ public class InventoryUI : MonoBehaviour
         canvasGroup.alpha = 1;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
+        onInevntoryOpen?.Invoke();
+
     }
 
     /// <summary>
@@ -168,6 +181,7 @@ public class InventoryUI : MonoBehaviour
         canvasGroup.blocksRaycasts = false;
         canvasGroup.interactable = false;
         canvasGroup.alpha = 0;
+        onInevntoryClose?.Invoke();
     }
 
     private void InvnentoryShortCut(InputAction.CallbackContext _)
