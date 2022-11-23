@@ -47,6 +47,15 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquipTarget
     /// </summary>
     ItemSlot[] partsSlots;
 
+    /// <summary>
+    /// 락온 이펙트
+    /// </summary>
+    LockOnEffect lockOnEffect;
+
+    /// <summary>
+    /// 락온 범위
+    /// </summary>
+    float lockOnRange = 5.0f;
     // 프로퍼티 ----------------------------------------------------------------------------------------------------------
     public float AttackPower => attackPower;
     public float DefencePower => defencePower;
@@ -113,6 +122,11 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquipTarget
         //}
     }
 
+    /// <summary>
+    /// 락온한 대상의 트랜스폼
+    /// </summary>
+    public Transform LockOnTransform => lockOnEffect.transform.parent;
+
     // -------------------------------------------------------------------------------------------------------------------
 
     // 델리게이트 ---------------------------------------------------------------------------------------------------------
@@ -139,6 +153,9 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquipTarget
         weaponBlade = weapon_r.GetComponentInChildren<Collider>();              // 무기의 충돌 영역 가져오기
 
         partsSlots = new ItemSlot[Enum.GetValues(typeof(EquipPartType)).Length];
+
+        lockOnEffect = GetComponentInChildren<LockOnEffect>();
+        LockOff();
 
         inven = new Inventory(this);
     }
@@ -391,6 +408,45 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquipTarget
                 break;
         }
         return result;
+    }
+
+    public void LockOnToggle()
+    {
+        LockOn();
+    }
+
+    void LockOn()
+    {
+        // lockOnRange 거리 안에 있는 Enemy오브젝트 찾기
+        Collider[] enemies = Physics.OverlapSphere(transform.position, lockOnRange, LayerMask.GetMask("AttectTarget"));
+        if(enemies.Length > 0)
+        {
+            // 거리안에 Enemy가 있으면
+            Transform targetEnemy = null;
+            float targetDistance = float.MaxValue;
+
+            foreach (var enemy in enemies)
+            {
+                float EnemyDistanceSqr = (enemy.transform.position - transform.position).sqrMagnitude;
+                if (targetDistance > EnemyDistanceSqr)
+                {
+                    // targetDistance거리가 EnemyDistanceSqr 보다 작으면
+                    targetDistance = EnemyDistanceSqr;
+                    targetEnemy = enemy.transform;
+                }
+            }
+            lockOnEffect.SetLockOnTarget(targetEnemy);              // 부모지정 및 위치 변경
+        }
+        else
+        {
+            Debug.Log("주변의 적이 없습니다.");
+            LockOff();      // 주변에 적이 없는데 락온을 시도하면 락온 해제
+        }
+    }
+
+    void LockOff()
+    {
+        lockOnEffect.SetLockOnTarget(null);
     }
 
     /// <summary>

@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
         playerInput.Player.Dash.performed += OnDash;        // 액션과 대쉬 함수 연결
         playerInput.Player.Attack.performed += OnAttack;
         playerInput.Player.Pickup.performed += OnPickup;
+        playerInput.Player.LockOn.performed += OnLockOn;
         //playerInput.Player.Dash.canceled += OnDash;
     }
 
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         //playerInput.Player.Dash.canceled -= OnDash;
+        playerInput.Player.LockOn.performed -= OnLockOn;
         playerInput.Player.Pickup.performed -= OnPickup;
         playerInput.Player.Attack.performed -= OnAttack;
         playerInput.Player.Dash.performed -= OnDash;        // 액션과 대쉬 함수 해재
@@ -79,6 +81,12 @@ public class PlayerController : MonoBehaviour
         {
             //cc.Move(currntSpeed * Time.deltaTime * moveDir);
             cc.Move(currentSpeed * Time.deltaTime * moveDir);
+
+            // 락온한 대상이 잇으면 락온한 대상의 위치를 바라보게 만들기
+            if(player.LockOnTransform != null)
+            {
+                targerRotation = Quaternion.LookRotation(player.LockOnTransform.position - player.transform.position);
+            }
 
             Rotate();
         }
@@ -181,5 +189,14 @@ public class PlayerController : MonoBehaviour
             anima.SetInteger("ComboState", comboState);             // 애니메이터에 증가된 콤보 상태 설정
             anima.SetTrigger("Attack");                             // Attack 트리거 발동
         }
+    }
+
+    /// <summary>
+    /// 몬스터 락온 버튼을 눌럿을 때 실행
+    /// </summary>
+    /// <param name="_"></param>
+    private void OnLockOn(InputAction.CallbackContext _)
+    {
+        player.LockOnToggle();
     }
 }
