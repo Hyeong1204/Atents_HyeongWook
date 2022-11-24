@@ -15,7 +15,7 @@ public class LockOnEffect : MonoBehaviour
     {
         if(TargetHealth != null)    // 기존의 대상이 있었으면
         {
-            TargetHealth.onDie -= ReleasTarget;     // 연결되어있떤ㄷ 델리게이트 등록 해제
+            TargetHealth.onDie -= ReleasTarget;     // 연결되어있던 델리게이트 등록 해제
         }
 
         if (newParent != null)

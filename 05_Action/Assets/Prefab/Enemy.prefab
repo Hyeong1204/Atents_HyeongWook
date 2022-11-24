@@ -420,6 +420,7 @@ MonoBehaviour:
   defencePower: 3
   sightRange: 10
   sightHalfAngle: 50
+  closeSightRange: 2.5
   dropItems:
   - id: 0
     dropPercentage: 0.49927196

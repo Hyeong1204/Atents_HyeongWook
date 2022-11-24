@@ -40,6 +40,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     // 추적 관련 변수 ------------------------------------------------------
     public float sightRange = 10.0f;                // 시야 범위
     public float sightHalfAngle = 50.0f;            // 시야각의 절반
+    public float closeSightRange = 2.5f;
     Transform chaseTarget;                          // 추적할 플레이어의 트랜스폼
     // --------------------------------------------------------------------
 
@@ -115,6 +116,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
                 {
                     case EnemyState.Wait:
                         agent.isStopped = true;
+                        agent.velocity = Vector3.zero;
                         waitTimer = waitTime;           // 타이머 초기화
                         anima.SetTrigger("Stop");       // Idle 애니메이션 재생
                         StateUpdate = Update_Wait;      // FixedUpdate에서 실행될 델리게이트 변경
@@ -131,13 +133,15 @@ public class Slime : MonoBehaviour, IHealth, IBattle
                         StateUpdate = Update_Chase;     // FixedUpdate에서 실행될 델리게이트 변경
                         break;
                     case EnemyState.Attack:
-                        agent.isStopped = false;        // 이동 정지
+                        agent.isStopped = true;         // 이동 정지
+                        agent.velocity = Vector3.zero;
                         anima.SetTrigger("Stop");       // 애니메이션 변경
                         attackCoolTime = attackSpeed;   // 공격 쿨타임 초기화
                         StateUpdate = Updata_Attack;    // FixedUpdate에서 실행될 델리게이트 변경
                         break;
                     case EnemyState.Dead:
                         agent.isStopped = true;         // 길찾기 중지
+                        agent.velocity = Vector3.zero;
                         anima.SetTrigger("Die");        // 사망 애니메이션 재생
                         StartCoroutine(DeadRepresent());// 사망 연출 코루틴 실행(서서이 가라앉는 연출)
 
@@ -230,7 +234,10 @@ public class Slime : MonoBehaviour, IHealth, IBattle
             if(attackTarget == target)
             {
                 attackTarget = null;        // 공격 하던 대상이 범위를 벗어나면 공격 대상을 비우기
-                State = EnemyState.Chase;       // 플레이어가 공격 범위에서 벗어나면 다시 추적 상태로
+                if (State != EnemyState.Dead)
+                {
+                    State = EnemyState.Chase;       // 플레이어가 공격 범위에서 벗어나면 다시 추적 상태로
+                }
             }
         };
     }
@@ -345,14 +352,23 @@ public class Slime : MonoBehaviour, IHealth, IBattle
             Vector3 playerPos = colliders[0].transform.position;            // 플레이어 위치
             Vector3 toPlayerDir = playerPos - transform.position;           // 플레이어로 가는 방향
 
-            if (IsInSightAngle(toPlayerDir))
+            if( toPlayerDir.sqrMagnitude < closeSightRange * closeSightRange)       // 근접 시야 범위 안에 있는지 확인
             {
-                // player가 시야각 안에 들어왔다.
-                if (!IsSightBlocked(toPlayerDir))
+                // 근접 시야 범위 안에 player가 있음
+                chaseTarget = colliders[0].transform;           // 추척할 플레이어 저장
+                result = true;
+            }
+            else
+            {
+                if (IsInSightAngle(toPlayerDir))
                 {
-                    // 시야가 다른 물체로 인해 막히이 않았다.
-                    chaseTarget = colliders[0].transform;   // 추적할 플레이어 저장
-                    result = true;
+                    // player가 시야각 안에 들어왔다.
+                    if (!IsSightBlocked(toPlayerDir))
+                    {
+                        // 시야가 다른 물체로 인해 막히이 않았다.
+                        chaseTarget = colliders[0].transform;   // 추적할 플레이어 저장
+                        result = true;
+                    }
                 }
             }
         }
@@ -419,9 +435,9 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         Handles.color = Color.green;
         Handles.DrawWireDisc(transform.position, transform.up, sightRange);         // 시야 반경만큼 원 그리기
 
-        if (SearchPlayer())
+        if (SearchPlayer())             // 플레이어가 보이는지 여부에 따라 색상 지정
         {
-            Handles.color = Color.red;
+            Handles.color = Color.red;          // 보이면 빨간색
         }
 
         Quaternion q1 = Quaternion.AngleAxis(-sightHalfAngle, transform.up);        // up벡터를 축으로 반시계방향으로 회전
@@ -430,7 +446,11 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         Handles.DrawLine(transform.position, transform.position + q1 * forward, 5.0f);    // 중심선을 반시계방향으로 회전
         Handles.DrawLine(transform.position, transform.position + q2 * forward, 5.0f);    // 중심선을 시계방향으로 회전
 
-        Handles.DrawWireArc(transform.position, transform.up, q1 * forward, sightHalfAngle * 2, sightRange, 5.0f);
+        Handles.DrawWireArc(transform.position, transform.up, q1 * forward, sightHalfAngle * 2, sightRange, 5.0f);      // 호 그리기
+
+        // 근접시야 처리
+        Handles.color = new Color(255, 127, 0);        
+        Handles.DrawWireDisc(transform.position, transform.up, closeSightRange);
 #endif
     }
 
