@@ -31,6 +31,9 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     public float attackPower = 10.0f;   // 공격력
     public float defencePower = 3.0f;   // 방어력
     float hp = 100.0f;                  // 현재 HP
+    float attackSpeed = 1.0f;           // 1초마다 공격
+    float attackCoolTime = 1.0f;        // 쿨타임이 0 미만이 되면 공격
+    IBattle attackTarget;
     ParticleSystem dieEffect;           // 죽을 때표시될 이펙트
     // -------------------------------------------------------------------------
 
@@ -66,6 +69,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         Wait = 0,       // 대기 상태
         Patrol,         // 순찰 상태
         Chase,          // 추적 상태
+        Attack,         // 공격 상태
         Dead            // 사망 상태
     }
 
@@ -126,6 +130,12 @@ public class Slime : MonoBehaviour, IHealth, IBattle
                         anima.SetTrigger("Move");       // Move 애니메이션 재생
                         StateUpdate = Update_Chase;     // FixedUpdate에서 실행될 델리게이트 변경
                         break;
+                    case EnemyState.Attack:
+                        agent.isStopped = false;        // 이동 정지
+                        anima.SetTrigger("Stop");       // 애니메이션 변경
+                        attackCoolTime = attackSpeed;   // 공격 쿨타임 초기화
+                        StateUpdate = Updata_Attack;    // FixedUpdate에서 실행될 델리게이트 변경
+                        break;
                     case EnemyState.Dead:
                         agent.isStopped = true;         // 길찾기 중지
                         anima.SetTrigger("Die");        // 사망 애니메이션 재생
@@ -139,6 +149,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
             }
         }
     }
+
 
     /// <summary>
     /// 남은 대기 시간을 나타내는 프로퍼티
@@ -203,6 +214,25 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         badycollider = GetComponent<SphereCollider>();
         dieEffect = GetComponentInChildren<ParticleSystem>();
         rigid = GetComponent<Rigidbody>();
+
+        EnmeyAttackArea attackArea = GetComponentInChildren<EnmeyAttackArea>();
+        attackArea.onPlayerIn += (target) =>
+        {
+            if (State == EnemyState.Chase)         // 추적 상태이면
+            {
+                attackTarget = target;
+                State = EnemyState.Attack;         // 공격 상태로 변경
+            }
+        };
+
+        attackArea.onPlayerOut += (target) =>
+        {
+            if(attackTarget == target)
+            {
+                attackTarget = null;        // 공격 하던 대상이 범위를 벗어나면 공격 대상을 비우기
+                State = EnemyState.Chase;       // 플레이어가 공격 범위에서 벗어나면 다시 추적 상태로
+            }
+        };
     }
 
     private void Start()
@@ -228,7 +258,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
 
     private void FixedUpdate()
     {
-        if (State != EnemyState.Dead && SearchPlayer())     // 매번 추적대상을 찾기
+        if (State != EnemyState.Dead && State != EnemyState.Attack && SearchPlayer())     // 매번 추적대상을 찾기
         {
             State = EnemyState.Chase;       // 추적 대상이 있으면 추적 상태로 변경
         }
@@ -272,6 +302,21 @@ public class Slime : MonoBehaviour, IHealth, IBattle
         else
         {
             State = EnemyState.Wait;            // 추적 대상이 없으면 잠시 대기
+        }
+    }
+
+    /// <summary>
+    /// Updata 상태일 때 실행될 업데이트 함수
+    /// </summary>
+    private void Updata_Attack()
+    {
+        attackCoolTime -= Time.fixedDeltaTime;          // 쿨타임 감소
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(attackTarget.transform.position - transform.position), 0.1f); // 공격 대상 바라보게 만들기
+        if(attackCoolTime < 0)                  // 쿨타임 체크
+        {
+            // 공격하고
+            anima.SetTrigger("Attack");         // 공격 애니메이션 재생
+            Attact(attackTarget);               // 공격 처리
         }
     }
 
@@ -423,6 +468,7 @@ public class Slime : MonoBehaviour, IHealth, IBattle
     public void Attact(IBattle target)
     {
         target?.Defence(attackPower);
+        attackCoolTime = attackSpeed;       // 쿨타임 초기화
     }
 
     public void Defence(float damage)
