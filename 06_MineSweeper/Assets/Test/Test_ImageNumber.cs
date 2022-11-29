@@ -24,21 +24,23 @@ public class Test_ImageNumber : TestBase
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-        imageNum.Number++;
+        GameManager.Inst.TestTimerPlay();
+        GameManager.Inst.TestFlag_Increase();
     }
 
     protected override void Test2(InputAction.CallbackContext _)
     {
-        imageNum.Number--;
+        GameManager.Inst.TestTimerStop();
+        GameManager.Inst.TestFlag_Decrease();
     }
 
     protected override void Test3(InputAction.CallbackContext _)
     {
-        imageNum.Number = 999;
+        GameManager.Inst.TestTimerReset();
     }
 
     protected override void Test4(InputAction.CallbackContext _)
     {
-        imageNum.Number = -99;
+        
     }
 }
