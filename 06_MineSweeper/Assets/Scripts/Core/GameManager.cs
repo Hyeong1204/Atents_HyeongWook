@@ -6,10 +6,18 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
+    // 타이머 관련   -------------------------------------------------------------
     private Timer timer;
-
-    private int flagCount = 0;
     private int timeCount = 0;
+
+    // 깃발 갯수 관련 -------------------------------------------------------------
+    private int flagCount = 0;
+
+    // 지뢰 관련    ---------------------------------------------------------------
+    public int minCount = 10;
+    public int boardWidth = 8;
+    public int boardHeight = 8;
+    Board board;
 
     public int FlagCount
     {
@@ -42,6 +50,8 @@ public class GameManager : Singleton<GameManager>
         base.Initialize();
 
         timer = GetComponent<Timer>();
+        board = FindObjectOfType<Board>();
+        board.Initialize(boardWidth, boardHeight, minCount);
     }
 
     private void Update()
