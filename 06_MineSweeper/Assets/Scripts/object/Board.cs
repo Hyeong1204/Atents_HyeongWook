@@ -57,6 +57,21 @@ public class Board : MonoBehaviour
                 cells[cell.ID] = cell;                                  // 셀 배열에 셀 저장
             }
         }
+
+        // 만들어진 셀에 지뢰를 minCount만큼 설치하기
+        for (int i = 0; i < minCount; i++)
+        {
+            int rand = Random.Range(0, cells.Length);
+            if (!cells[rand].HasMine)
+            {
+                cells[rand].SetMine();
+                Debug.Log($"{cells[rand].ID}번째에 지뢰 새성");
+            }
+            else
+            {
+                i--;
+            }
+        }
     }
 
     /// <summary>
@@ -65,9 +80,12 @@ public class Board : MonoBehaviour
     public void ClearCells()
     {
         // 이미 만들어진셀 오브젝트를 모두 삭제하기
-        foreach (var cell in cells)
+        if (cells != null)      // 기존에 만들어진 셀이 있으면
         {
-            Destroy(cell.gameObject);
+            foreach (var cell in cells)
+            {
+                Destroy(cell.gameObject);
+            }
         }
         cells = null;           // 안의 내용을 다 제거했다고 표시
     }

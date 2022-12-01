@@ -19,6 +19,8 @@ public class GameManager : Singleton<GameManager>
     public int boardHeight = 8;
     Board board;
 
+    public Board Board => board;
+
     public int FlagCount
     {
         get => flagCount;
