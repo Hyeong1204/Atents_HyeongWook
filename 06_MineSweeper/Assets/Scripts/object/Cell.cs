@@ -25,7 +25,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 셀의 ID이면서 위치를표시하는 역할
     /// </summary>
-    int id = ID_NOT_VALID;          // 셀의 아이디이면서 위치를 표시하는 역할
+    public int id = ID_NOT_VALID;          // 셀의 아이디이면서 위치를 표시하는 역할
 
     /// <summary>
     /// 셀이 열려있는지 닫혀있는지 여부. true면 열려있고 false면 닫혀있다.
@@ -83,6 +83,16 @@ public class Cell : MonoBehaviour
     /// 셀에 물음표가(?) 표시되어있는지 확인하는 프로퍼티
     /// </summary>
     public bool IsQuestion => markState == CellMarkState.Question;
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log($"{ID}들어옴");
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Debug.Log($"{ID}나감");
+    }
 
     // 함수 =======================================================================
 
