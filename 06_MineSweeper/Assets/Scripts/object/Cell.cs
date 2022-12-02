@@ -46,7 +46,14 @@ public class Cell : MonoBehaviour
     /// 주변 셀의 지뢰 갯수. 셀이 열렸을 때 표시할 이미지 결정
     /// </summary>
     int aroundMineCount = 0;        // 주변 셀의 지뢰 갯수
- 
+
+    /// <summary>
+    /// 이 셀이 들어있는 보드
+    /// </summary>
+    Board parentBoard;
+
+    SpriteRenderer cover;
+    SpriteRenderer inside;
     // 프로퍼티 ===========================================================================
 
     /// <summary>
@@ -60,6 +67,21 @@ public class Cell : MonoBehaviour
             if(id == ID_NOT_VALID)      // ID는 처음 한번만 설정가능
             {
                 id = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 이 셀이 소속되어있는 보드 확인 및 설정용 프로퍼티(설정은 한번만 가능)
+    /// </summary>
+    public Board Board
+    {
+        get => parentBoard;
+        set
+        {
+            if(parentBoard == null)
+            {
+                parentBoard = value;
             }
         }
     }
@@ -84,14 +106,20 @@ public class Cell : MonoBehaviour
     /// </summary>
     public bool IsQuestion => markState == CellMarkState.Question;
 
+    private void Awake()
+    {
+        cover = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        inside = transform.GetChild(1).GetComponent<SpriteRenderer>();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"{ID}들어옴");
+        //Debug.Log($"{ID}들어옴");
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log($"{ID}나감");
+        //Debug.Log($"{ID}나감");
     }
 
     // 함수 =======================================================================
@@ -143,5 +171,6 @@ public class Cell : MonoBehaviour
     public void SetMine()
     {
         hasMine = true;
+        inside.sprite = Board[OpenCellType.Mine_NotFound];
     }
 }
