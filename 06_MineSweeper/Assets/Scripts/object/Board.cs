@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -98,6 +99,66 @@ public class Board : MonoBehaviour
             int lastIndex = count - i;
             (source[randomIndex], source[lastIndex]) = (source[lastIndex], source[randomIndex]);        // temp 변수 없시 스왑처리
         }
+    }
+
+    public List<Cell> GetNeihtbors(int id)
+    {
+        List<Cell> result = new List<Cell>(8);
+        Vector2Int grid = IdToGrid(id);
+
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                int index = GridToID(j + grid.x, i + grid.y);
+                if((i == 0 && j == 0) && index != Cell.ID_NOT_VALID)
+                {
+                    result.Add(cells[index]);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public List<Cell> GetNeihtborsMy(int id)
+    {
+        List<Cell> result = new List<Cell>();
+        int index = 0;
+
+        Vector2Int dir = new Vector2Int(id % width, id / width);
+        for (int y = -1; y < 2; y++)
+        {
+            for (int x = -1; x < 2; x++)
+            {
+                if(x == 0 && y == 0)
+                {
+                    continue;
+                }
+
+                Vector2Int cellDir = new Vector2Int(dir.x + x, dir.y + y);
+                if (cellDir.x > -1 && cellDir.x < width && cellDir.y > -1 && cellDir.y < height)
+                {
+                    index = cellDir.x + cellDir.y * width;
+
+                    result.Add(cells[index]);
+                }
+            }
+        }
+        return result;
+    }
+
+    Vector2Int IdToGrid(int id)
+    {
+        return new Vector2Int(id % width, id / width);
+    }
+
+    int GridToID(int x, int y)
+    {
+        if(x >= 0 && x < width && y >= 0 && y< height)
+         return x + y * width;
+
+        return Cell.ID_NOT_VALID;
     }
 
     /// <summary>

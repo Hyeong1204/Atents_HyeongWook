@@ -20,7 +20,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// ID가 잘못 되었다고 알려주는 상수
     /// </summary>
-    const int ID_NOT_VALID = -1;
+    public const int ID_NOT_VALID = -1;
 
     /// <summary>
     /// 셀의 ID이면서 위치를표시하는 역할
@@ -162,7 +162,11 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void IncressAroundMineCount()
     {
-        aroundMineCount++;
+        if (!hasMine)
+        {
+            aroundMineCount++;
+            inside.sprite = Board[(OpenCellType)aroundMineCount];
+        }
     }
 
     /// <summary>
@@ -170,7 +174,14 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void SetMine()
     {
-        hasMine = true;
-        inside.sprite = Board[OpenCellType.Mine_NotFound];
+        hasMine = true;             // 지뢰 설치 되었다고 표시
+        inside.sprite = Board[OpenCellType.Mine_NotFound];      // 지뢰로 이미지 변경
+
+        // 이 셀 주변 셀들의 IncressAroundMineCount함수 실행(aroundMineCount를 1씩 증가)
+        List<Cell> cellList = Board.GetNeihtborsMy(ID);
+        foreach (var cell in cellList)
+        {
+            cell.IncressAroundMineCount();
+        }
     }
 }
