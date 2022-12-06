@@ -39,11 +39,23 @@ public class Board : MonoBehaviour
     public Sprite[] openCellImages;
 
     /// <summary>
+    /// 열리지 않은 셀에서 표시될 이미지
+    /// </summary>
+    public Sprite[] closeCellImages;
+
+    /// <summary>
     /// OpenCellType으로 이미지를 받아오는 인덱서
     /// </summary>
     /// <param name="type">필요한 이미지에 enum타입</param>
     /// <returns>enum타입에 맞는 이미지</returns>
     public Sprite this[OpenCellType type] => openCellImages[(int)type];
+
+    /// <summary>
+    /// CloseCellType으로 이미지를 받아오는 인덱서
+    /// </summary>
+    /// <param name="type">필요한 이미지에 enum타입</param>
+    /// <returns>enum타입에 맞는 이미지</returns>
+    public Sprite this[CloseCellType type] => closeCellImages[(int)type];
 
     PlayerInputActions inputActions;
 
@@ -82,6 +94,7 @@ public class Board : MonoBehaviour
 
         cells = new Cell[width * height];                               // 셀들의 배열 생성
 
+        GameManager gameManager = GameManager.Inst;
         // 셀들을 하나씩 생성하기 위한 이중 for
         for (int i = 0; i < height; i++)
         {
@@ -92,6 +105,8 @@ public class Board : MonoBehaviour
                 cellObj.transform.position = basePos + offset + new Vector3(j * Distance, -i * Distance, 0);  // 적절한 위치에 배치
                 cell.ID = i * width + j;                                // ID 설정(ID를 통해 위치도 확인 가능)
                 cell.Board = this;                                      // 보드 설정
+                cell.onFlagUse += gameManager.DecreaseFlagCount;
+                cell.onFlagReturn+= gameManager.IncreaseFlagCount;
                 cellObj.name = $"Cell_{cell.ID}_[{i}, {j}]";            // 셀의 이름 변경
                 cells[cell.ID] = cell;                                  // 셀 배열에 셀 저장
             }
@@ -225,6 +240,7 @@ public class Board : MonoBehaviour
         if (IsValidGrid(grid))                                      // 결과 그리드 좌표가 적합한지 화인 => 적합하지 않으면 보드 밖이라는 의미
         {
             Cell target = cells[GridToID(grid.x, grid.y)];          // 해당 셀 가져오기
+            target.CellRightPress();
             Debug.Log(target.name);
         }
         else

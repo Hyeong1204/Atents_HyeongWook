@@ -52,6 +52,9 @@ public class GameManager : Singleton<GameManager>
         base.Initialize();
 
         timer = GetComponent<Timer>();
+
+        FlagCount = minCount;
+
         board = FindObjectOfType<Board>();
         board.Initialize(boardWidth, boardHeight, minCount);
     }
@@ -59,6 +62,16 @@ public class GameManager : Singleton<GameManager>
     private void Update()
     {
         TimeCount = (int)timer.ElapsedTime;
+    }
+
+    public void IncreaseFlagCount()
+    {
+        FlagCount++;
+    }
+
+    public void DecreaseFlagCount()
+    {
+        FlagCount--;
     }
 
 #if TEST_CODE

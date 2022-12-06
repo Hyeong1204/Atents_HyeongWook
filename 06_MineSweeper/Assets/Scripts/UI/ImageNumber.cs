@@ -93,7 +93,7 @@ public class ImageNumber : MonoBehaviour
 
     private void Start()
     {
-        Number = 0;
+        number = 0;
     }
 
     /// <summary>
@@ -101,8 +101,13 @@ public class ImageNumber : MonoBehaviour
     /// </summary>
     private void RefreshNumberImage()
     {
-        int tempNum = Mathf.Abs(number);            // 부호 제거. 무조건 +로 변경.
+        int tempNum = Mathf.Abs(Number);            // 부호 제거. 무조건 +로 변경.
         Queue<int> digitsQ = new Queue<int>(3);     // 각 자리수 숫자를 저장할 큐 만들기
+        if(tempNum == 0)
+        {
+            digitsQ.Enqueue(tempNum);
+        }
+
         while(tempNum > 0)                          // 각 자리수별로 숫자를 잘라서 digitsQ에 저장하기
         {
             digitsQ.Enqueue(tempNum % 10);          // 마지막 자리 수 찾기

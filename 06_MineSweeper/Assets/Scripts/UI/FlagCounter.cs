@@ -16,6 +16,7 @@ public class FlagCounter : MonoBehaviour
     {
         GameManager gameManager = GameManager.Inst;
         gameManager.onFlagCountChange += Refresh;
+        imageNumber.Number = gameManager.FlagCount;
     }
 
     private void Refresh(int flagCount)

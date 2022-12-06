@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -122,6 +123,11 @@ public class Cell : MonoBehaviour
         //Debug.Log($"{ID}나감");
     }
 
+    // 델리게이트 =================================================================
+
+    public Action onFlagUse;
+    public Action onFlagReturn;
+
     // 함수 =======================================================================
 
     /// <summary>
@@ -187,6 +193,27 @@ public class Cell : MonoBehaviour
 
     public void CellRightPress()
     {
-
+        if (!IsOpen)
+        {
+            switch (markState)
+            {
+                case CellMarkState.None:
+                    markState = CellMarkState.Flag;
+                    cover.sprite = Board[CloseCellType.Flag];
+                    onFlagUse?.Invoke();
+                    break;
+                case CellMarkState.Flag:
+                    markState = CellMarkState.Question;
+                    cover.sprite = Board[CloseCellType.Question];
+                    onFlagReturn?.Invoke();
+                    break;
+                case CellMarkState.Question:
+                    markState = CellMarkState.None;
+                    cover.sprite = Board[CloseCellType.Close];
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
