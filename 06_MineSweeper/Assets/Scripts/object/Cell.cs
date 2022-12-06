@@ -184,4 +184,9 @@ public class Cell : MonoBehaviour
             cell.IncressAroundMineCount();
         }
     }
+
+    public void CellRightPress()
+    {
+
+    }
 }

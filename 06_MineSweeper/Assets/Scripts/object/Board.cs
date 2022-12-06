@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.GraphicsBuffer;
 
 public class Board : MonoBehaviour
 {
@@ -171,17 +172,28 @@ public class Board : MonoBehaviour
         return result;
     }
 
+    /// <summary>
+    /// 셀의 ID를 Grid좌표로 변경하느 함수. Vaild한 그리드 좌표가 나온다는 보장은 없음.
+    /// </summary>
+    /// <param name="id">Grid로 변경할 ID</param>
+    /// <returns>변경 완료된 Grid좌표</returns>
     Vector2Int IdToGrid(int id)
     {
         return new Vector2Int(id % width, id / width);
     }
 
+    /// <summary>
+    /// Grid 좌표를 ID로 변경하는 함수
+    /// </summary>
+    /// <param name="x">변경할 그리드 좌표의 x값</param>
+    /// <param name="y">변경할 그리드 좌펴의 y값</param>
+    /// <returns>변경의 성공하면 정상적인 ID. 실패할 경우 -1</returns>
     int GridToID(int x, int y)
     {
         if (IsValidGrid(x,y))
-         return x + y * width;
+         return x + y * width;          // 그리드 좌표가 적합하면 변환
 
-        return Cell.ID_NOT_VALID;
+        return Cell.ID_NOT_VALID;       // 적합하지 않으면 ID_NOT_VALID
     }
 
     /// <summary>
@@ -208,15 +220,16 @@ public class Board : MonoBehaviour
     private void OnRightClick(InputAction.CallbackContext _)
     {
         // 우클릭
-        Vector2 screenPos = Mouse.current.position.ReadValue();
-        Vector2Int grid = ScreenToGrid(screenPos);
-        if (IsValidGrid(grid))
+        Vector2 screenPos = Mouse.current.position.ReadValue();     // 마우스 커서의 스크린 좌표를 일기
+        Vector2Int grid = ScreenToGrid(screenPos);                  // 스크린 좌표를 Grid좌표로 변환
+        if (IsValidGrid(grid))                                      // 결과 그리드 좌표가 적합한지 화인 => 적합하지 않으면 보드 밖이라는 의미
         {
-            Cell target = cells[GridToID(grid.x, grid.y)];
+            Cell target = cells[GridToID(grid.x, grid.y)];          // 해당 셀 가져오기
+            Debug.Log(target.name);
         }
         else
         {
-
+            Debug.Log("셀 없음");
         }
     }
 
@@ -266,20 +279,36 @@ public class Board : MonoBehaviour
         Vector2 diff = (Vector2)Camera.main.ScreenToWorldPoint(screenPos) - startPos;
 
         // Distance로 나누어서 Grid좌표로 변환
-        return new((int)(diff.x / Distance), (int)(diff.y / Distance));
+        return new((int)(diff.x / Distance), (int)(-diff.y / Distance));
     }
 
+    /// <summary>
+    /// 입력받은 스크린 좌표를 ID로 변경하는 함수
+    /// </summary>
+    /// <param name="screenpos">확인할 스크린 좌표</param>
+    /// <returns>스크린좌표와 매칭되는 보드위의 셀 ID</returns>
     int ScreenToID(Vector2 screenpos)
     {
         Vector2Int grid = ScreenToGrid(screenpos);
         return GridToID(grid.x, grid.y);
     }
 
+    /// <summary>
+    /// 보드안에 있는 그리드 좌표인지 확인하는 함수
+    /// </summary>
+    /// <param name="x">확인할 그리드 좌표의 x</param>
+    /// <param name="y">확인할 그리드 좌표의 y</param>
+    /// <returns>보드 안에 그리드 좌표이면 true, 아니면 false</returns>
     bool IsValidGrid(int x, int  y)
     {
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
+    /// <summary>
+    /// 보드안에 있는 그리드 좌표인지 확인하는 함수
+    /// </summary>
+    /// <param name="grid">확인할 그리드 좌표</param>
+    /// <returns>보드 안에 그리드 좌표이면 true, 아니면 false</returns>
     bool IsValidGrid(Vector2Int grid)
     {
         return IsValidGrid(grid.x, grid.y);
