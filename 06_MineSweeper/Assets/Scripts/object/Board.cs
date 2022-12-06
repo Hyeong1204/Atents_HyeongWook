@@ -153,7 +153,7 @@ public class Board : MonoBehaviour
             for (int j = -1; j < 2; j++)
             {
                 int index = GridToID(j + grid.x, i + grid.y);
-                if((i == 0 && j == 0) && index != Cell.ID_NOT_VALID)
+                if(!(i == 0 && j == 0) && index != Cell.ID_NOT_VALID)
                 {
                     result.Add(cells[index]);
                 }

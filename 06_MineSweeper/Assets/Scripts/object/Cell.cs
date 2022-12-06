@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -54,8 +55,21 @@ public class Cell : MonoBehaviour
     /// </summary>
     Board parentBoard;
 
+    /// <summary>
+    /// 닫혔을 때 보일 스프라이트 렌더러
+    /// </summary>
     SpriteRenderer cover;
+
+    /// <summary>
+    /// 열렸을 때 보일 스프라잍트 렌더러
+    /// </summary>
     SpriteRenderer inside;
+
+    /// <summary>
+    /// 이 셀에 의해 눌러진 셀의 목록(자기자신 or 자기 주변에 닫혀 있던 셀)
+    /// </summary>
+    List<Cell> pressedCells;
+
     // 프로퍼티 ===========================================================================
 
     /// <summary>
@@ -110,6 +124,8 @@ public class Cell : MonoBehaviour
 
     private void Awake()
     {
+        pressedCells = new List<Cell>(8);                               // 새로 메모리 할당
+
         cover = transform.GetChild(0).GetComponent<SpriteRenderer>();
         inside = transform.GetChild(1).GetComponent<SpriteRenderer>();
     }
@@ -128,7 +144,7 @@ public class Cell : MonoBehaviour
         //Debug.Log($"{ID}나감");
         if (Mouse.current.leftButton.ReadValue() > 0)
         {
-            RetoreCover();
+            RestoreCover();
         }
     }
 
@@ -142,17 +158,22 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 셀을 여는 함수
     /// </summary>
-    void Open()
+    public void Open()
     {
+        if (!isOpen && !IsFlaged)                                // 닫혀있고 깃발 표시가 안되었을 때만 연다.
+        {
+            isOpen = true;
+            cover.gameObject.SetActive(false);      // 셀을 열릴 때 커버를 비활성화
 
-    }
-
-    /// <summary>
-    /// 셀에 빈것 -> 깃발 -> 물음표 -> 빈것 -> ... 순서로 표시하는 함수
-    /// </summary>
-    void SetMark()
-    {
-
+            if (aroundMineCount == 0 && !HasMine)               // 주변 지뢰 갯수가 0이면
+            {
+                List<Cell> neighbors = Board.GetNeihtbors(this.ID);     // 주변 셀들을
+                foreach (var cell in neighbors)
+                {
+                    cell.Open();                                        // 모두 연다
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -160,7 +181,26 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void CellPress()
     {
-        PressCover();
+        pressedCells.Clear();           // 새롭게 눌렸으니 기존에 눌러져 있던 대한 기록을 제거
+        if (IsOpen)
+        {
+            // 이 셀이 열려져 있으면, 자신 주변의 닫힌 셀을 모두 누른 표시를 해야한다.
+            List<Cell> neighbors = Board.GetNeihtbors(this.ID);     // 주변 셀을 모두 가져온다.
+            foreach (var cell in neighbors)
+            {
+                if (!cell.IsOpen)                       // 주변 셀중에 닫혀있는 셀만
+                {
+                    pressedCells.Add(cell);             // 누르고 있는 셀이라고 표시
+                    cell.CellPress();                   // 누르고 있는 표시
+                }
+            }
+        }
+        else
+        {
+            // 이 셀이 닫힌 셀이 때 자신을 누른 표시를 한다.
+            PressCover();
+        }
+
     }
 
     /// <summary>
@@ -168,7 +208,8 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void CellRelease()
     {
-        RetoreCover();
+        RestoreCovers();            // 눌렀다고 표시한 모든 셀을 복구 시키고
+        Open();                     // 자신을 열기
     }
 
     void PressCover()
@@ -185,9 +226,19 @@ public class Cell : MonoBehaviour
             default:
                 break;
         }
+        pressedCells.Add(this);
     }
 
-    void RetoreCover()
+    void RestoreCovers()
+    {
+        foreach (var cell in pressedCells)
+        {
+            cell.RestoreCover();
+        }
+        pressedCells.Clear();
+    }
+
+    void RestoreCover()
     {
         switch (markState)
         {
@@ -231,6 +282,9 @@ public class Cell : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 셀에 빈것 -> 깃발 -> 물음표 -> 빈것 -> ... 순서로 표시하는 함수
+    /// </summary>
     public void CellRightPress()
     {
         if (!IsOpen)
