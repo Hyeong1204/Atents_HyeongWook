@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Cell : MonoBehaviour
 {
@@ -116,11 +117,19 @@ public class Cell : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //Debug.Log($"{ID}들어옴");
+        if(Mouse.current.leftButton.ReadValue() > 0)
+        {
+            PressCover();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         //Debug.Log($"{ID}나감");
+        if (Mouse.current.leftButton.ReadValue() > 0)
+        {
+            RetoreCover();
+        }
     }
 
     // 델리게이트 =================================================================
@@ -151,7 +160,7 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void CellPress()
     {
-        // 눌러진 이미지로 변경
+        PressCover();
     }
 
     /// <summary>
@@ -159,8 +168,39 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void CellRelease()
     {
-        // 여는 경우 : Open();
-        // 복구되는 경우
+        RetoreCover();
+    }
+
+    void PressCover()
+    {
+        switch (markState)
+        {
+            case CellMarkState.None:
+                cover.sprite = Board[CloseCellType.Close_Press];
+                break;
+            case CellMarkState.Question:
+                cover.sprite = Board[CloseCellType.Question_Press];
+                break;
+            case CellMarkState.Flag:
+            default:
+                break;
+        }
+    }
+
+    void RetoreCover()
+    {
+        switch (markState)
+        {
+            case CellMarkState.None:
+                cover.sprite = Board[CloseCellType.Close];
+                break;
+            case CellMarkState.Question:
+                cover.sprite = Board[CloseCellType.Question];
+                break;
+            case CellMarkState.Flag:
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -197,17 +237,17 @@ public class Cell : MonoBehaviour
         {
             switch (markState)
             {
-                case CellMarkState.None:
+                case CellMarkState.None:                            //
                     markState = CellMarkState.Flag;
                     cover.sprite = Board[CloseCellType.Flag];
                     onFlagUse?.Invoke();
                     break;
-                case CellMarkState.Flag:
+                case CellMarkState.Flag:                            //
                     markState = CellMarkState.Question;
                     cover.sprite = Board[CloseCellType.Question];
                     onFlagReturn?.Invoke();
                     break;
-                case CellMarkState.Question:
+                case CellMarkState.Question:                        //
                     markState = CellMarkState.None;
                     cover.sprite = Board[CloseCellType.Close];
                     break;

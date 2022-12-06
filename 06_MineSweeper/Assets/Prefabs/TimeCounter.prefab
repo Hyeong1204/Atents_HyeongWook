@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3448884816439658696, guid: 1667eb478720ab4459c57b7948056042, type: 3}
       propertyPath: m_Name
-      value: TimeCounter Variant
+      value: TimeCounter
       objectReference: {fileID: 0}
     - target: {fileID: 3448884816439658697, guid: 1667eb478720ab4459c57b7948056042, type: 3}
       propertyPath: m_Pivot.x
@@ -41,11 +41,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3448884816439658697, guid: 1667eb478720ab4459c57b7948056042, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 160
+      value: 244
       objectReference: {fileID: 0}
     - target: {fileID: 3448884816439658697, guid: 1667eb478720ab4459c57b7948056042, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 92
+      value: 144
       objectReference: {fileID: 0}
     - target: {fileID: 3448884816439658697, guid: 1667eb478720ab4459c57b7948056042, type: 3}
       propertyPath: m_LocalPosition.x
