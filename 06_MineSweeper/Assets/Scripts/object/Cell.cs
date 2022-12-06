@@ -70,6 +70,11 @@ public class Cell : MonoBehaviour
     /// </summary>
     List<Cell> pressedCells;
 
+    /// <summary>
+    /// 이 셀의 주변셀들
+    /// </summary>
+    List<Cell> neighbors;
+
     // 프로퍼티 ===========================================================================
 
     /// <summary>
@@ -130,12 +135,17 @@ public class Cell : MonoBehaviour
         inside = transform.GetChild(1).GetComponent<SpriteRenderer>();
     }
 
+    private void Start()
+    {
+        neighbors = Board.GetNeihtbors(this.ID);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //Debug.Log($"{ID}들어옴");
         if(Mouse.current.leftButton.ReadValue() > 0)
         {
-            PressCover();
+            CellPress();
         }
     }
 
@@ -144,7 +154,7 @@ public class Cell : MonoBehaviour
         //Debug.Log($"{ID}나감");
         if (Mouse.current.leftButton.ReadValue() > 0)
         {
-            RestoreCover();
+            RestoreCovers();
         }
     }
 
@@ -158,7 +168,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 셀을 여는 함수
     /// </summary>
-    public void Open()
+    void Open()
     {
         if (!isOpen && !IsFlaged)                                // 닫혀있고 깃발 표시가 안되었을 때만 연다.
         {
@@ -167,7 +177,6 @@ public class Cell : MonoBehaviour
 
             if (aroundMineCount == 0 && !HasMine)               // 주변 지뢰 갯수가 0이면
             {
-                List<Cell> neighbors = Board.GetNeihtbors(this.ID);     // 주변 셀들을
                 foreach (var cell in neighbors)
                 {
                     cell.Open();                                        // 모두 연다
@@ -177,7 +186,7 @@ public class Cell : MonoBehaviour
     }
 
     /// <summary>
-    /// 셀이 눌러졌을 때 실행될 함수
+    /// 마우스 왼쪽 버튼이 이 셀을 눌렀을 때 실행될 함수
     /// </summary>
     public void CellPress()
     {
@@ -185,7 +194,6 @@ public class Cell : MonoBehaviour
         if (IsOpen)
         {
             // 이 셀이 열려져 있으면, 자신 주변의 닫힌 셀을 모두 누른 표시를 해야한다.
-            List<Cell> neighbors = Board.GetNeihtbors(this.ID);     // 주변 셀을 모두 가져온다.
             foreach (var cell in neighbors)
             {
                 if (!cell.IsOpen)                       // 주변 셀중에 닫혀있는 셀만
@@ -204,7 +212,7 @@ public class Cell : MonoBehaviour
     }
 
     /// <summary>
-    /// 누른 셀을 땠을 때 실해될 함수
+    /// 마우스 왼족 버튼이 이 셀위에서 떨어 졌을 때 실행될 함수
     /// </summary>
     public void CellRelease()
     {
@@ -212,9 +220,12 @@ public class Cell : MonoBehaviour
         Open();                     // 자신을 열기
     }
 
+    /// <summary>
+    /// 이 셀이 눌러졌을 떄 처리해야 할 일을 모아 놓은 함수
+    /// </summary>
     void PressCover()
     {
-        switch (markState)
+        switch (markState)      
         {
             case CellMarkState.None:
                 cover.sprite = Board[CloseCellType.Close_Press];
@@ -226,21 +237,30 @@ public class Cell : MonoBehaviour
             default:
                 break;
         }
-        pressedCells.Add(this);
+        pressedCells.Add(this); // 눌러진 셀이라고 표시
     }
 
+    /// <summary>
+    /// 이 셀이 눌러져 있다가  복구 될때 해야할 일을 모아 놓은 함수
+    /// </summary>
     void RestoreCovers()
     {
-        foreach (var cell in pressedCells)
+        if (pressedCells.Count > 0)
         {
-            cell.RestoreCover();
+            foreach (var cell in pressedCells)          // 전부 순회하면서 복구
+            {
+                cell.RestoreCover();
+            }
+            pressedCells.Clear();                       // 리스트 비우기
         }
-        pressedCells.Clear();
     }
 
+    /// <summary>
+    /// 이 셀이 하나가 눌러져 있다가 복구 될 때 해야할 일을 모아 놓은 함수
+    /// </summary>
     void RestoreCover()
     {
-        switch (markState)
+        switch (markState)          // 이미지 상태에 따라서 복구
         {
             case CellMarkState.None:
                 cover.sprite = Board[CloseCellType.Close];
@@ -275,7 +295,7 @@ public class Cell : MonoBehaviour
         inside.sprite = Board[OpenCellType.Mine_NotFound];      // 지뢰로 이미지 변경
 
         // 이 셀 주변 셀들의 IncressAroundMineCount함수 실행(aroundMineCount를 1씩 증가)
-        List<Cell> cellList = Board.GetNeihtborsMy(ID);
+        List<Cell> cellList = Board.GetNeihtborsMy(ID);         // 실행 타이밍이 Start보다 빨라 따로 구해줌
         foreach (var cell in cellList)
         {
             cell.IncressAroundMineCount();
