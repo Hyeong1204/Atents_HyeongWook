@@ -140,23 +140,23 @@ public class Cell : MonoBehaviour
         neighbors = Board.GetNeihtbors(this.ID);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //Debug.Log($"{ID}들어옴");
-        if(Mouse.current.leftButton.ReadValue() > 0)
-        {
-            CellPress();
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    //Debug.Log($"{ID}들어옴");
+    //    if(Mouse.current.leftButton.ReadValue() > 0)
+    //    {
+    //        CellPress();
+    //    }
+    //}
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        //Debug.Log($"{ID}나감");
-        if (Mouse.current.leftButton.ReadValue() > 0)
-        {
-            RestoreCovers();
-        }
-    }
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    //Debug.Log($"{ID}나감");
+    //    if (Mouse.current.leftButton.ReadValue() > 0)
+    //    {
+    //        RestoreCovers();
+    //    }
+    //}
 
     // 델리게이트 =================================================================
 
@@ -174,6 +174,12 @@ public class Cell : MonoBehaviour
         {
             isOpen = true;
             cover.gameObject.SetActive(false);      // 셀을 열릴 때 커버를 비활성화
+
+            if (this.hasMine)                       // 지뢰가 있으면
+            {
+                inside.sprite = Board[OpenCellType.Mine_Explosion];     // 터지는 이미지로 변경
+                return;
+            }
 
             if (aroundMineCount == 0 && !HasMine)               // 주변 지뢰 갯수가 0이면
             {
@@ -216,8 +222,35 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void CellRelease()
     {
-        RestoreCovers();            // 눌렀다고 표시한 모든 셀을 복구 시키고
-        Open();                     // 자신을 열기
+        if (pressedCells.Count != 1)                 // 1개가 아닐 때(2개 이상일 때는 다 처리. 0개일 때는 중복 실행이지만 무시)
+        {
+            int flagCount = 0;
+            foreach (var cell in neighbors)          // 주변에 있는 깃발 갯수 세기
+            {
+                if (cell.IsFlaged)
+                {
+                    flagCount++;
+                }
+            }
+
+            if (flagCount == aroundMineCount)        // 주변의 깃발 갯수와 주변 지뢰의 갯수가 같을 때만 눌러진 것들 다 열기
+            {
+                foreach (var cell in pressedCells)   // 눌러져 있던 셀들을 전부 순회하면서 열기
+                {
+                    cell.Open();                     // 자신을 열기
+                }
+            }
+            else
+            {
+                RestoreCovers();                      // 갯수가 다르면 눌러져있던 셀들 복구
+            }
+        }
+        else
+        {
+            // 1개 일때는 자기 자신만 열고 끝내기
+            pressedCells[0].Open();
+        }
+        pressedCells.Clear();                // 연 셀들을 눌린 셀 목록에서 제거
     }
 
     /// <summary>
@@ -328,6 +361,30 @@ public class Cell : MonoBehaviour
                 default:
                     break;
             }
+        }
+    }
+
+    /// <summary>
+    /// 셀 밖에서 셀위로 마우스가 들어왔을 때 실행되는 함수
+    /// </summary>
+    public void OnEnterCell()
+    {
+        //Debug.Log($"{ID}나감");
+        if (Mouse.current.leftButton.ReadValue() > 0)       // 무으스 왼쪽 버튼이 눌러져 있으면
+        {
+            CellPress();
+        }
+    }
+
+    /// <summary>
+    /// 셀 위에 마우스가 있다가 밖으로 나갔을 때 실행되는 함수
+    /// </summary>
+    public void OnExitCell()
+    {
+        //Debug.Log($"{ID}나감");
+        if (Mouse.current.leftButton.ReadValue() > 0)       // 무으스 왼쪽 버튼이 눌러져 있으면
+        {
+            RestoreCovers();
         }
     }
 }
