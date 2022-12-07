@@ -24,6 +24,11 @@ public class Board : MonoBehaviour
     int height = 16;
 
     /// <summary>
+    /// 보드에 설치될 지뢰의 갯수
+    /// </summary>
+    int minCount = 10;
+
+    /// <summary>
     /// 셀 한 번의 길이(셀은 정사각형)
     /// </summary>
     const float Distance = 1.0f;                    // 1일 때 카메라 크기 9.
@@ -119,6 +124,7 @@ public class Board : MonoBehaviour
 
         width = newWidth;
         height = newHeigh;
+        this.minCount = minCount;
 
         Vector3 basePos = transform.position;           // 기준 위치 설정(보드의 위치)
         Vector3 offset = new Vector3(-(width-1) * Distance * 0.5f, (height-1) * Distance * 0.5f);   // 보드의 피벗을 중심으로 셀이 생성되게 하기 위해 셀이 생성될 시작점 계산용
@@ -143,6 +149,22 @@ public class Board : MonoBehaviour
             }
         }
 
+        gameManager.onGameReset += RestBoard;
+        gameManager.onGameOver += OnGameOver;
+
+        RestBoard();
+    }
+
+    /// <summary>
+    /// 보드를 초기 상태로 되돌리고 랜덤으로 지뢰설치
+    /// </summary>
+    void RestBoard()
+    {
+        // 모든 셀 초기화
+        foreach (var cell in cells)
+        {
+            cell.ResetCell();
+        }
         // 만들어진 셀에 지뢰를 minCount만큼 설치하기 (피셔 예이츠 알고리즘 사용)
         int[] ids = new int[cells.Length];
         for (int i = 0; i < cells.Length; i++)
@@ -269,6 +291,7 @@ public class Board : MonoBehaviour
         Vector2Int grid = ScreenToGrid(screenPos);                  // 스크린 좌표를 Grid좌표로 변환
         if (IsValidGrid(grid))                                      // 결과 그리드 좌표가 적합한지 화인 => 적합하지 않으면 보드 밖이라는 의미
         {
+            GameManager.Inst.GameStart();                           // 매번 Play 상태로 변경 시도(Ready 상태일 때만 적용)
             Cell target = cells[GridToID(grid.x, grid.y)];          // 해당 셀 가져오기
             target.CellPress();
         }
@@ -407,6 +430,28 @@ public class Board : MonoBehaviour
         else
         {
             CurrentCell = null;             // CurrentCell 비우기
+        }
+    }
+
+    /// <summary>
+    /// 게임 오버가 되었을 때 Board가 처리해야 할 일을 수행하는 함수
+    /// </summary>
+    void OnGameOver()
+    {
+        // 잘못 꽂은 깃발 처리
+        // 못찾은 지뢰 표시
+
+        foreach (var cell in cells)
+        {
+            if (!cell.HasMine && cell.IsFlaged)
+            {
+                // 깃발을 잘못 설치했다. == 깃발이 표시되어있는데 지뢰가 없다.
+
+            }
+            if(!cell.IsFlaged && cell.HasMine)
+            {
+                // 지뢰를 못 찾았다. == 지뢰는 있는데 깃발이 표시되어 있지 않다.
+            }
         }
     }
 }

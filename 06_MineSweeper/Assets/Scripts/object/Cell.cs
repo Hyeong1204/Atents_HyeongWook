@@ -178,6 +178,7 @@ public class Cell : MonoBehaviour
             if (this.hasMine)                       // 지뢰가 있으면
             {
                 inside.sprite = Board[OpenCellType.Mine_Explosion];     // 터지는 이미지로 변경
+                GameManager.Inst.GameOver();
                 return;
             }
 
@@ -196,25 +197,27 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void CellPress()
     {
-        pressedCells.Clear();           // 새롭게 눌렸으니 기존에 눌러져 있던 대한 기록을 제거
-        if (IsOpen)
+        if (GameManager.Inst.IsPlaying)
         {
-            // 이 셀이 열려져 있으면, 자신 주변의 닫힌 셀을 모두 누른 표시를 해야한다.
-            foreach (var cell in neighbors)
+            pressedCells.Clear();           // 새롭게 눌렸으니 기존에 눌러져 있던 대한 기록을 제거
+            if (IsOpen)
             {
-                if (!cell.IsOpen)                       // 주변 셀중에 닫혀있는 셀만
+                // 이 셀이 열려져 있으면, 자신 주변의 닫힌 셀을 모두 누른 표시를 해야한다.
+                foreach (var cell in neighbors)
                 {
-                    pressedCells.Add(cell);             // 누르고 있는 셀이라고 표시
-                    cell.CellPress();                   // 누르고 있는 표시
+                    if (!cell.IsOpen)                       // 주변 셀중에 닫혀있는 셀만
+                    {
+                        pressedCells.Add(cell);             // 누르고 있는 셀이라고 표시
+                        cell.CellPress();                   // 누르고 있는 표시
+                    }
                 }
             }
+            else
+            {
+                // 이 셀이 닫힌 셀이 때 자신을 누른 표시를 한다.
+                PressCover();
+            }
         }
-        else
-        {
-            // 이 셀이 닫힌 셀이 때 자신을 누른 표시를 한다.
-            PressCover();
-        }
-
     }
 
     /// <summary>
@@ -222,35 +225,38 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void CellRelease()
     {
-        if (pressedCells.Count != 1)                 // 1개가 아닐 때(2개 이상일 때는 다 처리. 0개일 때는 중복 실행이지만 무시)
+        if (GameManager.Inst.IsPlaying)
         {
-            int flagCount = 0;
-            foreach (var cell in neighbors)          // 주변에 있는 깃발 갯수 세기
+            if (pressedCells.Count != 1)                 // 1개가 아닐 때(2개 이상일 때는 다 처리. 0개일 때는 중복 실행이지만 무시)
             {
-                if (cell.IsFlaged)
+                int flagCount = 0;
+                foreach (var cell in neighbors)          // 주변에 있는 깃발 갯수 세기
                 {
-                    flagCount++;
+                    if (cell.IsFlaged)
+                    {
+                        flagCount++;
+                    }
                 }
-            }
 
-            if (flagCount == aroundMineCount)        // 주변의 깃발 갯수와 주변 지뢰의 갯수가 같을 때만 눌러진 것들 다 열기
-            {
-                foreach (var cell in pressedCells)   // 눌러져 있던 셀들을 전부 순회하면서 열기
+                if (flagCount == aroundMineCount)        // 주변의 깃발 갯수와 주변 지뢰의 갯수가 같을 때만 눌러진 것들 다 열기
                 {
-                    cell.Open();                     // 자신을 열기
+                    foreach (var cell in pressedCells)   // 눌러져 있던 셀들을 전부 순회하면서 열기
+                    {
+                        cell.Open();                     // 자신을 열기
+                    }
+                }
+                else
+                {
+                    RestoreCovers();                      // 갯수가 다르면 눌러져있던 셀들 복구
                 }
             }
             else
             {
-                RestoreCovers();                      // 갯수가 다르면 눌러져있던 셀들 복구
+                // 1개 일때는 자기 자신만 열고 끝내기
+                pressedCells[0].Open();
             }
+            pressedCells.Clear();                // 연 셀들을 눌린 셀 목록에서 제거
         }
-        else
-        {
-            // 1개 일때는 자기 자신만 열고 끝내기
-            pressedCells[0].Open();
-        }
-        pressedCells.Clear();                // 연 셀들을 눌린 셀 목록에서 제거
     }
 
     /// <summary>
@@ -335,12 +341,24 @@ public class Cell : MonoBehaviour
         }
     }
 
+    public void ResetCell()
+    {
+        isOpen = false;
+        cover.gameObject.SetActive(true);
+        hasMine = false;
+        markState = CellMarkState.None;
+        aroundMineCount = 0;
+        cover.sprite = Board[CloseCellType.Close];
+        inside.sprite = Board[OpenCellType.Empty];
+        pressedCells.Clear();
+    }
+
     /// <summary>
     /// 셀에 빈것 -> 깃발 -> 물음표 -> 빈것 -> ... 순서로 표시하는 함수
     /// </summary>
     public void CellRightPress()
     {
-        if (!IsOpen)
+        if (GameManager.Inst.IsPlaying &&!IsOpen)
         {
             switch (markState)
             {
