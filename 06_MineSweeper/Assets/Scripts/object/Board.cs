@@ -446,11 +446,13 @@ public class Board : MonoBehaviour
             if (!cell.HasMine && cell.IsFlaged)
             {
                 // 깃발을 잘못 설치했다. == 깃발이 표시되어있는데 지뢰가 없다.
+                cell.SetFlagIncorrect();
 
             }
             if(!cell.IsFlaged && cell.HasMine)
             {
                 // 지뢰를 못 찾았다. == 지뢰는 있는데 깃발이 표시되어 있지 않다.
+                cell.SetMineNotFound();
             }
         }
     }
