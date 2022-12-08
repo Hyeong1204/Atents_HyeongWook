@@ -212,15 +212,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2649735769254565413, guid: 87a67cc38a9ce56488bb0036500e1dbd, type: 3}
       propertyPath: minCount
-      value: 100
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2649735769254565413, guid: 87a67cc38a9ce56488bb0036500e1dbd, type: 3}
       propertyPath: boardWidth
-      value: 20
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 2649735769254565413, guid: 87a67cc38a9ce56488bb0036500e1dbd, type: 3}
       propertyPath: boardHeight
-      value: 20
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 2649735769254565414, guid: 87a67cc38a9ce56488bb0036500e1dbd, type: 3}
       propertyPath: m_RootOrder
@@ -592,7 +592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2281120968247241847, guid: cc8fe8d1ef02f1a40a26ffa26f720ff5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.53
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 2281120968247241847, guid: cc8fe8d1ef02f1a40a26ffa26f720ff5, type: 3}
       propertyPath: m_LocalPosition.y

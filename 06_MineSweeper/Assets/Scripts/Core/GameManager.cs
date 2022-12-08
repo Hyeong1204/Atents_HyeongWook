@@ -112,10 +112,12 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("GameOver 상태");
     }
 
+    /// <summary>
+    /// 플레이어의 행동이 끝날 때 실행될 함수
+    /// </summary>
     public void FinishPlayerAction()
     {
-        //bool result = false;
-
+        // 클리어 조건을 만족시키는 확인
         if (Board.OpenCellCount == (boardHeight * boardWidth) - minCount && Board.FoundMineCount == minCount)
         {
             GameClear();

@@ -54,7 +54,14 @@ public class Board : MonoBehaviour
     /// </summary>
     Cell currentCell = null;
 
+    /// <summary>
+    /// 이 보드에서 열려있는 셀의 숫자
+    /// </summary>
     int openCellCount = 0;
+
+    /// <summary>
+    /// 이 보드에서 찾은 지뢰의 숫자
+    /// </summary>
     int foundMineCount = 0;
 
     // 프로퍼티 -------------------------------------------------------------------------------------------------------
@@ -76,7 +83,14 @@ public class Board : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 열린 셀의 갯수를 확인만 가능한 프로퍼티
+    /// </summary>
     public int OpenCellCount => openCellCount;
+
+    /// <summary>
+    /// 찾은 지뢰의 갯수를 확인만 가능한 프로퍼티
+    /// </summary>
     public int FoundMineCount => foundMineCount;
 
     // 델리게이트 --------------------------------------------------------------------------------------------------------
