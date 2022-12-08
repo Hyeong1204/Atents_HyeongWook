@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,11 +20,37 @@ public class Timer : MonoBehaviour
     /// </summary>
     public float ElapsedTime => elapsedTime;
 
+    /// <summary>
+    /// 실제로 보여지는 시간. ElapseTime의 자연수 부분이 변경되었는지 확인하기 위한 용도.
+    /// </summary>
+    int visibleTime = 0;
+
+    /// <summary>
+    /// 초단위로 시간이 변경되었을 때 실행될 델리게이트
+    /// </summary>
+    public Action<int> onTimeChange;
+
+    private void Start()
+    {
+        GameManager gameManager = GameManager.Inst;
+        gameManager.onGameStart += TimerReset;
+        gameManager.onGameStart += Play;
+        gameManager.onGameClear += Stop;
+        gameManager.onGameOver += Stop;
+        gameManager.onGameReset += TimerReset;
+    }
+
     private void Update()
     {
         if (isPlay)     // 플레이 상태일 때만 
         {
             elapsedTime += Time.deltaTime;  // 시간 누적하기
+
+            if(visibleTime != (int)elapsedTime)
+            {
+                visibleTime = (int)elapsedTime;
+                onTimeChange?.Invoke(visibleTime);
+            }
         }
     }
 
@@ -50,5 +77,6 @@ public class Timer : MonoBehaviour
     {
         Stop();
         elapsedTime = 0.0f;
+        onTimeChange?.Invoke(0);
     }
 }

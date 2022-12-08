@@ -16,18 +16,12 @@ public class FlagCounter : MonoBehaviour
     {
         GameManager gameManager = GameManager.Inst;
         gameManager.onFlagCountChange += Refresh;
-        gameManager.onGameReset += OnReset;
+        gameManager.onGameReset += () => Refresh(gameManager.FlagCount);
         Refresh(gameManager.FlagCount);
     }
-
 
     private void Refresh(int flagCount)
     {
         imageNumber.Number = flagCount;
-    }
-
-    private void OnReset()
-    {
-        imageNumber.Number = GameManager.Inst.minCount;
     }
 }

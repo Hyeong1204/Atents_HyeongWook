@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>
         GameClear,      // 모든 지뢰를 찾았을 때
         GameOver        // 지뢰가 있는 셀을 열었을 때
     }
-
+    
     GameState state = GameState.Ready;
 
     /// <summary>
@@ -35,10 +35,6 @@ public class GameManager : Singleton<GameManager>
     public Action onGameClear;
 
     public Action onGameOver;
-
-    // 타이머 관련   -------------------------------------------------------------
-    private Timer timer;
-    private int timeCount = 0;
 
     // 깃발 갯수 관련 -------------------------------------------------------------
     private int flagCount = 0;
@@ -61,27 +57,11 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public int TimeCount
-    {
-        get => timeCount;
-        private set
-        {
-            if (timeCount != value)
-            {
-                timeCount = value;
-                onTimeCountChange?.Invoke(timeCount);
-            }
-        }
-    }
-
     public Action<int> onFlagCountChange;
-    public Action<int> onTimeCountChange;
 
     protected override void Initialize()
     {
         base.Initialize();
-
-        timer = GetComponent<Timer>();
 
         FlagCount = minCount;
 
@@ -89,10 +69,6 @@ public class GameManager : Singleton<GameManager>
         board.Initialize(boardWidth, boardHeight, minCount);
     }
 
-    private void Update()
-    {
-        TimeCount = (int)timer.ElapsedTime;
-    }
 
     public void IncreaseFlagCount()
     {
@@ -117,6 +93,7 @@ public class GameManager : Singleton<GameManager>
     public void GameReset()
     {
         state = GameState.Ready;
+        FlagCount = minCount;
         onGameReset?.Invoke();
         Debug.Log("Ready 상태");
     }
@@ -136,21 +113,6 @@ public class GameManager : Singleton<GameManager>
     }
 
 #if TEST_CODE
-    public void TestTimerPlay()
-    {
-        timer.Play();
-    }
-
-    public void TestTimerStop()
-    {
-        timer.Stop();
-    }
-
-    public void TestTimerReset()
-    {
-        timer.TimerReset();
-    }
-
     public void TestFlag_Increase()
     {
         FlagCount++;

@@ -15,29 +15,9 @@ public class TimeCounter : MonoBehaviour
 
     private void Start()
     {
+        timer = GetComponent<Timer>();
         GameManager gameManager = GameManager.Inst;
-        timer = gameManager.GetComponent<Timer>();
-        gameManager.onTimeCountChange += Refresh;
-        gameManager.onGameStart += OnStart;
-        gameManager.onGameClear += OnStop;
-        gameManager.onGameOver += OnStop;
-        gameManager.onGameReset += OnReset;
-    }
-
-    private void OnReset()
-    {
-        OnStop();
-        imageNumber.Number = 0;
-    }
-
-    private void OnStop()
-    {
-        timer.Stop();
-    }
-
-    private void OnStart()
-    {
-        timer.Play();
+        timer.onTimeChange += Refresh;
     }
 
     private void Refresh(int count)
