@@ -159,10 +159,12 @@ public class Cell : MonoBehaviour
     //}
 
     // 델리게이트 =================================================================
+    public Action onFlagUse;        // 깃발 설치 했을 때 실행될 델리게이트
+    public Action onFlagReturn;     // 깃발 설치 취소 했을 때 실행될 델리게이트
 
-    public Action onFlagUse;
-    public Action onFlagReturn;
-
+    public Action onMineFound;      // 지뢰를 찾았을 때 실행될 델리게이트
+    public Action onMineFoundCancel;// 찾은 지뢰를 취소 했을 때
+    public Action onOpen;           // 셀이 열렸을 때 실행될 델리게이트
     // 함수 =======================================================================
 
     /// <summary>
@@ -173,6 +175,7 @@ public class Cell : MonoBehaviour
         if (!isOpen && !IsFlaged)                                // 닫혀있고 깃발 표시가 안되었을 때만 연다.
         {
             isOpen = true;
+            onOpen?.Invoke();                       // 열렸다고 신호 보내기
             cover.gameObject.SetActive(false);      // 셀을 열릴 때 커버를 비활성화
 
             if (this.hasMine)                       // 지뢰가 있으면
@@ -366,11 +369,19 @@ public class Cell : MonoBehaviour
                 case CellMarkState.None:                            //
                     markState = CellMarkState.Flag;
                     cover.sprite = Board[CloseCellType.Flag];
+                    if (HasMine)
+                    {
+                        onMineFound?.Invoke();
+                    }
                     onFlagUse?.Invoke();
                     break;
                 case CellMarkState.Flag:                            //
                     markState = CellMarkState.Question;
                     cover.sprite = Board[CloseCellType.Question];
+                    if (HasMine)
+                    {
+                        onMineFoundCancel?.Invoke();
+                    }
                     onFlagReturn?.Invoke();
                     break;
                 case CellMarkState.Question:                        //

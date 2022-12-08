@@ -112,6 +112,18 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("GameOver 상태");
     }
 
+    public void FinishPlayerAction()
+    {
+        //bool result = false;
+
+        if (Board.OpenCellCount == (boardHeight * boardWidth) - minCount && Board.FoundMineCount == minCount)
+        {
+            GameClear();
+        }
+
+        //return result;
+    }
+
 #if TEST_CODE
     public void TestFlag_Increase()
     {
