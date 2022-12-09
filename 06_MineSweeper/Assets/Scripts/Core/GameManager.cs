@@ -93,7 +93,7 @@ public class GameManager : Singleton<GameManager>
         base.Initialize();
 
         FlagCount = minCount;
-
+        ActionCount = 0;
         board = FindObjectOfType<Board>();
         board.Initialize(boardWidth, boardHeight, minCount);
     }

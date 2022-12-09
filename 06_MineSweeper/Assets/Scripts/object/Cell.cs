@@ -378,6 +378,7 @@ public class Cell : MonoBehaviour
                         onMineFound?.Invoke();
                     }
                     onFlagUse?.Invoke();                        // 깃발 설치했다고 알림
+                    onAction?.Invoke();
                     pressedCells.Clear();                       // 연 셀들을 눌린 셀 목록에서 제거
                     break;
                 case CellMarkState.Flag:                            //
