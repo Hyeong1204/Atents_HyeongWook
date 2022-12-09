@@ -164,7 +164,9 @@ public class Cell : MonoBehaviour
 
     public Action onMineFound;      // 지뢰를 찾았을 때 실행될 델리게이트
     public Action onMineFoundCancel;// 찾은 지뢰를 취소 했을 때
-    public Action onOpen;           // 셀이 열렸을 때 실행될 델리게이트
+    public Action onOpen;           // 셀이 열렸을 때 실행될 델리게이트 (연쇄적으로 열릴때도 실행됨)
+
+    public Action onAction;         // 플레이어가 행동을 했을 때(셀을 연다, 깃발을 설치한다, 깃발 설치를 해제한다.) 실행될 델리게이트
     // 함수 =======================================================================
 
     /// <summary>
@@ -248,6 +250,7 @@ public class Cell : MonoBehaviour
                     {
                         cell.Open();                     // 자신을 열기
                     }
+                    pressedCells.Clear();                      // 연 셀들을 눌린 셀 목록에서 제거
                 }
                 else
                 {
@@ -258,9 +261,10 @@ public class Cell : MonoBehaviour
             {
                 // 닫혀있는 셀에서 마우스 버튼을 땠을 때
                 pressedCells[0].Open();             // 닫혀 있는 자기 자신만 열고 끝
+                onAction?.Invoke();                        // 행동을 했다고 신호를 보내기
             }
         }
-        pressedCells.Clear();                // 연 셀들을 눌린 셀 목록에서 제거
+        pressedCells.Clear();                      // 연 셀들을 눌린 셀 목록에서 제거
     }
 
     /// <summary>
@@ -373,7 +377,8 @@ public class Cell : MonoBehaviour
                     {
                         onMineFound?.Invoke();
                     }
-                    onFlagUse?.Invoke();
+                    onFlagUse?.Invoke();                        // 깃발 설치했다고 알림
+                    pressedCells.Clear();                       // 연 셀들을 눌린 셀 목록에서 제거
                     break;
                 case CellMarkState.Flag:                            //
                     markState = CellMarkState.Question;
@@ -382,7 +387,8 @@ public class Cell : MonoBehaviour
                     {
                         onMineFoundCancel?.Invoke();
                     }
-                    onFlagReturn?.Invoke();
+                    onFlagReturn?.Invoke();                     // 깃발 설치 취소했다고 알림
+                    pressedCells.Clear();                       // 연 셀들을 눌린 셀 목록에서 제거
                     break;
                 case CellMarkState.Question:                        //
                     markState = CellMarkState.None;

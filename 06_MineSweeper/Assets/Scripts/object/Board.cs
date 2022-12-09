@@ -168,13 +168,12 @@ public class Board : MonoBehaviour
                 cell.ID = i * width + j;                                // ID 설정(ID를 통해 위치도 확인 가능)
                 cell.Board = this;                                      // 보드 설정
                 cell.onFlagUse += gameManager.DecreaseFlagCount;
-                cell.onFlagUse += gameManager.FinishPlayerAction;
                 cell.onFlagReturn += gameManager.IncreaseFlagCount;
                 cell.onFlagReturn += gameManager.FinishPlayerAction;    // 존재가 애매함(실질적인 의미없음)
                 cell.onOpen += () => openCellCount++;
-                cell.onOpen += gameManager.FinishPlayerAction;
                 cell.onMineFound += () => foundMineCount++;
                 cell.onMineFoundCancel += () => foundMineCount--;
+                cell.onAction += gameManager.FinishPlayerAction;
                 cellObj.name = $"Cell_{cell.ID}_[{i}, {j}]";            // 셀의 이름 변경
                 cells[cell.ID] = cell;                                  // 셀 배열에 셀 저장
             }
