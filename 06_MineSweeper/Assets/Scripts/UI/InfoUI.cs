@@ -24,6 +24,11 @@ public class InfoUI : MonoBehaviour
 
         gameManager.onGameOver += () => OnGameEnd(gameManager.Board.FoundMineCount, gameManager.Board.NotFoundMineCount);
         gameManager.onGameClear += () => OnGameEnd(gameManager.Board.FoundMineCount, gameManager.Board.NotFoundMineCount);
+        gameManager.onGameReset += () =>
+        {
+            findCointText.text = "???";
+            notFindCointText.text = "???";
+        };
     }
 
     /// <summary>
