@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class RankPanel : MonoBehaviour
 {
+    // 과제 : 
+    // 게임이 끝나면 패널 열리기
+    // 열릴때 무조건 패널이 하나만 켜져야함
+    // 버튼이 눌렸을 때 해당 패널이 열려야함
     private void Start()
     {
         GameManager gameManager = GameManager.Inst;
@@ -15,7 +19,8 @@ public class RankPanel : MonoBehaviour
 
     void Open()
     {
-        this.gameObject.SetActive(true);
+        this.gameObject.SetActive(true);    
+
     }
 
     void Close()
