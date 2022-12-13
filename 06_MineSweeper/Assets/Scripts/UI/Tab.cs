@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Tab : MonoBehaviour
 {
-    bool isSelected = false;
+    bool isSelected = true;
     Button tabButton;
     Image tabImage;
     readonly Color UselectedColor = new Color(1, 1, 1, 0.2f);
@@ -14,16 +14,13 @@ public class Tab : MonoBehaviour
 
     public Action<Tab> onTabSelect;
 
-    bool IsSelected
+    public bool IsSelected
     {
         get => isSelected;
         set
         {
-            if(isSelected != value)
-            {
-                isSelected = value;
-                TabSelect(isSelected);
-            }
+            isSelected = value;
+            TabSelect(isSelected);
         }
     }
 
@@ -39,6 +36,11 @@ public class Tab : MonoBehaviour
         });
         tabImage = GetComponent<Image>();
         childPanel = transform.GetChild(0);
+        IsSelected = false;
+    }
+
+    private void Start()
+    {
     }
 
     void TabSelect(bool selected)
