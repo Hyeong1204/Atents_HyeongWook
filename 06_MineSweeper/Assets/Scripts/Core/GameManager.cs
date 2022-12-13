@@ -58,10 +58,10 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 플레이어가 이번 판에서 했던 행동 횟수용 프로퍼티
     /// </summary>
-    private int ActionCount
+    public int ActionCount
     {
         get => actionCount;
-        set
+        private set
         {
             if(actionCount != value)
             {
@@ -88,6 +88,9 @@ public class GameManager : Singleton<GameManager>
 
     public Action<int> onFlagCountChange;
 
+    Timer timer;
+    public float PlayTime => timer.ElapsedTime;
+
     protected override void Initialize()
     {
         base.Initialize();
@@ -96,6 +99,7 @@ public class GameManager : Singleton<GameManager>
         ActionCount = 0;
         board = FindObjectOfType<Board>();
         board.Initialize(boardWidth, boardHeight, minCount);
+        timer = FindObjectOfType<Timer>();
     }
 
 

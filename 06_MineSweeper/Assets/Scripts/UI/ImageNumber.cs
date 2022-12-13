@@ -103,6 +103,7 @@ public class ImageNumber : MonoBehaviour
     {
         int tempNum = Mathf.Abs(Number);            // 부호 제거. 무조건 +로 변경.
         Queue<int> digitsQ = new Queue<int>(3);     // 각 자리수 숫자를 저장할 큐 만들기
+
         if(tempNum == 0)
         {
             digitsQ.Enqueue(tempNum);

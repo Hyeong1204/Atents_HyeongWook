@@ -42,7 +42,8 @@ public class ToggleButton : MonoBehaviour
     /// </summary>
     private void ToggleClick()
     {
-        SetToggleState(!isOn);
+        isOn = true;                // 토글을 켠상태로 만들기
+        SetToggleState(!isOn);      // 버튼 켜기
     }
 
     /// <summary>
