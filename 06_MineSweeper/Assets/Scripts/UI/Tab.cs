@@ -54,15 +54,15 @@ public class Tab : MonoBehaviour
 
     private void Awake()
     {
+        subPanel = transform.GetComponentInChildren<TabSubPanel>();
         tabButton = GetComponent<Button>();
         tabButton.onClick.AddListener(() =>
         {
             IsSelected = true;                  // 클릭하면 IsSelected 프로퍼티를 true로 변경
         });
         tabImage = GetComponent<Image>();
-        IsSelected = false;                     // 기본적으로는 선택 되어있지 않은 것으로 처리
 
-        subPanel = GetComponentInChildren<TabSubPanel>();
+        IsSelected = false;                     // 기본적으로는 선택 되어있지 않은 것으로 처리        
     }
 
     /// <summary>
@@ -72,7 +72,6 @@ public class Tab : MonoBehaviour
     {
         if(IsSelected) 
         {
-            subPanel.Refresh();
             subPanel.gameObject.SetActive(true);      // 선택되었을 때만 열기
         }
     }

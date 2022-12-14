@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2649735769254565414}
   - component: {fileID: 2649735769254565413}
+  - component: {fileID: 93708713}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -44,6 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e29269915003b9c4a99ac8100a3330f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minCount: 10
-  boardWidth: 8
-  boardHeight: 8
+  minCount: 3
+  boardWidth: 16
+  boardHeight: 16
+--- !u!114 &93708713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2649735769254565411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5bdb5f549a8e284a88b5ff575f45043, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rankCount: 5

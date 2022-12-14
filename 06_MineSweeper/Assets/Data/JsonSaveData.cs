@@ -5,6 +5,6 @@ using System.Collections.Generic;
 public class JsonSaveData
 {
     public int[] actionCountRank/* = { 9999, 9999, 9999, 9999, 9999 }*/;
-    public float[] playTimerRank = { 999, 999, 999, 999, 999, };
+    public float[] playTimerRank = { 999, 999, 999, 999, 999 };
 }
 
