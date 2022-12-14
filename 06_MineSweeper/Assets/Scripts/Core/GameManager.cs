@@ -55,6 +55,10 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     int actionCount = 0;
 
+    // 랭킹 관련 ----------------------------------------------------------------------
+    RankData rankData;
+    public RankData RankData => rankData;
+
     /// <summary>
     /// 플레이어가 이번 판에서 했던 행동 횟수용 프로퍼티
     /// </summary>
@@ -100,6 +104,7 @@ public class GameManager : Singleton<GameManager>
         board = FindObjectOfType<Board>();
         board.Initialize(boardWidth, boardHeight, minCount);
         timer = FindObjectOfType<Timer>();
+        rankData = GetComponent<RankData>();
     }
 
 
