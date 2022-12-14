@@ -85,8 +85,8 @@ public class RankData : MonoBehaviour
         }
 
         // 파일 저장하기
-        string tullPath = $"{path}/{RankDataFileName}";
-        File.WriteAllText(tullPath, json);
+        string fullPath = $"{path}/{RankDataFileName}";
+        File.WriteAllText(fullPath, json);
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public class RankData : MonoBehaviour
 
         if(Directory.Exists(path) && File.Exists(fullPath))     // 폴더와 파일 둘다 있을 때만 읽기
         {
-            string json = File.ReadAllText(path);
+            string json = File.ReadAllText(fullPath);
             JsonSaveData jsonSavaData = JsonUtility.FromJson<JsonSaveData>(json);
             actionRank = new List<int>(jsonSavaData.actionCountRank);
             timeRank = new List<float>(jsonSavaData.playTimerRank);
