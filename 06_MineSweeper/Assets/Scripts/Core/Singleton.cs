@@ -26,7 +26,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
             if(isShutDown)
             {
 #if PRINT_DEBUG_INFO
-                Debug.LogWarning($"{typeof(T)} 싱글톤은 이미 삭제되었음.");
+                //Debug.LogWarning($"{typeof(T)} 싱글톤은 이미 삭제되었음.");
 #endif
                 return null;
             }
@@ -46,7 +46,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
                 DontDestroyOnLoad(_instance.gameObject);    // 씬이 사라지더라도 게임 오브젝트를 삭제하지 않게 하는 코드
             }
 #if PRINT_DEBUG_INFO
-            Debug.Log($"Singleton({_instance.gameObject.name}) : Get");
+            //Debug.Log($"Singleton({_instance.gameObject.name}) : Get");
 #endif
             return _instance;   // 무조건 null이 아닌 값이 리턴된다.
         }
@@ -58,7 +58,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void Awake()
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"Singleton({this.gameObject.name}) : Awake");
+        //Debug.Log($"Singleton({this.gameObject.name}) : Awake");
 #endif
         if (_instance == null)
         {
@@ -79,7 +79,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void OnEnable()
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"Singleton({this.gameObject.name}) : OnEnable");
+        //Debug.Log($"Singleton({this.gameObject.name}) : OnEnable");
 #endif
         SceneManager.sceneLoaded += OnSceneLoaded;  // 씬 로드가 완료되면 Initialize 함수 실행
     }
@@ -87,7 +87,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void OnDisable()
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"Singleton({this.gameObject.name}) : OnDisable");
+        //Debug.Log($"Singleton({this.gameObject.name}) : OnDisable");
 #endif
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
@@ -96,7 +96,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void OnApplicationQuit()
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"Singleton({this.gameObject.name}) : Quit");
+        //Debug.Log($"Singleton({this.gameObject.name}) : Quit");
 #endif
         isShutDown = true;
     }
@@ -104,7 +104,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"Singleton({this.gameObject.name}) : SceneLoaded");
+        //Debug.Log($"Singleton({this.gameObject.name}) : SceneLoaded");
 #endif
         Initialize();   // 씬이 로드 되면 초기화 함수 따로 실행
     }
@@ -115,7 +115,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     protected virtual void Initialize()
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"Singleton({this.gameObject.name}) : Initialize");
+        //Debug.Log($"Singleton({this.gameObject.name}) : Initialize");
 #endif
     }
 }

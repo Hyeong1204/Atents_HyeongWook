@@ -119,7 +119,7 @@ public class GameManager : Singleton<GameManager>
         {
             state = GameState.Play;
             onGameStart?.Invoke();
-            Debug.Log("Play 상태");
+            //Debug.Log("Play 상태");
         }
     }
 
@@ -129,21 +129,21 @@ public class GameManager : Singleton<GameManager>
         ActionCount = 0;
         FlagCount = minCount;
         onGameReset?.Invoke();
-        Debug.Log("Ready 상태");
+        //Debug.Log("Ready 상태");
     }
 
     public void GameClear()
     {
         state = GameState.GameClear;
         onGameClear?.Invoke();
-        Debug.Log("Clear 상태");
+        //Debug.Log("Clear 상태");
     }
 
     public void GameOver()
     {
         state = GameState.GameOver;
         onGameOver?.Invoke();
-        Debug.Log("GameOver 상태");
+        //Debug.Log("GameOver 상태");
     }
 
     /// <summary>

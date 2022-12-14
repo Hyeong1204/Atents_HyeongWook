@@ -366,11 +366,11 @@ public class Board : MonoBehaviour
         {
             Cell target = cells[GridToID(grid.x, grid.y)];          // 해당 셀 가져오기
             target.CellRightPress();
-            Debug.Log(target.name);
+            //Debug.Log(target.name);
         }
         else
         {
-            Debug.Log("셀 없음");
+            //Debug.Log("셀 없음");
         }
     }
 

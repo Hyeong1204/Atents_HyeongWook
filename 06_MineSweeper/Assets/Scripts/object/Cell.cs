@@ -142,7 +142,7 @@ public class Cell : MonoBehaviour
 
     //private void OnTriggerEnter2D(Collider2D collision)
     //{
-    //    //Debug.Log($"{ID}들어옴");
+    //    ////Debug.Log($"{ID}들어옴");
     //    if(Mouse.current.leftButton.ReadValue() > 0)
     //    {
     //        CellPress();
@@ -151,7 +151,7 @@ public class Cell : MonoBehaviour
 
     //private void OnTriggerExit2D(Collider2D collision)
     //{
-    //    //Debug.Log($"{ID}나감");
+    //    ////Debug.Log($"{ID}나감");
     //    if (Mouse.current.leftButton.ReadValue() > 0)
     //    {
     //        RestoreCovers();
@@ -406,7 +406,7 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void OnEnterCell()
     {
-        //Debug.Log($"{ID}나감");
+        ////Debug.Log($"{ID}나감");
         if (Mouse.current.leftButton.ReadValue() > 0)       // 무으스 왼쪽 버튼이 눌러져 있으면
         {
             CellPress();
@@ -418,7 +418,7 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void OnExitCell()
     {
-        //Debug.Log($"{ID}나감");
+        ////Debug.Log($"{ID}나감");
         if (Mouse.current.leftButton.ReadValue() > 0)       // 무으스 왼쪽 버튼이 눌러져 있으면
         {
             RestoreCovers();

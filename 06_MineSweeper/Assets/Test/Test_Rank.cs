@@ -34,7 +34,7 @@ public class SortTest : IComparable
 
     public void Print()
     {
-        Debug.Log($"");
+        //Debug.Log($"");
     }
 }
 

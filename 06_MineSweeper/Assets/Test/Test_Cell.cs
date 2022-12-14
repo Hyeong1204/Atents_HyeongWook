@@ -23,7 +23,7 @@ public class Test_Cell : TestBase
         {
             output += item.ToString();
         }
-            Debug.Log(output);
+            //Debug.Log(output);
     }
 
     protected override void Test3(InputAction.CallbackContext _)
@@ -53,6 +53,6 @@ public class Test_Cell : TestBase
             }
             output += "\n";
         }
-        Debug.Log(output);
+        //Debug.Log(output);
     }
 }
