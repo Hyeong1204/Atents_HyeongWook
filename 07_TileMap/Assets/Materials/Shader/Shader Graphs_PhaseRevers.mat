@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_NetPhase
+  m_Name: Shader Graphs_PhaseRevers
   m_Shader: {fileID: -6465566751694194690, guid: 097f3f67dbaf50b4d9ed1bee212b6b87, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -38,7 +38,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Spit: 1
+    - _Spit: 0
     - _Tickness: 0.1
     m_Colors:
     - _Color: {r: 0, g: 2, b: 1.403922, a: 0}

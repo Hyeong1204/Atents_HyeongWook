@@ -6,11 +6,17 @@ using UnityEngine.InputSystem;
 public class Test_Shader : TestBase
 {
     public GameObject phaseSlime;
+    public GameObject dessolveSlime;
     public float phaseDuration = 2.0f;
 
     protected override void Test1(InputAction.CallbackContext _)
     {
         StartCoroutine(StartPhase());
+    }
+
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+        StartCoroutine(StartDessolve());
     }
 
     IEnumerator StartPhase()
@@ -32,5 +38,25 @@ public class Test_Shader : TestBase
         }
 
         material.SetFloat("_thickness", 0.0f);
+    }
+
+    IEnumerator StartDessolve()
+    {
+        Renderer renderer = dessolveSlime.GetComponent<SpriteRenderer>();
+        Material material = renderer.material;
+        material.SetFloat("_Fode", 1.0f);
+
+        float timeElipsed = phaseDuration;
+        float phaseDuationNoramlize = 1 / phaseDuration;
+
+        while (timeElipsed > 0)
+        {
+            timeElipsed -= Time.deltaTime;
+
+            material.SetFloat("_Fode", timeElipsed * phaseDuationNoramlize);
+            yield return null;
+        }
+
+        material.SetFloat("_Fode", 0.0f);
     }
 }
