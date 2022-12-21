@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 37984769}
   - component: {fileID: 37984768}
   m_Layer: 0
-  m_Name: Slime (2)
+  m_Name: PhaseReverseSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -228,6 +228,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &69930490 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 911397134687578534, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+  m_PrefabInstance: {fileID: 911397134622237788}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &187442167
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,7 +290,7 @@ GameObject:
   - component: {fileID: 520243810}
   - component: {fileID: 520243809}
   m_Layer: 0
-  m_Name: Slime (1)
+  m_Name: PhaseSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -390,7 +395,7 @@ GameObject:
   - component: {fileID: 916283761}
   - component: {fileID: 916283760}
   m_Layer: 0
-  m_Name: Slime
+  m_Name: OutlLineSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -529,7 +534,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   phaseSlime: {fileID: 520243807}
   dessolveSlime: {fileID: 1634737610}
-  phaseDuration: 2
+  allSlime: {fileID: 69930490}
+  allDuration: 2
 --- !u!1 &1124440155
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,7 +665,7 @@ Tilemap:
       - {fileID: 1099959019, guid: 4c326e3eae3d6bc4d8258bb2a01c1f0c, type: 3}
       - {fileID: 125924698, guid: 4c326e3eae3d6bc4d8258bb2a01c1f0c, type: 3}
       - {fileID: 1838260173, guid: 4c326e3eae3d6bc4d8258bb2a01c1f0c, type: 3}
-      m_AnimationSpeed: 10.160744
+      m_AnimationSpeed: 9.630581
       m_AnimationTimeOffset: 0
       m_IsLooping: 1
   - first: {x: 0, y: 0, z: 0}
@@ -669,7 +675,7 @@ Tilemap:
       - {fileID: 363047624, guid: 4c326e3eae3d6bc4d8258bb2a01c1f0c, type: 3}
       - {fileID: 1823570097, guid: 4c326e3eae3d6bc4d8258bb2a01c1f0c, type: 3}
       - {fileID: 1284425147, guid: 4c326e3eae3d6bc4d8258bb2a01c1f0c, type: 3}
-      m_AnimationSpeed: 11.770335
+      m_AnimationSpeed: 8.288469
       m_AnimationTimeOffset: 0
       m_IsLooping: 1
   - first: {x: 4, y: 0, z: 0}
@@ -679,7 +685,7 @@ Tilemap:
       - {fileID: -1795076732, guid: 4c326e3eae3d6bc4d8258bb2a01c1f0c, type: 3}
       - {fileID: 1082779865, guid: 4c326e3eae3d6bc4d8258bb2a01c1f0c, type: 3}
       - {fileID: -573096319, guid: 4c326e3eae3d6bc4d8258bb2a01c1f0c, type: 3}
-      m_AnimationSpeed: 7.6859126
+      m_AnimationSpeed: 6.9732237
       m_AnimationTimeOffset: 0
       m_IsLooping: 1
   m_TileAssetArray:
@@ -872,7 +878,7 @@ GameObject:
   - component: {fileID: 1634737613}
   - component: {fileID: 1634737612}
   m_Layer: 0
-  m_Name: Slime (3)
+  m_Name: DessolveSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1014,3 +1020,60 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &911397134622237788
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578529, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 911397134687578534, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
+      propertyPath: m_Name
+      value: AllSlime
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
