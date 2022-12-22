@@ -12,7 +12,12 @@ public class Player : MonoBehaviour
     /// 플레이어 이동 속도
     /// </summary>
     public float speed = 3.0f;
-    public float attackCoolTime = 2.0f;
+    public float attackCoolTime = 1.0f;
+
+    /// <summary>
+    /// 플레이어의 현재 남아 있는 쿨타임
+    /// </summary>
+    float currentAttackCoolTime = 0.0f;
 
     /// <summary>
     /// 애니메이터 컴포넌트
@@ -49,9 +54,15 @@ public class Player : MonoBehaviour
     /// </summary>
     List<Slime> attackTarget;
 
+    /// <summary>
+    /// 현재 이동 가능 여부
+    /// </summary>
     bool isMove = false;
 
-    bool isAttack = false;
+    /// <summary>
+    /// 공격 유효기간 표시. true면 슬라임을 죽일 수 있다. false면 못 죽이든 상황
+    /// </summary>
+    bool isAttackValid = false;
 
     private void Awake()
     {
@@ -76,6 +87,19 @@ public class Player : MonoBehaviour
             attackTarget.Remove(slime);     // 리스트에서 제거
             slime.ShowOutLine(false);       // 아웃라인 끄기
         };
+    }
+
+    private void Update()
+    {
+        currentAttackCoolTime -= Time.deltaTime;        // 아무 조건 없이 계속 감소
+
+        if (isAttackValid && attackTarget.Count > 0)
+        {
+            foreach (var target in attackTarget)
+            {
+                target.Die();
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -150,15 +174,13 @@ public class Player : MonoBehaviour
 
     private void OnAttack(InputAction.CallbackContext _)
     {
-        if (!isAttack)
+        if (currentAttackCoolTime < 0)
         {
             oldInputDir = dir;                      // 이후 복원을 위해 입력 방향 저장
             dir = Vector2.zero;                     // 입력 이동 방향 초기화
             anim.SetTrigger("Attack");              // 공격 애니메이션 실행 
-            isAttack = true;
-            StartCoroutine(AttackTime());
 
-            Attack();
+            currentAttackCoolTime = attackCoolTime;     // 쿨타임 리셋
         }
     }
 
@@ -173,20 +195,19 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Attack()
+    /// <summary>
+    /// 공격이 효과적으로 보일 때 실행되는 함수
+    /// </summary>
+    public void AttackValid()
     {
-        if(attackTarget.Count > 0)
-        {
-            foreach (var slime in attackTarget)
-            {
-                slime.Die();
-            }
-        }
+        isAttackValid = true;
     }
 
-    IEnumerator AttackTime()
+    /// <summary>
+    /// 공격이 효과적으로 보이는 기간이 끝날 때 싱핼될 함수
+    /// </summary>
+    public void AttackNotvalid()
     {
-        yield return new WaitForSeconds(attackCoolTime);
-        isAttack = false;
+        isAttackValid = false;
     }
 }

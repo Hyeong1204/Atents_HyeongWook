@@ -76,7 +76,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1794197515
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: -152994048, guid: cf53fdbf8f85c2e49be43d7c6ebbdf02, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -122,6 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
+  attackCoolTime: 2
 --- !u!61 &1266385169369526684
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -179,6 +180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6382967476655894474}
   - component: {fileID: 865447542}
+  - component: {fileID: 1558131164}
   m_Layer: 0
   m_Name: AttackArea
   m_TagString: Untagged
@@ -211,12 +213,24 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.7, y: 1.1}
   m_Direction: 0
+--- !u!114 &1558131164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2784634806547401624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f7f8fcb1d79ada4d9e203f6113ec059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6263577435460146260
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +243,7 @@ GameObject:
   m_Layer: 0
   m_Name: Center
   m_TagString: Untagged
-  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
