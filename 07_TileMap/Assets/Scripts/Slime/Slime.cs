@@ -28,13 +28,8 @@ public class Slime : MonoBehaviour
 
     private void OnDisable()
     {
-        onDisable?.Invoke();
-        mainMaterial.SetFloat("_Dissolve_Fade", 1.0f);
-    }
-
-    private void Start()
-    {
         ShowOutLine(false);
+        onDisable?.Invoke();
         mainMaterial.SetFloat("_Dissolve_Fade", 1.0f);
     }
 

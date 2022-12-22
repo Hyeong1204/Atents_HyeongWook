@@ -37,6 +37,8 @@ public class Player : MonoBehaviour
     /// </summary>
     Rigidbody2D rigid;
 
+    Transform attackArea;
+
     bool isMove = false;
 
     private void Awake()
@@ -45,6 +47,7 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         inputActions = new PlayerInputAction();
         rigid = GetComponent<Rigidbody2D>();
+        attackArea = transform.GetChild(0);
     }
 
     private void FixedUpdate()
@@ -73,10 +76,31 @@ public class Player : MonoBehaviour
     {
         // 이동 입력이 들어왔을 때
         dir = context.ReadValue<Vector2>();     // 방향 저장
+        oldInputDir = dir;                      // 이후 복원을 위해 입력 방향 저장
         anim.SetFloat("InputX", dir.x);         // 애니메이터 파라메터 변경
         anim.SetFloat("InputY", dir.y);
         isMove = true;
         anim.SetBool("IsMove", isMove);
+
+        float attackAngle = 0.0f;
+        if (dir.y > 0)
+        {
+            attackAngle = 180.0f;
+        }
+        else if (dir.y < 0)
+        {
+            attackAngle = 0.0f;
+        }
+        else if (dir.x > 0)
+        {
+            attackAngle = 90.0f;
+        }
+        else
+        {
+            attackAngle = 270.0f;
+        }
+
+        attackArea.rotation = Quaternion.Euler(0,0,attackAngle);
     }
 
     private void OnStop(InputAction.CallbackContext context)
