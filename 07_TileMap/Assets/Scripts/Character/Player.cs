@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour
     /// 플레이어 이동 속도
     /// </summary>
     public float speed = 3.0f;
+    public float attackCoolTime = 2.0f;
 
     /// <summary>
     /// 애니메이터 컴포넌트
@@ -37,31 +39,42 @@ public class Player : MonoBehaviour
     /// </summary>
     Rigidbody2D rigid;
 
+    /// <summary>
+    /// 공겨 영역의 중심(축)
+    /// </summary>
     Transform attackAreaCenter;
 
+    /// <summary>
+    /// 플레이어가 공격하면 죽을 슬라임들
+    /// </summary>
     List<Slime> attackTarget;
 
     bool isMove = false;
+
+    bool isAttack = false;
 
     private void Awake()
     {
         // 컴포넌트 및 객체 찾기
         anim = GetComponent<Animator>();
-        inputActions = new PlayerInputAction();
         rigid = GetComponent<Rigidbody2D>();
+        inputActions = new PlayerInputAction();
 
-        attackTarget = new List<Slime>(2);
-        attackAreaCenter = transform.GetChild(0);
-        AttackArea attackArea = attackAreaCenter.GetComponentInChildren<AttackArea>();
+
+        attackTarget = new List<Slime>(2);          // 공격 대상 저장용 리슽트 생성
+        attackAreaCenter = transform.GetChild(0);   // 공격 지점의 중심점 찾기
+        AttackArea attackArea = attackAreaCenter.GetComponentInChildren<AttackArea>();      // 공격 중심점 찾기
         attackArea.onTarget += (slime) =>
         {
-            attackTarget.Add(slime);
-            slime.ShowOutLine(true);
+            // slime이 공격 지점안에 들어왔을 때의 처리
+            attackTarget.Add(slime);        // 리스트에 추가
+            slime.ShowOutLine(true);        // 아웃라인 표시
         };
-        attackArea.onUnTarget += (slime) =>
+        attackArea.onTargetRelease += (slime) =>
         {
-            attackTarget.Remove(slime);
-            slime.ShowOutLine(false);
+            // slime이 공격 지점 박으로 나갔을 때의 처리
+            attackTarget.Remove(slime);     // 리스트에서 제거
+            slime.ShowOutLine(false);       // 아웃라인 끄기
         };
     }
 
@@ -94,32 +107,38 @@ public class Player : MonoBehaviour
         oldInputDir = dir;                      // 이후 복원을 위해 입력 방향 저장
         anim.SetFloat("InputX", dir.x);         // 애니메이터 파라메터 변경
         anim.SetFloat("InputY", dir.y);
-        isMove = true;
-        anim.SetBool("IsMove", isMove);
+        isMove = true;                          // 이동 한다고 표시하고
+        anim.SetBool("IsMove", isMove);         // 이동 애니메이션 재생
 
+        // 입력 방향에 따라 공격지점 위치 변경(중심축 회전으로 처리)
         float attackAngle = 0.0f;
         if (dir.y > 0)
         {
-            // 위로 갈떄
+            // 위로 갈 때(위, 아래가 우선 순위가 높음)
             attackAngle = 180.0f;
         }
         else if (dir.y < 0)
         {
-            // 아래로 갈 떄
+            // 아래로 갈 때
             attackAngle = 0.0f;
         }
         else if (dir.x > 0)
         {
-            // 오른쪽으로 갈 떄
+            // 오른쪽으로 갈 때
             attackAngle = 90.0f;
         }
-        else
+        else if (dir.x < 0)
         {
             // 왼쪽으로 갈 때
             attackAngle = 270.0f;
         }
+        else
+        {
+            // 있을 수 없음. 하지만 혹시 일어날 수도 있기 때문에 추가
+            attackAngle = 0.0f;
+        }
 
-        attackAreaCenter.rotation = Quaternion.Euler(0,0,attackAngle);
+        attackAreaCenter.rotation = Quaternion.Euler(0, 0, attackAngle);
     }
 
     private void OnStop(InputAction.CallbackContext context)
@@ -131,9 +150,16 @@ public class Player : MonoBehaviour
 
     private void OnAttack(InputAction.CallbackContext _)
     {
-        oldInputDir = dir;                      // 이후 복원을 위해 입력 방향 저장
-        dir = Vector2.zero;                     // 입력 이동 방향 초기화
-        anim.SetTrigger("Attack");              // 공격 애니메이션 실행
+        if (!isAttack)
+        {
+            oldInputDir = dir;                      // 이후 복원을 위해 입력 방향 저장
+            dir = Vector2.zero;                     // 입력 이동 방향 초기화
+            anim.SetTrigger("Attack");              // 공격 애니메이션 실행 
+            isAttack = true;
+            StartCoroutine(AttackTime());
+
+            Attack();
+        }
     }
 
     /// <summary>
@@ -145,5 +171,22 @@ public class Player : MonoBehaviour
         {
             dir = oldInputDir;                      // 입력 이동방향 복원
         }
+    }
+
+    void Attack()
+    {
+        if(attackTarget.Count > 0)
+        {
+            foreach (var slime in attackTarget)
+            {
+                slime.Die();
+            }
+        }
+    }
+
+    IEnumerator AttackTime()
+    {
+        yield return new WaitForSeconds(attackCoolTime);
+        isAttack = false;
     }
 }

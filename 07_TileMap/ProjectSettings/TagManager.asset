@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -49,6 +50,9 @@ TagManager:
     locked: 0
   - name: Object
     uniqueID: 1735636913
+    locked: 0
+  - name: Enemey
+    uniqueID: 1607643403
     locked: 0
   - name: Player
     uniqueID: 1794197515
