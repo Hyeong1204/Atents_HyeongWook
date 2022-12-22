@@ -37,7 +37,9 @@ public class Player : MonoBehaviour
     /// </summary>
     Rigidbody2D rigid;
 
-    Transform attackArea;
+    Transform attackAreaCenter;
+
+    List<Slime> attackTarget;
 
     bool isMove = false;
 
@@ -47,7 +49,20 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         inputActions = new PlayerInputAction();
         rigid = GetComponent<Rigidbody2D>();
-        attackArea = transform.GetChild(0);
+
+        attackTarget = new List<Slime>(2);
+        attackAreaCenter = transform.GetChild(0);
+        AttackArea attackArea = attackAreaCenter.GetComponentInChildren<AttackArea>();
+        attackArea.onTarget += (slime) =>
+        {
+            attackTarget.Add(slime);
+            slime.ShowOutLine(true);
+        };
+        attackArea.onUnTarget += (slime) =>
+        {
+            attackTarget.Remove(slime);
+            slime.ShowOutLine(false);
+        };
     }
 
     private void FixedUpdate()
@@ -85,22 +100,26 @@ public class Player : MonoBehaviour
         float attackAngle = 0.0f;
         if (dir.y > 0)
         {
+            // 위로 갈떄
             attackAngle = 180.0f;
         }
         else if (dir.y < 0)
         {
+            // 아래로 갈 떄
             attackAngle = 0.0f;
         }
         else if (dir.x > 0)
         {
+            // 오른쪽으로 갈 떄
             attackAngle = 90.0f;
         }
         else
         {
+            // 왼쪽으로 갈 때
             attackAngle = 270.0f;
         }
 
-        attackArea.rotation = Quaternion.Euler(0,0,attackAngle);
+        attackAreaCenter.rotation = Quaternion.Euler(0,0,attackAngle);
     }
 
     private void OnStop(InputAction.CallbackContext context)

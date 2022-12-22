@@ -168,7 +168,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!1 &2784634806547401624
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,11 +178,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6382967476655894474}
-  - component: {fileID: 4498341894959277250}
+  - component: {fileID: 865447542}
   m_Layer: 0
   m_Name: AttackArea
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -201,8 +201,8 @@ Transform:
   m_Father: {fileID: 2254023501473954455}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &4498341894959277250
-CircleCollider2D:
+--- !u!70 &865447542
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -215,8 +215,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.3
+  m_Size: {x: 0.7, y: 1.1}
+  m_Direction: 0
 --- !u!1 &6263577435460146260
 GameObject:
   m_ObjectHideFlags: 0
