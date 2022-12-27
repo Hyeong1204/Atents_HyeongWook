@@ -49,10 +49,22 @@ public class Test_AStar : TestBase
 
     protected override void Test3(InputAction.CallbackContext _)
     {
-        GridMap gridMap = new GridMap(7, 7);
-        Node node = gridMap.GetNode(1, 3);
-        
-        float a = AStar.GetHeauristic(node, new Vector2Int(6,2));
-        Debug.Log(a);
+        GridMap gridMap = new GridMap(4, 4);
+        Node wall = gridMap.GetNode(0, 2);
+        wall.gridType = Node.GridType.Wall;
+        wall = gridMap.GetNode(2, 2);
+        wall.gridType = Node.GridType.Wall;
+        wall = gridMap.GetNode(3, 2);
+        wall.gridType = Node.GridType.Wall;
+
+        List<Vector2Int> list = AStar.PathFind(gridMap, new Vector2Int(0, 0), new Vector2Int(3, 3));
+        string path = "Path : ";
+        foreach(var node in list)
+        {
+            path += $"( {node.x}, {node.y} ) ->";
+        }
+        path += " 끝";
+
+        Debug.Log(path);
     }
 }

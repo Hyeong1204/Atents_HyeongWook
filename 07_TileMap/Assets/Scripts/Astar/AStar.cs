@@ -11,8 +11,6 @@ public static class AStar
         List<Vector2Int> path = null;
         if (gridMap.IsValidPostion(start) && gridMap.IsValidPostion(goal))
         {
-            path = new List<Vector2Int>();
-
             List<Node> open = new List<Node>();
             List<Node> close = new List<Node>();
 
@@ -100,10 +98,17 @@ public static class AStar
             if(current == goal)
             {
                 // 도작 지점에 도착했다.
+                path = new List<Vector2Int>();
+                Node result = current;
+                while(result != null)
+                {
+                    path.Add(new Vector2Int(result.x, result.y));
+                    result = result.parent;
+                }
+
+                path.Reverse();
             }
         }
-
-
 
         return path;
     }
