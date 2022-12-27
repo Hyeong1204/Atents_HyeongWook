@@ -7,6 +7,11 @@ public class Test_AStar : TestBase
 {
     protected override void Test1(InputAction.CallbackContext _)
     {
+        Sorting();
+    }
+
+    private static void Sorting()
+    {
         Node node1 = new Node(0, 0);
         node1.G = 1;
         node1.H = 1;
@@ -31,5 +36,23 @@ public class Test_AStar : TestBase
         nodeList.Add(node5);
 
         nodeList.Sort();
+    }
+
+    protected override void Test2(InputAction.CallbackContext _)
+    {
+        GridMap gridMap = new GridMap(3, 3);
+        Node node = gridMap.GetNode(1, 1);
+        node.G = 1;
+        node.H = 2;
+        gridMap.ClearAstarDate();
+    }
+
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+        GridMap gridMap = new GridMap(7, 7);
+        Node node = gridMap.GetNode(1, 3);
+        
+        float a = AStar.GetHeauristic(node, new Vector2Int(6,2));
+        Debug.Log(a);
     }
 }

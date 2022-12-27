@@ -58,8 +58,8 @@ public class Node : IComparable<Node>
     /// <param name="gridType">노드의 종류. 기본적으로 평지</param>
     public Node(int x, int y, GridType gridType = GridType.Plain)
     {
-        this.x = y;
-        this.y = x;
+        this.x = x;
+        this.y = y;
         this.gridType = gridType;
 
         G = float.MaxValue;
