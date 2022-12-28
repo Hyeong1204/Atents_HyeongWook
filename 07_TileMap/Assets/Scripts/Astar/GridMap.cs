@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public class GridMap
 {
@@ -25,6 +26,8 @@ public class GridMap
     /// 원점의 그리즈 좌표(맨 왼쪽 아래 끝 부분의 그리드 좌표)
     /// </summary>
     Vector2Int origin;
+
+    Tilemap background;
 
     /// <summary>
     /// 그리드맵을 만들기 위한 생성자
@@ -79,19 +82,22 @@ public class GridMap
         }
 
         // 갈 수 없는 지역 표시(obstacle에 타일이 있는 부분은 Wall로 표시)
-        for (int y = backgound.cellBounds.yMin; y < backgound.cellBounds.yMax; y++)             
+        for (int y = backgound.cellBounds.yMin; y < backgound.cellBounds.yMax; y++)
         {
             for (int x = backgound.cellBounds.xMin; x < backgound.cellBounds.xMax; x++)
             {
                 // background 영역위에 있는 obstacle만 확인
-                TileBase tile = obstacle.GetTile(new(x,y));
-                if(tile != null)                                // 타일이 있으면 벽지역이다.
+                TileBase tile = obstacle.GetTile(new(x, y));
+                if (tile != null)                                // 타일이 있으면 벽지역이다.
                 {
-                    Node node = GetNode(x,y);
+                    Node node = GetNode(x, y);
                     node.gridType = Node.GridType.Wall;         // 벽으로 표시
                 }
             }
         }
+
+        // 배경만 기록
+        this.background = backgound;
     }
 
     /// <summary>
@@ -153,6 +159,28 @@ public class GridMap
     }
 
     /// <summary>
+    /// 해당 위치가 벽인지 아닌지 확이하는 함수
+    /// </summary>
+    /// <param name="x">확인할 위치의 x</param>
+    /// <param name="y">확인할 위치의 y</param>
+    /// <returns>벽이면 true, 아니면 false</returns>
+    public bool IsWall(int x, int y)
+    {
+        Node node = GetNode(x, y);
+        return node.gridType == Node.GridType.Wall;
+    }
+
+    /// <summary>
+    /// 해당 위치가 벽인지 아닌지 확이하는 함수
+    /// </summary>
+    /// <param name="pos">확인할 위치의 좌표</param>
+    /// <returns>벽이면 true, 아니면 false</returns>
+    public bool IsWall(Vector2Int pos)
+    {
+        return IsWall(pos.x, pos.y);
+    }
+
+    /// <summary>
     /// Grid좌표를 index로 변경하기 위한 함수. (GetNode에서 사용하기 위한 함수.)
     /// </summary>
     /// <param name="x">그리드 좌표 x</param>
@@ -165,5 +193,39 @@ public class GridMap
         // (x, y) = x + y * 가로길이;                   // 원점이 왼쪽위에 있을 때
         // (x, y) = x + ((높이 - 1) - y) * 가로길이     // 원점이 왼족아래에 있을 때
         return (x - origin.x) + ((height - 1) - y + origin.y) * width;          // 왼쪽 아래가 (0,0)이고 x+는 오른쪽, y+는 위쪽이기 떄문에 이렇게 변환
+    }
+
+    /// <summary>
+    /// 월드 좌표를 그리드 좌표로 변경해주는 함수
+    /// </summary>
+    /// <param name="pos">월드 좌표</param>
+    /// <returns>변환된 그리드 좌표</returns>
+    public Vector2Int WorldToGrid(Vector3 pos)
+    {
+        if (background != null)
+        {
+            return (Vector2Int)background.WorldToCell(pos);
+        }
+        else
+        {
+            return new Vector2Int((int)pos.x, Mathf.FloorToInt(pos.y));
+        }
+    }
+
+    /// <summary>
+    /// 그리드 좌표를 월드 좌표로 변경해주는 함수
+    /// </summary>
+    /// <param name="gridPos">그리드 좌표</param>
+    /// <returns>월드 좌표</returns>
+    public Vector2 GridToWorld(Vector2Int gridPos)
+    {
+        if (background != null)
+        {
+            return background.CellToWorld((Vector3Int)gridPos) + new Vector3(0.5f, 0.5f);
+        }
+        else
+        {
+            return new Vector2(gridPos.x + 0.5f, gridPos.y + 0.5f);
+        }
     }
 }
