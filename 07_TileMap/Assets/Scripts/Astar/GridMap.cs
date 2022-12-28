@@ -48,28 +48,47 @@ public class GridMap
         }
     }
 
+    /// <summary>
+    /// 그리드 맵을 Tilemap을 사용해 생성하는 생성자
+    /// </summary>
+    /// <param name="backgound">그리맵의 전체 크기를 결정할 타일맵</param>
+    /// <param name="obstacle">그리드맵에서 벽으로 설정될 타일을 가지는 타일맵(벽 위치 결정)</param>
     public GridMap(Tilemap backgound, Tilemap obstacle)
     {
         // backgound 크기를 기반으로 nodes 생성하기
-        this.width = backgound.size.x;
+        this.width = backgound.size.x;          // background의 크기 받아와서 가로 세로 길이로 사용
         this.height = backgound.size.y;
 
-        nodes = new Node[height * width];
+        nodes = new Node[height * width];       // 전체 노드가 들어갈 배열 생성
 
         // 새로 생성하는 Node의 x, y 좌표는 타일맵에서의 좌표와 같아야 한다.
-        origin = (Vector2Int)backgound.origin;
+        origin = (Vector2Int)backgound.origin;  // 타일맵에 기록된 원점 저장
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                int index = GridToIndex(x, y);
-                nodes[index] = new Node(origin.x + x, origin.y + y);            // 노드 전부 생성
-                TileBase tile = obstacle.GetTile(new Vector3Int(origin.x + x, origin.y + y));
+                int index = GridToIndex(origin.x + x, origin.y + y);
+                nodes[index] = new Node(origin.x + x, origin.y + y);            // 노드 전부 생성해서 배열의 넣기
+                //TileBase tile = obstacle.GetTile(new Vector3Int(origin.x + x, origin.y + y));
 
-                // 갈 수 없는 지역 표시(obstacle에 타일이 있는 부분은 Wall로 표시)
-                if (tile != null)
+                //if (tile != null)
+                //{
+                //    nodes[index].gridType = Node.GridType.Wall;
+                //}
+            }
+        }
+
+        // 갈 수 없는 지역 표시(obstacle에 타일이 있는 부분은 Wall로 표시)
+        for (int y = backgound.cellBounds.yMin; y < backgound.cellBounds.yMax; y++)             
+        {
+            for (int x = backgound.cellBounds.xMin; x < backgound.cellBounds.xMax; x++)
+            {
+                // background 영역위에 있는 obstacle만 확인
+                TileBase tile = obstacle.GetTile(new(x,y));
+                if(tile != null)                                // 타일이 있으면 벽지역이다.
                 {
-                    nodes[index].gridType = Node.GridType.Wall;
+                    Node node = GetNode(x,y);
+                    node.gridType = Node.GridType.Wall;         // 벽으로 표시
                 }
             }
         }
@@ -120,7 +139,7 @@ public class GridMap
     /// <returns>맵 안이면 true, 아니면 false</returns>
     public bool IsValidPostion(int x, int y)
     {
-        return x >= 0 && y >= 0 && x < width && y < height;
+        return x >= origin.x && y >= origin.y && x < (origin.x + width) && y < (origin.y + height);
     }
 
     /// <summary>
@@ -141,8 +160,10 @@ public class GridMap
     /// <returns>그리드 좌표가 변경된 인덱스 값(nodes의 특정 노드를 얻기 위한 인덱스)</returns>
     private int GridToIndex(int x, int y)
     {
-        // -9, -5가 되었을 때 0이 나와야 한다.
-        // 8, 4가 되었을 때 179가 나온다.
-        return (x + origin.x) + ((height - 1) - y + origin.y) * width;          // 왼쪽 아래가 (0,0)이고 x+는 오른쪽, y+는 위쪽이기 떄문에 이렇게 변환
+        // -9, -5가 되었을 때 162이 나와야 한다.
+        // 8, 4가 되었을 때 17이 나온다.
+        // (x, y) = x + y * 가로길이;                   // 원점이 왼쪽위에 있을 때
+        // (x, y) = x + ((높이 - 1) - y) * 가로길이     // 원점이 왼족아래에 있을 때
+        return (x - origin.x) + ((height - 1) - y + origin.y) * width;          // 왼쪽 아래가 (0,0)이고 x+는 오른쪽, y+는 위쪽이기 떄문에 이렇게 변환
     }
 }

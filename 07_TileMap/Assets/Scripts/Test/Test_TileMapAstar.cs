@@ -15,7 +15,5 @@ public class Test_TileMapAstar : MonoBehaviour
         //background.size.y;          // 타일맵의 세로 크기
 
         GridMap gridmap = new GridMap(background, obstacle);
-
-        int i = 0;
     }
 }
