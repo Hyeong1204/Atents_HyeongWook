@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GridMap
 {
@@ -21,6 +22,11 @@ public class GridMap
     int height;
 
     /// <summary>
+    /// 원점의 그리즈 좌표(맨 왼쪽 아래 끝 부분의 그리드 좌표)
+    /// </summary>
+    Vector2Int origin;
+
+    /// <summary>
     /// 그리드맵을 만들기 위한 생성자
     /// </summary>
     /// <param name="width">생성할 맵의 가로 크기</param>
@@ -38,6 +44,33 @@ public class GridMap
             {
                 int index = GridToIndex(x, y);
                 nodes[index] = new Node(x, y);  // 노드 전부 
+            }
+        }
+    }
+
+    public GridMap(Tilemap backgound, Tilemap obstacle)
+    {
+        // backgound 크기를 기반으로 nodes 생성하기
+        this.width = backgound.size.x;
+        this.height = backgound.size.y;
+
+        nodes = new Node[height * width];
+
+        // 새로 생성하는 Node의 x, y 좌표는 타일맵에서의 좌표와 같아야 한다.
+        origin = (Vector2Int)backgound.origin;
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                int index = GridToIndex(x, y);
+                nodes[index] = new Node(origin.x + x, origin.y + y);            // 노드 전부 생성
+                TileBase tile = obstacle.GetTile(new Vector3Int(origin.x + x, origin.y + y));
+
+                // 갈 수 없는 지역 표시(obstacle에 타일이 있는 부분은 Wall로 표시)
+                if (tile != null)
+                {
+                    nodes[index].gridType = Node.GridType.Wall;
+                }
             }
         }
     }
@@ -108,6 +141,8 @@ public class GridMap
     /// <returns>그리드 좌표가 변경된 인덱스 값(nodes의 특정 노드를 얻기 위한 인덱스)</returns>
     private int GridToIndex(int x, int y)
     {
-        return x + ((height - 1) - y) * width;          // 왼쪽 아래가 (0,0)이고 x+는 오른쪽, y+는 위쪽이기 떄문에 이렇게 변환
+        // -9, -5가 되었을 때 0이 나와야 한다.
+        // 8, 4가 되었을 때 179가 나온다.
+        return (x + origin.x) + ((height - 1) - y + origin.y) * width;          // 왼쪽 아래가 (0,0)이고 x+는 오른쪽, y+는 위쪽이기 떄문에 이렇게 변환
     }
 }
