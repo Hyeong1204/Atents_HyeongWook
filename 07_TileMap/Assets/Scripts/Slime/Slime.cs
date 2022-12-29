@@ -78,7 +78,7 @@ public class Slime : MonoBehaviour
     /// <summary>
     /// 슬라임이 목적지에 도착 했을 때 실행되는 델리게이트
     /// </summary>
-    public Action onMoveEnd;
+    public Action onGoalArrive;
 
     // 함수들 -----------------------------------------------------------------------------------------------------
     private void Awake()
@@ -106,17 +106,32 @@ public class Slime : MonoBehaviour
     private void Start()
     {
         map = test.Map;                                    // 맵 받아오기(수정 되어야할 코드)
+        onGoalArrive += () =>
+        {
+            Vector2Int pos = map.GetRandomMoveable();
+            SetDestination(pos);
+        };
         pathLine.gameObject.SetActive(isShowPath);         // isShowPath에 따라 경로 활성화/비활성화 설정
+        pathLine.transform.SetParent(pathLine.transform.parent.parent);                  // 부모를 슬라임의 부모로
     }
 
     private void Update()
     {
-        if(path.Count> 0)
+        if (path.Count > 0)                                     // path에 위치가 기록 되어 있으면 진행
         {
-            Vector3 dest = map.GridToWorld(path[0]);
+            Vector3 dest = map.GridToWorld(path[0]);            // path의 첫번째 위치로 항상 이동
             // 목적 방향으로 (Time.deltaTime * moveSpeed)만큼 이동하기 
-            Vector3 dir = (dest - transform.position).normalized;
-            transform.Translate(Time.deltaTime * moveSpeed * dir);
+            Vector3 dir = dest - transform.position;          // 방향 계산
+            transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);       // 계산한 방향으로 1초에 moveSpeed만큼 이동
+
+            if (dir.sqrMagnitude < 0.001f)                       // 목적지(path의 첫번째 위치)에 도착 했는지 확인
+            {
+                path.RemoveAt(0);                               // 목적지에 도착 했으면 그 노드를 제거
+            }
+        }
+        else
+        {
+            onGoalArrive?.Invoke();
         }
     }
 
@@ -182,7 +197,7 @@ public class Slime : MonoBehaviour
     /// <param name="isShow">true면 아웃라인 표시, false면 아웃라인 끄기</param>
     public void ShowOutLine(bool isShow)
     {
-        if(isShow)
+        if (isShow)
         {
             mainMaterial.SetFloat("_OutLine_Thickness", Outline_Thickness);     // 아웃라인 두께 지정해서 보이게 만들기
         }

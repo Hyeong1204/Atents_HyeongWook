@@ -228,4 +228,15 @@ public class GridMap
             return new Vector2(gridPos.x + 0.5f, gridPos.y + 0.5f);
         }
     }
+
+    /// <summary>
+    /// 매ㅐㅂ에서 이동 가능한 랜덤한 지점을 하나 골라 리턴하는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Vector2Int GetRandomMoveable()
+    {
+
+
+        return Vector2Int.zero;
+    } 
 }
