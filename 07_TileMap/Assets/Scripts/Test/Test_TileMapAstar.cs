@@ -12,7 +12,7 @@ public class Test_TileMapAstar : TestBase
     public Tilemap background;
     public Tilemap obstacle;
 
-    public LineRenderer lineRenderer;
+    public PathLineDraw pathLine;
     public Transform start;
     public Transform goal;
 
@@ -54,14 +54,7 @@ public class Test_TileMapAstar : TestBase
 
         Debug.Log(pathstring);
 
-        lineRenderer.positionCount = path.Count;
-        int index = 0;
-        foreach (var node in path)
-        {
-            Vector2 wolrdPos = map.GridToWorld(node);
-            lineRenderer.SetPosition(index, new(wolrdPos.x - lineRenderer.transform.position.x, wolrdPos.y - lineRenderer.transform.position.y, 1));
-            index++;
-        }
+        pathLine.DrawPath(map, path);
     }
 
     private void Test_RightClick(InputAction.CallbackContext _)
