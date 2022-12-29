@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class Slime : MonoBehaviour
 {
+    // 일반 변수 ----------------------------------------------------------------------------------------
+
+    bool isActivate = false;
+
+    /// <summary>
+    /// 이 슬라임의 그리드 좌표를 확인하기 위한 프로퍼티
+    /// </summary>
+    Vector2Int Position => map.WorldToGrid(transform.position);
+
     // 길찾기 관련 변수들 --------------------------------------------------------------------------------
     public Test_TlimemapAStarSlime test;        // 이 후에 반드시 삭제할 코드.
 
@@ -32,11 +41,6 @@ public class Slime : MonoBehaviour
     /// 이 슬라임의 경로를 그리기 위한 변수
     /// </summary>
     PathLineDraw pathLine;
-
-    /// <summary>
-    /// 이 슬라임의 그리드 좌표를 확인하기 위한 프로퍼티
-    /// </summary>
-    Vector2Int Position => map.WorldToGrid(transform.position);
 
     // 쉐이더 관련 변수들 --------------------------------------------------------------------------------
     /// <summary>
@@ -88,6 +92,9 @@ public class Slime : MonoBehaviour
         pathLine = GetComponentInChildren<PathLineDraw>();
 
         path = new List<Vector2Int>();
+
+        onDie += () => isActivate = false;           // 페이즈가 끝나면 활성화
+        onPhaseEnd += () => isActivate = true;           // 페이즈가 끝나면 활성화
     }
 
     private void OnEnable()
@@ -105,14 +112,22 @@ public class Slime : MonoBehaviour
 
     private void Start()
     {
-        map = test.Map;                                    // 맵 받아오기(수정 되어야할 코드)
-        onGoalArrive += () =>
+        if (isActivate)                                         // 활성화 되면 진행
         {
-            Vector2Int pos = map.GetRandomMoveable();
-            SetDestination(pos);
-        };
-        pathLine.gameObject.SetActive(isShowPath);         // isShowPath에 따라 경로 활성화/비활성화 설정
-        pathLine.transform.SetParent(pathLine.transform.parent.parent);                  // 부모를 슬라임의 부모로
+            map = test.Map;                                     // 맵 받아오기(수정 되어야할 코드)
+            onGoalArrive += () =>
+            {
+                Vector2Int pos = map.GetRandomMoveable();       // 현재 내 위치를 기록
+                while (pos == Position)                         // pos가 내 위치면 계속 반복 => 내 위치와 다른 위치가 나올 때까지 반복
+                {
+                    pos = map.GetRandomMoveable();              // 맵에서 이동 가능한 위치를 랜덤으로 가져오기
+                }
+
+                SetDestination(pos);                            // 랜덤으로 가져온 위치로 이동하기
+            };
+            pathLine.gameObject.SetActive(isShowPath);          // isShowPath에 따라 경로 활성화/비활성화 설정
+            pathLine.transform.SetParent(pathLine.transform.parent.parent);                  // 부모를 슬라임의 부모로 
+        }
     }
 
     private void Update()
