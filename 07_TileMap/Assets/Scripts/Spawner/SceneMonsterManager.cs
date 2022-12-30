@@ -12,6 +12,10 @@ public class SceneMonsterManager : MonoBehaviour
 
     Spawner[] spawners;
 
+    List<Slime> spawnedList;
+
+    public List<Slime> SpawnedList => spawnedList;
+
     public GridMap GridMap => gridMap;
 
     private void Awake()
@@ -25,6 +29,13 @@ public class SceneMonsterManager : MonoBehaviour
         gridMap = new GridMap(background, obstacle);                        // 그리드 맵 만들기
 
         spawners = GetComponentsInChildren<Spawner>();                      // 자식으로 있는 스포너 가져오기
+
+        foreach (var spawner in spawners)
+        {
+            spawner.onSpawned += (slime) => spawnedList.Add(slime);
+        }
+
+        spawnedList = new List<Slime>();
     }
 
     /// <summary>
