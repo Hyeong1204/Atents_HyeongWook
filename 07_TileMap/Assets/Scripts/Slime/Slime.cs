@@ -15,7 +15,6 @@ public class Slime : MonoBehaviour
     Vector2Int Position => map.WorldToGrid(transform.position);
 
     // 길찾기 관련 변수들 --------------------------------------------------------------------------------
-    public Test_TlimemapAStarSlime test;        // 이 후에 반드시 삭제할 코드.
 
     /// <summary>
     /// 슬라임의 이동속도
@@ -112,9 +111,6 @@ public class Slime : MonoBehaviour
 
     private void Start()
     {
-        if (isActivate)                                         // 활성화 되면 진행
-        {
-            map = test.Map;                                     // 맵 받아오기(수정 되어야할 코드)
             onGoalArrive += () =>
             {
                 Vector2Int pos = map.GetRandomMoveable();       // 현재 내 위치를 기록
@@ -127,27 +123,40 @@ public class Slime : MonoBehaviour
             };
             pathLine.gameObject.SetActive(isShowPath);          // isShowPath에 따라 경로 활성화/비활성화 설정
             pathLine.transform.SetParent(pathLine.transform.parent.parent);                  // 부모를 슬라임의 부모로 
-        }
     }
 
     private void Update()
     {
-        if (path.Count > 0)                                     // path에 위치가 기록 되어 있으면 진행
+        if (isActivate)                                             // 활성화 되면 실행
         {
-            Vector3 dest = map.GridToWorld(path[0]);            // path의 첫번째 위치로 항상 이동
-            // 목적 방향으로 (Time.deltaTime * moveSpeed)만큼 이동하기 
-            Vector3 dir = dest - transform.position;          // 방향 계산
-            transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);       // 계산한 방향으로 1초에 moveSpeed만큼 이동
-
-            if (dir.sqrMagnitude < 0.001f)                       // 목적지(path의 첫번째 위치)에 도착 했는지 확인
+            if (path.Count > 0)                                     // path에 위치가 기록 되어 있으면 진행
             {
-                path.RemoveAt(0);                               // 목적지에 도착 했으면 그 노드를 제거
+                Vector3 dest = map.GridToWorld(path[0]);            // path의 첫번째 위치로 항상 이동
+                                                                    // 목적 방향으로 (Time.deltaTime * moveSpeed)만큼 이동하기 
+                Vector3 dir = dest - transform.position;          // 방향 계산
+                transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);       // 계산한 방향으로 1초에 moveSpeed만큼 이동
+
+                if (dir.sqrMagnitude < 0.001f)                       // 목적지(path의 첫번째 위치)에 도착 했는지 확인
+                {
+                    path.RemoveAt(0);                               // 목적지에 도착 했으면 그 노드를 제거
+                }
             }
+            else
+            {
+                onGoalArrive?.Invoke();
+            } 
         }
-        else
-        {
-            onGoalArrive?.Invoke();
-        }
+    }
+
+    /// <summary>
+    /// 슬라임 초기화용 함수. 슬라임이 맵에 나타날 때 실행되어야 함
+    /// </summary>
+    /// <param name="grid">슬라임이 존재하는 맵</param>
+    /// <param name="pos">슬라임의 위치</param>
+    public void Initialize(GridMap grid, Vector3 pos)
+    {
+        map = grid;
+        transform.position = pos;
     }
 
     /// <summary>
