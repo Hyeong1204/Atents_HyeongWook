@@ -92,13 +92,14 @@ public class Slime : MonoBehaviour
 
         path = new List<Vector2Int>();
 
-        onDie += () => isActivate = false;           // 페이즈가 끝나면 활성화
-        onPhaseEnd += () => isActivate = true;           // 페이즈가 끝나면 활성화
     }
 
     private void OnEnable()
     {
-        pathLine.gameObject.SetActive(isShowPath);          // isShowPath에 따라 경로 활성화/비활성화 설정
+        onDie = () => isActivate = false;               // 페이즈가 끝나면 활성화
+        onPhaseEnd = () => isActivate = true;           // 페이즈가 끝나면 활성화
+
+        pathLine.gameObject.SetActive(isShowPath);      // isShowPath에 따라 경로 활성화/비활성화 설정
         // 쉐이더 프로퍼티 값들 초기화
         ShowOutLine(false);                              // 아웃라인 끄기
         mainMaterial.SetFloat("_Dissolve_Fade", 1.0f);   // 디졸브 안된 상태로 만들기
@@ -215,6 +216,8 @@ public class Slime : MonoBehaviour
             mainMaterial.SetFloat("_Dissolve_Fade", 1 - timeElipsed * phaseDuationNoramlize);       // 측정 시간을 정규화시켜 (1 - 정규화 
             yield return null;                                  // 다음 프레임까지 대기
         }
+
+        transform.SetParent(SlimeFactory.Inst.gameObject.transform);     // 슬라임을 다시 팩토리의 자식으로
 
         this.gameObject.SetActive(false);                       // 게임 오브젝트 비활성화(오브젝트 풀로 되돌리기)
     }
