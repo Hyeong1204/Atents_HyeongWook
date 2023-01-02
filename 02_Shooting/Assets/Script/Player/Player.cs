@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
     public int initialLife = 3;             // 초기 생명 개수
     public int totalScore = 0;             // 플레이어가 획득한 점수
     private int extraPowerBouns = 100;
-    
+
 
     private float boost = 1.0f;             // 부스트 속도(부스트 상태에 들어가면 2, 보통 상태일 때는 1)
     private float timeElapsed = 0.0f;       // 무적상태에 들어간 후의 경과 시간(의 30배)
@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
                 AddScore(extraPowerBouns);
                 power = 3;
             }
-            if(power < 1)
+            if (power < 1)
             {
                 power = 1;
             }
@@ -122,7 +122,7 @@ public class Player : MonoBehaviour
             }
 
             // 파워 등급에 맞게 새로 배치
-            for (int i=0; i < power; i++)
+            for (int i = 0; i < power; i++)
             {
                 GameObject firePos = new GameObject();          // 빈 오브젝트 생성하기
                 firePos.name = $"FirePosition_{i}";             // firePos에 이름을 바꿈
@@ -138,7 +138,7 @@ public class Player : MonoBehaviour
         }
     }
 
-   
+
     // 입력 처리용 함수 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
     /// <summary>
     /// 이동 부스트 발동 해제용 입력 처리용 (Shift 땠을 때)
@@ -265,8 +265,8 @@ public class Player : MonoBehaviour
             //Dead();     // 적이랑 부딪치면 죽이기
 
             Life--; // 적이랑 부딪치면 life가 1 감소한다.
-            
-            
+
+
         }
     }
 
@@ -301,19 +301,19 @@ public class Player : MonoBehaviour
     {
         if (!isDead)
         {
-        //transform.position += (Speed * Time.fixedDeltaTime * dir);
-        // 이 스크립트 파일이 들어 있는 게임 오브젝트에서 Rigiboody2D 컴포넌트를 찾아 리턴.(없으면 null)
-        // 그런데 GetComponent는 무거운 함수 => (Update나 FixedUpdate처럼 주기적 또는 자주 호촐되는 함수 안에서는 안쓰는 것이 좋다
-        //rigid = GetComponent<Rigidbody2D>();
+            //transform.position += (Speed * Time.fixedDeltaTime * dir);
+            // 이 스크립트 파일이 들어 있는 게임 오브젝트에서 Rigiboody2D 컴포넌트를 찾아 리턴.(없으면 null)
+            // 그런데 GetComponent는 무거운 함수 => (Update나 FixedUpdate처럼 주기적 또는 자주 호촐되는 함수 안에서는 안쓰는 것이 좋다
+            //rigid = GetComponent<Rigidbody2D>();
 
-        // rigid.AddForce(Speed * Time.fixedDeltaTime * dir); // 관성이 있는 움직임을 할 때 유용
-        rigid.MovePosition(transform.position + boost * Speed * Time.fixedDeltaTime * dir);     // 관성없는 움직임을 처리할 때 유용
-        //fireTimeCount += Time.fixedDeltaTime;
-        //if(isFire && fireTimeCount > fireInterval)
-        //{
-        //    Instantiate(Bullet, transform.position, Quaternion.identity);
-        //    fireTimeCount = 0.0f;
-        //}
+            // rigid.AddForce(Speed * Time.fixedDeltaTime * dir); // 관성이 있는 움직임을 할 때 유용
+            rigid.MovePosition(transform.position + boost * Speed * Time.fixedDeltaTime * dir);     // 관성없는 움직임을 처리할 때 유용
+                                                                                                    //fireTimeCount += Time.fixedDeltaTime;
+                                                                                                    //if(isFire && fireTimeCount > fireInterval)
+                                                                                                    //{
+                                                                                                    //    Instantiate(Bullet, transform.position, Quaternion.identity);
+                                                                                                    //    fireTimeCount = 0.0f;
+                                                                                                    //}
         }
         else
         {
@@ -380,9 +380,9 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(InvincbleTime);     // 무적시간 동안 대기
 
         isInvincbleMode = false;            // 무적모드 끄기
-        if(!(Life <= 0))
+        if (!(Life <= 0))
         {
-        //bodyCollider.enabled = true;        // 살아있을 때만 충돌이 다시 발생하게 만들기
+            //bodyCollider.enabled = true;        // 살아있을 때만 충돌이 다시 발생하게 만들기
         }
         gameObject.layer = LayerMask.NameToLayer("Player");
         sprite.color = Color.white;         // 원래 색으로 되돌리기
@@ -424,5 +424,5 @@ public class Player : MonoBehaviour
         totalScore += score;
         onScoreChange?.Invoke(totalScore);
     }
-    
+
 }
