@@ -71,6 +71,8 @@ public class Slime : MonoBehaviour
 
                 currentNode = value;                                // 새로 노드  설정
                 currentNode.gridType = Node.GridType.Monster;       // 노드 타임을 Monster로 변경
+
+                spriteRenderer.sortingOrder = -currentNode.y;       // order in layer 변경. 아래쪽에 있는 것이 위에 그려지도록 변경
             }
         }
     }
@@ -96,6 +98,11 @@ public class Slime : MonoBehaviour
     /// </summary>
     Material mainMaterial;
 
+    /// <summary>
+    /// order in layer를 변경하기 위한 스프라이트 랜더러
+    /// </summary>
+    SpriteRenderer spriteRenderer;
+
     // 델리게이트 ----------------------------------------------------------------------------------------
     /// <summary>
     /// 페이즈가 끝났을 때 실행될 델리게이트
@@ -120,8 +127,8 @@ public class Slime : MonoBehaviour
     // 함수들 -----------------------------------------------------------------------------------------------------
     private void Awake()
     {
-        Renderer renderer = GetComponent<SpriteRenderer>();
-        mainMaterial = renderer.material;           // 머티리얼 미리 찾아 놓기
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        mainMaterial = spriteRenderer.material;           // 머티리얼 미리 찾아 놓기
         pathLine = GetComponentInChildren<PathLineDraw>();
 
         path = new List<Vector2Int>();
@@ -189,24 +196,20 @@ public class Slime : MonoBehaviour
     {
         if (isActivate)                                             // 활성화 되면 실행
         {
-            if (path.Count > 0 && pathWaitTime < MaxWaitTime)       // path에 위치가 기록 되어 있으면 진행
+            if (path != null && path.Count > 0 && pathWaitTime < MaxWaitTime)       // 정해진 경로가 있고 && 다음 경로가 있고 && 기다려도 되는 시간이 남아 있을 때
             {
-                Node destNode = map.GetNode(path[0]);
-                Vector3 destWorld = map.GridToWorld(path[0]);
-
-                if (!map.IsMoster(path[0]) || CurrentNode == destNode)      // path[0]에 몬스터가 없거나 path[0]에 내가 있다.
+                Vector2Int destGrid = path[0];
+                if (!map.IsMoster(destGrid) || CurrentNode == map.GetNode(destGrid))      
                 {
+                    // path[0]에 몬스터가 없거나(다음에 이동할 칸에 다른 몬스터가 없는 경우)
+                    // path[0]에 내가 있다.(내가 다음 도착지점 칸에는 있는데 아직 한 가운데까지 못 간 경우)
                     // 이동처리
-                    Vector3 dest = map.GridToWorld(path[0]);            // path의 첫번째 위치로 항상 이동
-                                                                        // 목적 방향으로 (Time.deltaTime * moveSpeed)만큼 이동하기 
+                    Vector3 dest = map.GridToWorld(destGrid);            // destGrid의 첫번째 위치로 항상 이동
+                                                                         // 목적 방향으로 (Time.deltaTime * moveSpeed)만큼 이동하기 
                     Vector3 dir = dest - transform.position;            // 방향 계산
 
-                    Vector3 targetPosition = transform.position + Time.deltaTime * moveSpeed * dir.normalized;
-                    Node targetNode = map.GetNode(targetPosition);
-
-                    transform.position = targetPosition;                 // targetPosition 방향으로 이동
-
-                    CurrentNode = map.GetNode(transform.position);       // 현재 노드 변경
+                    transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);                 // 목적지 방향으로  속도에 맞춰서 이동
+                    CurrentNode = map.GetNode(transform.position);       // 현재 노드 변경 (그리드 타입 변경)
 
                     if (dir.sqrMagnitude < 0.001f)                       // 목적지(path의 첫번째 위치)에 도착 했는지 확인
                     {
@@ -218,12 +221,16 @@ public class Slime : MonoBehaviour
                 }
                 else
                 {
+                    // destGrid에 몬스터가 있고, destGrid에 내가 없다.
+                    //Vector2Int back = new Vector2Int(currentNode.x, currentNode.y);
+                    //path.Insert(0, back);
                     // 기다리기
                     pathWaitTime += Time.deltaTime;
                 }
             }
             else
             {
+                pathWaitTime = 0.0f;
                 onGoalArrive?.Invoke();
             }
         }
