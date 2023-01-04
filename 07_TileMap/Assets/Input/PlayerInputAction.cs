@@ -262,6 +262,65 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""0c4bd22b-d17d-4abe-8b6a-b67dac34e384"",
+            ""actions"": [
+                {
+                    ""name"": ""AnyKey"",
+                    ""type"": ""Button"",
+                    ""id"": ""0871c284-4b5a-4063-8371-d430961ce07a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""3cec84b4-0df9-4f1a-b6a1-40b7e42f294f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""77df3446-898d-43d7-b28f-b661d624fac7"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyBoardMouse"",
+                    ""action"": ""AnyKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""afcbf8a3-c00a-43f2-8ec4-37b40c7e4953"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyBoardMouse"",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""08693523-8737-4ab8-9264-92b4e864747b"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyBoardMouse"",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -296,6 +355,10 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
         m_Test_Test5 = m_Test.FindAction("Test5", throwIfNotFound: true);
         m_Test_left = m_Test.FindAction("left", throwIfNotFound: true);
         m_Test_right = m_Test.FindAction("right", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_AnyKey = m_UI.FindAction("AnyKey", throwIfNotFound: true);
+        m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -473,6 +536,47 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
         }
     }
     public TestActions @Test => new TestActions(this);
+
+    // UI
+    private readonly InputActionMap m_UI;
+    private IUIActions m_UIActionsCallbackInterface;
+    private readonly InputAction m_UI_AnyKey;
+    private readonly InputAction m_UI_Click;
+    public struct UIActions
+    {
+        private @PlayerInputAction m_Wrapper;
+        public UIActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @AnyKey => m_Wrapper.m_UI_AnyKey;
+        public InputAction @Click => m_Wrapper.m_UI_Click;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void SetCallbacks(IUIActions instance)
+        {
+            if (m_Wrapper.m_UIActionsCallbackInterface != null)
+            {
+                @AnyKey.started -= m_Wrapper.m_UIActionsCallbackInterface.OnAnyKey;
+                @AnyKey.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnAnyKey;
+                @AnyKey.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnAnyKey;
+                @Click.started -= m_Wrapper.m_UIActionsCallbackInterface.OnClick;
+                @Click.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnClick;
+                @Click.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnClick;
+            }
+            m_Wrapper.m_UIActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @AnyKey.started += instance.OnAnyKey;
+                @AnyKey.performed += instance.OnAnyKey;
+                @AnyKey.canceled += instance.OnAnyKey;
+                @Click.started += instance.OnClick;
+                @Click.performed += instance.OnClick;
+                @Click.canceled += instance.OnClick;
+            }
+        }
+    }
+    public UIActions @UI => new UIActions(this);
     private int m_KeyBoardMouseSchemeIndex = -1;
     public InputControlScheme KeyBoardMouseScheme
     {
@@ -496,5 +600,10 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
         void OnTest5(InputAction.CallbackContext context);
         void OnLeft(InputAction.CallbackContext context);
         void OnRight(InputAction.CallbackContext context);
+    }
+    public interface IUIActions
+    {
+        void OnAnyKey(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
     }
 }

@@ -240,6 +240,65 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UI",
+            "id": "0c4bd22b-d17d-4abe-8b6a-b67dac34e384",
+            "actions": [
+                {
+                    "name": "AnyKey",
+                    "type": "Button",
+                    "id": "0871c284-4b5a-4063-8371-d430961ce07a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "3cec84b4-0df9-4f1a-b6a1-40b7e42f294f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "77df3446-898d-43d7-b28f-b661d624fac7",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoardMouse",
+                    "action": "AnyKey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "afcbf8a3-c00a-43f2-8ec4-37b40c7e4953",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoardMouse",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "08693523-8737-4ab8-9264-92b4e864747b",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoardMouse",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

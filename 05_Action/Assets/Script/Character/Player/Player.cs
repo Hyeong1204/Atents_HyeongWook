@@ -164,6 +164,7 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquipTarget
     {
         HP = maxHP;
         isAlive = true;
+        Debug.Log("스타트");
         // 테스트용
         //onHealthChage += Test_HP_Change;
         //onDie += Test_Die;
