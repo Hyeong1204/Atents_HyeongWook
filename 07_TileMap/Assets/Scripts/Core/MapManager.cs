@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,12 +8,18 @@ public class MapManager : MonoBehaviour
     /// <summary>
     /// 맵의 세로 개수
     /// </summary>
-    const int Height = 3;
+    const int HeightCount = 3;
 
     /// <summary>
     /// 맵의 가로 개수
     /// </summary>
-    const int width = 3;
+    const int widthCount = 3;
+
+    const float mapHeightLength = 20.0f;
+    const float mapWidthtLength = 20.0f;
+
+    readonly Vector2 totalOrigin = new Vector2(-mapWidthtLength * widthCount * 0.5f, -mapHeightLength * HeightCount * 0.5f);    // 맵 전체 길이의 절반
+
     const string SceneNameBase = "Seamless_";
     string[] sceneNames;
 
@@ -37,18 +45,23 @@ public class MapManager : MonoBehaviour
     public void Initialize()
     {
         // 맵의 개수에 맞게 배열 생성
-        sceneNames = new string[Height * width];
-        sceneLoadState = new SceneLoadState[Height * width];
+        sceneNames = new string[HeightCount * widthCount];
+        sceneLoadState = new SceneLoadState[HeightCount * widthCount];
 
-        for (int y = 0; y < Height; y++)
+        for (int y = 0; y < HeightCount; y++)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < widthCount; x++)
             {
                 int index = GetIndex(x, y);
                 sceneNames[index] = $"{SceneNameBase}{y}_{x}";      // 각 신의 이름 설정
                 sceneLoadState[index] = SceneLoadState.UnLoad;      // 각 씬의 로딩 상태 초기화
             }
         }
+
+        Player player = GameManager.Inst.Player;
+        Vector2Int grid = WorldToGrid(player.transform.position);
+        RequestAsyncSceneLoad(grid.x, grid.y);
+        RefreshScenes(grid.x, grid.y);
     }
 
     /// <summary>
@@ -59,7 +72,7 @@ public class MapManager : MonoBehaviour
     /// <returns>좌표에 해당하는 인덱스</returns>
     int GetIndex(int x, int y)
     {
-        return x + width * y;
+        return x + widthCount * y;
     }
 
     /// <summary>
@@ -69,7 +82,7 @@ public class MapManager : MonoBehaviour
     /// <returns>인덱스에 해당하는 그리드 좌표</returns>
     Vector2Int GetGrid(int index)
     {
-        Vector2Int grid = new Vector2Int(index % width, index / width);
+        Vector2Int grid = new Vector2Int(index % widthCount, index / widthCount);
         return grid;
     }
 
@@ -105,6 +118,52 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 입력 받은 월드좌표가 어떤 그리드 좌표인지  알려주는 함수
+    /// </summary>
+    /// <param name="worldPos">확인할 월드좌표</param>
+    /// <returns>변환된 그리드 좌표</returns>
+    public Vector2Int WorldToGrid(Vector3 worldPos)
+    {
+        Vector2 offset = (Vector2)worldPos - totalOrigin;       // 전체맵의 원점에서 얼마나 떨어졌는지 계산
+        return new Vector2Int((int)(offset.x / mapWidthtLength), (int)(offset.y / mapHeightLength));    // 몇 번째 맵에 해당되는지 확인
+    }
+
+    void RefreshScenes(int x, int y)
+    {
+        List<Vector2Int> Removescenes = new List<Vector2Int>(8);
+        for (int i = 0; i < HeightCount; i++)
+        {
+            for (int j = 0; j < widthCount; j++)
+            {
+                Removescenes.Add(new Vector2Int(j, i));
+            }
+        }
+
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                Vector2Int grid = new Vector2Int(x + j, y + i);
+                if (IsValidMapGrid(grid.x, grid.y))
+                {
+                    RequestAsyncSceneLoad(grid.x, grid.y);
+                    Removescenes.Remove(grid);
+                }
+            }
+        }
+
+        foreach (var scene in Removescenes)
+        {
+            RequestAsyncSceneUnLoad(scene.x, scene.y);
+        }
+    }
+
+    bool IsValidMapGrid(int x, int y)
+    {
+        return 0 <= x && x < widthCount && 0 <= y && y < HeightCount;
+    }
+
     // 테스트 용
     public void Test_LoadScene(int x, int y)
     {
@@ -113,6 +172,12 @@ public class MapManager : MonoBehaviour
 
     public void Test_LoadUnScene(int x, int y)
     {
-        RequestAsyncSceneUnLoad(x, y);  
+        RequestAsyncSceneUnLoad(x, y);
     }
+
+    public void Test_RefreshScenes(int x, int y)
+    {
+        RefreshScenes(x, y);
+    }
+
 }
