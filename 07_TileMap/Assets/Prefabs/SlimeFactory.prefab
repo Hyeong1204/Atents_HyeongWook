@@ -45,4 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slimePrefab: {fileID: 911397134687578534, guid: 212038ffe326c674c892c800fbbffb9a, type: 3}
-  poolSize: 126
+  poolSize: 4

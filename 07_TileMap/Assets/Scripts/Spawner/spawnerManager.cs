@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.Tilemaps;
 
 public class spawnerManager : MonoBehaviour
@@ -40,6 +41,34 @@ public class spawnerManager : MonoBehaviour
         }
 
         spawnedList = new List<Slime>();
+
+        StartCoroutine(GetSpawnerData());
+    }
+
+    IEnumerator GetSpawnerData()
+    {
+        string url = "http://go26652.dothome.co.kr/HTTP_Data/SpawnerData.txt";
+
+        UnityWebRequest www = UnityWebRequest.Get(url);         // 웹에 http를 통해 데이터를 가져오는 요청을 만듬
+
+        yield return www.SendWebRequest();                      // 만든 요청을 실제로 보내고 결과가 도착할 때까지 대기
+
+        if (www.result != UnityWebRequest.Result.Success)        // 결과가 정상적으로 돌아왔는지 확인
+        {
+            Debug.LogError(www.error);                               // 성공이 아니면 에러 출력
+        }
+        else
+        {
+            //Debug.Log($"Result : {www.downloadHandler.text}");  // 성공이면 데이터 받아와서 처리
+            string json = www.downloadHandler.text;
+            SpawnerData data = JsonUtility.FromJson<SpawnerData>(json);
+
+            foreach (var spawner in spawners)
+            {
+                spawner.delay = data.delay;
+                spawner.capacity = data.capacity;
+            }
+        }
     }
 
     /// <summary>
