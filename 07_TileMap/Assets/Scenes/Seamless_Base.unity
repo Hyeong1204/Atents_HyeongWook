@@ -181,6 +181,7 @@ GameObject:
   - component: {fileID: 363402180}
   - component: {fileID: 363402179}
   - component: {fileID: 363402182}
+  - component: {fileID: 363402183}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -287,6 +288,19 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &363402183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363402178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95999345995eeee40b5f837ab504c86d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3
 --- !u!1 &499483305
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,7 +400,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1108240215}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.382914, y: -0.71691877, z: -1.9774172}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -406,11 +420,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1266385169369526656, guid: 23b71e3030ae12b46add594f64d45cb0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1266385169369526656, guid: 23b71e3030ae12b46add594f64d45cb0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1266385169369526656, guid: 23b71e3030ae12b46add594f64d45cb0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -443,6 +457,10 @@ PrefabInstance:
     - target: {fileID: 1266385169369526656, guid: 23b71e3030ae12b46add594f64d45cb0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1266385169369526685, guid: 23b71e3030ae12b46add594f64d45cb0, type: 3}
+      propertyPath: attackCoolTime
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1266385169369526686, guid: 23b71e3030ae12b46add594f64d45cb0, type: 3}
       propertyPath: m_Name
@@ -500,6 +518,10 @@ PrefabInstance:
     - target: {fileID: 4759784099901623784, guid: 163bf39740ff44f4c860cc95d9d1fd06, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4759784099901623785, guid: 163bf39740ff44f4c860cc95d9d1fd06, type: 3}
+      propertyPath: poolSize
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 4759784099901623786, guid: 163bf39740ff44f4c860cc95d9d1fd06, type: 3}
       propertyPath: m_Name
