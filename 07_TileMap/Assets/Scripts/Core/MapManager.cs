@@ -8,7 +8,7 @@ public class MapManager : MonoBehaviour
     /// <summary>
     /// 맵의 세로 개수
     /// </summary>
-    const int HeightCount = 3;
+    const int heightCount = 3;
 
     /// <summary>
     /// 맵의 가로 개수
@@ -18,7 +18,7 @@ public class MapManager : MonoBehaviour
     const float mapHeightLength = 20.0f;
     const float mapWidthtLength = 20.0f;
 
-    readonly Vector2 totalOrigin = new Vector2(-mapWidthtLength * widthCount * 0.5f, -mapHeightLength * HeightCount * 0.5f);    // 맵 전체 길이의 절반
+    readonly Vector2 totalOrigin = new Vector2(-mapWidthtLength * widthCount * 0.5f, -mapHeightLength * heightCount * 0.5f);    // 맵 전체 길이의 절반
 
     const string SceneNameBase = "Seamless_";
     string[] sceneNames;
@@ -45,10 +45,10 @@ public class MapManager : MonoBehaviour
     public void Initialize()
     {
         // 맵의 개수에 맞게 배열 생성
-        sceneNames = new string[HeightCount * widthCount];
-        sceneLoadState = new SceneLoadState[HeightCount * widthCount];
+        sceneNames = new string[heightCount * widthCount];
+        sceneLoadState = new SceneLoadState[heightCount * widthCount];
 
-        for (int y = 0; y < HeightCount; y++)
+        for (int y = 0; y < heightCount; y++)
         {
             for (int x = 0; x < widthCount; x++)
             {
@@ -59,8 +59,9 @@ public class MapManager : MonoBehaviour
         }
 
         Player player = GameManager.Inst.Player;
+        player.onMapMoved += (position) => RefreshScenes(position.x, position.y);
         Vector2Int grid = WorldToGrid(player.transform.position);
-        RequestAsyncSceneLoad(grid.x, grid.y);
+        RequestAsyncSceneLoad(grid.x, grid.y);                      // 플레이어가 존재하는 맵이 최우선적으로 처리하기 위해 실행
         RefreshScenes(grid.x, grid.y);
     }
 
@@ -129,10 +130,47 @@ public class MapManager : MonoBehaviour
         return new Vector2Int((int)(offset.x / mapWidthtLength), (int)(offset.y / mapHeightLength));    // 몇 번째 맵에 해당되는지 확인
     }
 
+    /// <summary>
+    /// 지정된 목저지 주변은 로딩요청하고 그외는 전부 로딩해제 요청하는 함수
+    /// </summary>
+    /// <param name="x">지정된 grid x좌표</param>
+    /// <param name="y">지정된 grid y좌표</param>
     void RefreshScenes(int x, int y)
     {
+        int startX = Mathf.Max(0, x - 1);                           // 범위를 벗어나는 것을 방지하기 위해 미리 계산
+        int endX = Mathf.Min(widthCount, x + 2);
+        int startY = Mathf.Max(0, y - 1);
+        int endY = Mathf.Min(heightCount, y + 2);
+
+        List<Vector2Int> openList = new List<Vector2Int>(widthCount * heightCount);    // 로딩 된 지역 기록
+        for (int _x = startX; _x < endX; _x++)
+        {
+            for (int _y = startY; _y < endY; _y++)
+            {
+                RequestAsyncSceneLoad(_x, _y);                      // 로딩한 곳들 로딩 됴청
+                openList.Add(new(_x, _y));                         // 로딩한 지역 기록
+            }
+        }
+
+        Vector2Int target = new Vector2Int();                       // 리스트에 찾는 값이 있는지 확인하기 위해 만든 임시 변수
+        for (int _y = 0; _y < heightCount; _y++)                    // 모든 맵을 전부 처리
+        {
+            for (int _x = 0; _x < widthCount; _x++)
+            {
+                target.x = _x;
+                target.y = _y;
+                if (!openList.Exists((iter) => iter == target))    // openList에 없는 위치만
+                {
+                    RequestAsyncSceneUnLoad(_x, _y);                // 로딩 해제 요청
+                }
+            }
+        }
+    }
+
+    void RefreshScenesMy(int x, int y)
+    {
         List<Vector2Int> Removescenes = new List<Vector2Int>(8);
-        for (int i = 0; i < HeightCount; i++)
+        for (int i = 0; i < heightCount; i++)
         {
             for (int j = 0; j < widthCount; j++)
             {
@@ -161,7 +199,7 @@ public class MapManager : MonoBehaviour
 
     bool IsValidMapGrid(int x, int y)
     {
-        return 0 <= x && x < widthCount && 0 <= y && y < HeightCount;
+        return 0 <= x && x < widthCount && 0 <= y && y < heightCount;
     }
 
     // 테스트 용

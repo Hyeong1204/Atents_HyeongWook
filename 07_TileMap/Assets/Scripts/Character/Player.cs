@@ -64,6 +64,34 @@ public class Player : MonoBehaviour
     /// </summary>
     bool isAttackValid = false;
 
+    MapManager mapManager;
+
+    /// <summary>
+    /// 현재 위치하고 있는 맵(의 그리드 좌표)
+    /// </summary>
+    Vector2Int mapGridPosition;
+
+    /// <summary>
+    /// 현재 위치하고 있는 맵을 확인하고 변겨할 수 있는 프로퍼티
+    /// </summary>
+    Vector2Int MapGridPosition
+    {
+        get => mapGridPosition;
+        set
+        {
+            if(value != mapGridPosition)                    // 맵이 변경이 될 때만
+            {
+                mapGridPosition = value;                    // 실제로 변경
+                onMapMoved?.Invoke(mapGridPosition);        // 델리게이트로 변경 되었음을 알림
+            }
+        }
+    }
+
+    /// <summary>
+    /// 맵 변경시 실행될 델리게이트 (파라메터는 변경된 맵의 그리드 좌표)
+    /// </summary>
+    public Action<Vector2Int> onMapMoved;
+
     private void Awake()
     {
         // 컴포넌트 및 객체 찾기
@@ -89,6 +117,11 @@ public class Player : MonoBehaviour
         };
     }
 
+    private void Start()
+    {
+        mapManager = GameManager.Inst.MapManager;       // 맵매니저 가져오기
+    }
+
     private void Update()
     {
         currentAttackCoolTime -= Time.deltaTime;        // 아무 조건 없이 계속 감소
@@ -104,7 +137,8 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rigid.MovePosition(rigid.position + speed * Time.fixedDeltaTime * dir);
+        rigid.MovePosition(rigid.position + speed * Time.fixedDeltaTime * dir);     // 이동처리
+        MapGridPosition = mapManager.WorldToGrid(transform.position);               // 이동후에 어떤 맵에 있는지 표시
     }
 
     private void OnEnable()
