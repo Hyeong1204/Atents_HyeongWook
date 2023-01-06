@@ -139,9 +139,9 @@ public class Slime : MonoBehaviour
     {
         onDie = () => isActivate = false;               // 페이즈가 끝나면 활성화
         onPhaseEnd = () => isActivate = true;           // 페이즈가 끝나면 활성화
-        pathLine.transform.SetParent(pathLine.transform.parent.parent);                  // 부모를 슬라임의 부모로 
 
         pathLine.gameObject.SetActive(isShowPath);      // isShowPath에 따라 경로 활성화/비활성화 설정
+
         // 쉐이더 프로퍼티 값들 초기화
         ShowOutLine(false);                              // 아웃라인 끄기
         mainMaterial.SetFloat("_Dissolve_Fade", 1.0f);   // 디졸브 안된 상태로 만들기
@@ -200,7 +200,7 @@ public class Slime : MonoBehaviour
             if (path != null && path.Count > 0 && pathWaitTime < MaxWaitTime)       // 정해진 경로가 있고 && 다음 경로가 있고 && 기다려도 되는 시간이 남아 있을 때
             {
                 Vector2Int destGrid = path[0];
-                if (!map.IsMoster(destGrid) || CurrentNode == map.GetNode(destGrid))      
+                if (!map.IsMoster(destGrid) || CurrentNode == map.GetNode(destGrid))
                 {
                     // path[0]에 몬스터가 없거나(다음에 이동할 칸에 다른 몬스터가 없는 경우)
                     // path[0]에 내가 있다.(내가 다음 도착지점 칸에는 있는데 아직 한 가운데까지 못 간 경우)
@@ -242,16 +242,22 @@ public class Slime : MonoBehaviour
     /// </summary>
     public void Die()
     {
-        ClearData();
+        if (isActivate)
+        {
+            // 슬라임을 저게하기 위한 처리를 수행
+            ClearData();
 
-        StartCoroutine(StartDissolve());        // 디졸브 실행
-        onDie?.Invoke();                        // 죽었다고 신호보내기
+            StartCoroutine(StartDissolve());        // 디졸브 실행
+            onDie?.Invoke();                        // 죽었다고 신호보내기
+        }
     }
 
+    /// <summary>
+    /// 슬라임 없어져야 하는 상황일 때 해야하는 처리를 수행하는 함수
+    /// </summary>
     public void ClearData()
     {
         transform.SetParent(SlimeFactory.Inst.gameObject.transform);     // 슬라임을 다시 팩토리의 자식으로
-        pathLine.transform.SetParent(this.transform);
 
         // 움직이던 경로 삭제
         path.Clear();                           // 재활용 되었을 때 이전 경로를 찾아가던 문제를 수정하기 위해 추가
