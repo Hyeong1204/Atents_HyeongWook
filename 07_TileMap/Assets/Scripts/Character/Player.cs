@@ -69,20 +69,20 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 현재 위치하고 있는 맵(의 그리드 좌표)
     /// </summary>
-    Vector2Int mapGridPosition;
+    Vector2Int currentMap;
 
     /// <summary>
     /// 현재 위치하고 있는 맵을 확인하고 변겨할 수 있는 프로퍼티
     /// </summary>
-    Vector2Int MapGridPosition
+    Vector2Int CurrentMap
     {
-        get => mapGridPosition;
+        get => currentMap;
         set
         {
-            if(value != mapGridPosition)                    // 맵이 변경이 될 때만
+            if(value != currentMap)                    // 맵이 변경이 될 때만
             {
-                mapGridPosition = value;                    // 실제로 변경
-                onMapMoved?.Invoke(mapGridPosition);        // 델리게이트로 변경 되었음을 알림
+                currentMap = value;                    // 실제로 변경
+                onMapMoved?.Invoke(currentMap);        // 델리게이트로 변경 되었음을 알림
             }
         }
     }
@@ -138,7 +138,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         rigid.MovePosition(rigid.position + speed * Time.fixedDeltaTime * dir);     // 이동처리
-        MapGridPosition = mapManager.WorldToGrid(transform.position);               // 이동후에 어떤 맵에 있는지 표시
+        CurrentMap = mapManager.WorldToGrid(transform.position);               // 이동후에 어떤 맵에 있는지 표시
     }
 
     private void OnEnable()
