@@ -55,15 +55,15 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// 플레이어의 수명이 변경 되었을 때 실행될 델리게이트
+    /// 플레이어의 수명이 변경 되었을 때 실행될 델리게이트. 현재 남은 시간과 최대 시간을 넘겨줌
     /// 비네트, 슬라이더, 남은 시간 표시용으로 사용
     /// </summary>
     public Action<float, float> onLifeTimeChange;         // 비네트, 슬라이더, 남은 시간
 
     /// <summary>
-    /// 플레이어가 죽었을 때 실행될 델리게이트
+    /// 플레이어가 죽었을 때 실행될 델리게이트. 전체 플레이시간을 넘겨줌
     /// </summary>
-    public Action onDie;
+    public Action<float> onDie;
 
     // 이동 관련 변수들 ------------------------------------------------------------------
 
@@ -184,7 +184,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         mapManager = GameManager.Inst.MapManager;       // 맵매니저 가져오기
-        lifeTime = maxLifeTime;
+        LifeTime = maxLifeTime;
     }
 
     private void Update()
@@ -201,7 +201,7 @@ public class Player : MonoBehaviour
         {
             while (attackTarget.Count > 0)              // 공격 대상이 있으면 다 죽이기
             {
-                attackTarget[0].Die();                  // Die가 실행되면 컬라이더가 비활성와 되면서 attackTarget에서 자동으로 제거됨
+                LifeTime += attackTarget[0].Die();                  // Die가 실행되면 컬라이더가 비활성와 되면서 attackTarget에서 자동으로 제거됨
             }
         }
     }
@@ -321,8 +321,8 @@ public class Player : MonoBehaviour
     /// </summary>
     void Die()
     {
-        LifeTime = 0.0f;            // 비네트, 슬라이더, 남은시간을 깔끔하게 표시하기 위해 0으로 설정
-        isDead = true;              // 여러번호출되지 않도록하기 하기 위치 설정
-        onDie?.Invoke();            // 죽었다고 알리기
+        LifeTime = 0.0f;                 // 비네트, 슬라이더, 남은시간을 깔끔하게 표시하기 위해 0으로 설정
+        isDead = true;                   // 여러번호출되지 않도록하기 하기 위치 설정
+        onDie?.Invoke(totalPlayTime);    // 죽었다고 알리기
     }
 }

@@ -8,6 +8,7 @@ public class Slime : MonoBehaviour
 {
     // 일반 변수 ----------------------------------------------------------------------------------------
 
+    public float bonusLife = 2.0f;
     bool isActivate = false;
 
     /// <summary>
@@ -251,8 +252,10 @@ public class Slime : MonoBehaviour
     /// <summary>
     /// 이 슬라임을 죽일 때 실행할 함수
     /// </summary>
-    public void Die()
+    public float Die()
     {
+        float bonus = 0.0f;
+
         bodyCollider.enabled = false;               // 더 이상 충돌 못 하게 막기
         if (isActivate)
         {
@@ -261,7 +264,9 @@ public class Slime : MonoBehaviour
 
             StartCoroutine(StartDissolve());        // 디졸브 실행
             onDie?.Invoke();                        // 죽었다고 신호보내기
+            bonus = bonusLife;
         }
+        return bonus;
     }
 
     /// <summary>

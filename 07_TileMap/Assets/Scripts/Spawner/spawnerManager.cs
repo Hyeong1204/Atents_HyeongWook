@@ -31,18 +31,18 @@ public class spawnerManager : MonoBehaviour
 
         spawners = GetComponentsInChildren<Spawner>();                      // 자식으로 있는 스포너 가져오기
 
-        foreach (var spawner in spawners)
-        {
-            spawner.onSpawned += (slime) =>
-            {
-                spawnedList.Add(slime);
-                slime.onDie += () => spawnedList.Remove(slime);
-            };
-        }
+        //foreach (var spawner in spawners)
+        //{
+        //    spawner.onSpawned += (slime) =>
+        //    {
+        //        spawnedList.Add(slime);
+        //        slime.onDie += () => spawnedList.Remove(slime);
+        //    };
+        //}
 
-        spawnedList = new List<Slime>();
+        //spawnedList = new List<Slime>();
 
-        StartCoroutine(GetSpawnerData());
+        //StartCoroutine(GetSpawnerData());
     }
 
     IEnumerator GetSpawnerData()

@@ -8,11 +8,16 @@ public class LifeTiimeText : MonoBehaviour
 {
     TextMeshProUGUI lifeText;
 
+    private void Awake()
+    {
+        lifeText = GetComponent<TextMeshProUGUI>();        
+    }
+
     private void Start()
     {
-        lifeText = GetComponent<TextMeshProUGUI>();
         Player player = GameManager.Inst.Player;
         player.onLifeTimeChange += RefreshText;
+        lifeText.text = $"{player.maxLifeTime:f2}";
     }
 
     private void RefreshText(float time, float _)
