@@ -208,7 +208,8 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rigid.MovePosition(rigid.position + speed * Time.fixedDeltaTime * dir);     // 이동처리
+        if (!isDead)
+            rigid.MovePosition(rigid.position + speed * Time.fixedDeltaTime * dir);     // 이동처리
         if (mapManager != null)
             CurrentMap = mapManager.WorldToGrid(transform.position);               // 이동후에 어떤 맵에 있는지 표시
     }
@@ -267,7 +268,10 @@ public class Player : MonoBehaviour
             attackAngle = 0.0f;
         }
 
-        attackAreaCenter.rotation = Quaternion.Euler(0, 0, attackAngle);
+        if (!isDead)
+        {
+            attackAreaCenter.rotation = Quaternion.Euler(0, 0, attackAngle); 
+        }
     }
 
     private void OnStop(InputAction.CallbackContext context)
@@ -279,7 +283,7 @@ public class Player : MonoBehaviour
 
     private void OnAttack(InputAction.CallbackContext _)
     {
-        if (currentAttackCoolTime < 0)
+        if (!isDead && currentAttackCoolTime < 0)
         {
             oldInputDir = dir;                      // 이후 복원을 위해 입력 방향 저장
             dir = Vector2.zero;                     // 입력 이동 방향 초기화

@@ -20,7 +20,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     /// <summary>
     /// 초기화를 한번만 진행하기 위한 플래그
     /// </summary>
-    private bool initialized = false;
+    public bool initialized = false;
     private static bool isShutDown = false;
     private static T _instance = null;
     public static T Inst

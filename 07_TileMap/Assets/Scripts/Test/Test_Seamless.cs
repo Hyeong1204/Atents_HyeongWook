@@ -19,12 +19,12 @@ public class Test_Seamless : TestBase
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-        mapManagr.Test_LoadScene(x, y);
+        Time.timeScale = 0;
     }
 
     protected override void Test2(InputAction.CallbackContext _)
     {
-        mapManagr.Test_LoadUnScene(x, y);
+        Time.timeScale = 1;
     }
 
     protected override void Test3(InputAction.CallbackContext _)
