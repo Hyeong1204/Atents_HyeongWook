@@ -107,6 +107,8 @@ public class Slime : MonoBehaviour
     /// </summary>
     SpriteRenderer spriteRenderer;
 
+    Collider2D bodyCollider;
+
     // 델리게이트 ----------------------------------------------------------------------------------------
     /// <summary>
     /// 페이즈가 끝났을 때 실행될 델리게이트
@@ -134,7 +136,7 @@ public class Slime : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         mainMaterial = spriteRenderer.material;           // 머티리얼 미리 찾아 놓기
         pathLine = GetComponentInChildren<PathLineDraw>();
-        //bodyCollider = GetComponent<Collider2D>();
+        bodyCollider = GetComponent<Collider2D>();
 
         path = new List<Vector2Int>();
 
@@ -143,9 +145,12 @@ public class Slime : MonoBehaviour
     private void OnEnable()
     {
         onDie = () => isActivate = false;               // 페이즈가 끝나면 활성화
-        onPhaseEnd = () => isActivate = true;           // 페이즈가 끝나면 활성화
+        onPhaseEnd = () =>
+        {
+            isActivate = true;                          // 페이즈가 끝나면 활성화
+            bodyCollider.enabled = true;                // 컬라이더 켜기(페이즈가 끝나기 전까지 무적)
+        };
 
-        //bodyCollider.enabled = true;                    // 컬라이더 켜기
         pathLine.gameObject.SetActive(isShowPath);      // isShowPath에 따라 경로 활성화/비활성화 설정
 
         // 쉐이더 프로퍼티 값들 초기화
@@ -248,9 +253,9 @@ public class Slime : MonoBehaviour
     /// </summary>
     public void Die()
     {
+        bodyCollider.enabled = false;               // 더 이상 충돌 못 하게 막기
         if (isActivate)
         {
-            //bodyCollider.enabled = false;           // 더 이상 충돌 못 하게 막기
             // 슬라임을 저게하기 위한 처리를 수행
             ClearData();
 

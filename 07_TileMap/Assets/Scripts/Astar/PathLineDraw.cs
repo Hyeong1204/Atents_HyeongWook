@@ -41,7 +41,10 @@ public class PathLineDraw : MonoBehaviour
     /// </summary>
     public void ClearPath()
     {
-        lineRenderer.positionCount = 0;         // 라인 랜더러가 가진 위치 제거
-        this.gameObject.SetActive(false);       // 비활성화 시키기
+        if (lineRenderer != null)
+        {
+            lineRenderer.positionCount = 0;         // 라인 랜더러가 가진 위치 제거
+            this.gameObject.SetActive(false);       // 비활성화 시키기
+        }
     }
 }

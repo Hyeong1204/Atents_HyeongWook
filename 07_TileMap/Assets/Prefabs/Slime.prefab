@@ -121,9 +121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7069a21e81b6b4885a94fc2ebf40a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  test: {fileID: 0}
   moveSpeed: 2
-  isShowPath: 1
+  isShowPath: 0
   phaseDuration: 0.5
   dissolveDuration: 1
 --- !u!58 &2188461441666578560
