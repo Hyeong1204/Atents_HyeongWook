@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,53 +7,51 @@ using UnityEngine.UI;
 
 public class GameOverPanel : MonoBehaviour
 {
+    public float alphaChangeSpeed = 2.0f;           // 1초에 2까지 변경되는 속도 (0.5초면 1이 된다.)
     CanvasGroup canvas;
-    TextMeshProUGUI totalText;
-    Button reStartButton;
 
-    float currentAlpha = 0.0f;
+    TextMeshProUGUI totalPlayTImeText;
+    Button reStartButton;
 
     private void Awake()
     {
         canvas = GetComponent<CanvasGroup>();
-        totalText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        totalPlayTImeText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         reStartButton = GetComponentInChildren<Button>();
-        reStartButton.onClick.AddListener(() =>
-        {
-            GameManager.Inst.initialized = false;
-            SceneManager.LoadScene(0);
-        });
+        reStartButton.onClick.AddListener(OnReStartClick);
     }
 
     void Start()
     {
         Player player = GameManager.Inst.Player;
-        player.onDie += PanelUpdate;
+        player.onDie += OnPlayerDie;
 
         canvas.alpha = 0.0f;
         canvas.blocksRaycasts = false;
-        currentAlpha = 0.0f;
     }
 
-    private void PanelUpdate(float totalTime)
+    private void OnPlayerDie(float totalPlayTime)
     {
-        StartCoroutine(OnPanel(totalTime));
+        StartCoroutine(StartAlphaChange());
+
+        totalPlayTImeText.text = $"Total Play Time\r\n<{Mathf.FloorToInt(totalPlayTime)} Sec>";
     }
 
-    IEnumerator OnPanel(float totalTime)
+    IEnumerator StartAlphaChange()
     {
-        currentAlpha = 0.0f;
-        totalText.text = $"Total Play Time\n<{(int)totalTime} Sec>";
-
-        while (currentAlpha < 1.0f)
+        while (canvas.alpha < 1.0f)
         {
-            currentAlpha += Time.deltaTime;
-            canvas.alpha = currentAlpha;
+            canvas.alpha += Time.deltaTime * alphaChangeSpeed;
 
             yield return null;
         }
 
         canvas.alpha = 1.0f;
         canvas.blocksRaycasts = true;
+    }
+
+    void OnReStartClick()
+    {
+        SceneManager.LoadScene("LoadingScene");
     }
 }

@@ -655,6 +655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce73dd5b91435f4f88f34a6720b7afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  alphaChangeSpeed: 2
 --- !u!225 &597911751
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1440,7 +1441,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1266385169369526685, guid: 23b71e3030ae12b46add594f64d45cb0, type: 3}
       propertyPath: maxLifeTime
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1266385169369526685, guid: 23b71e3030ae12b46add594f64d45cb0, type: 3}
       propertyPath: attackCoolTime

@@ -16,12 +16,17 @@ public class GameManager : Singleton<GameManager>
 
     protected override void Initialize()
     {
-        player = FindObjectOfType<Player>();
         mapManager = GetComponent<MapManager>();    // 맵 매니저 찾아서
 
         if (mapManager != null)
             mapManager.Initialize();                    // 초기화 하기
 
         base.Initialize();
+    }
+
+    protected override void ResetData()
+    {
+        base.ResetData();
+        player = FindObjectOfType<Player>();
     }
 }
