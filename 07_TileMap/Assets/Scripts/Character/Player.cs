@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
         set
         {
             lifeTime = value;                   // 우선 값 변경
-            if(lifeTime < 0.0f && !isDead)      // 아직 안죽었는데 수명이 0 이하면
+            if (lifeTime < 0.0f && !isDead)      // 아직 안죽었는데 수명이 0 이하면
             {
                 // 사망처리 용
                 Die();                          // 사망 처리
@@ -143,7 +143,7 @@ public class Player : MonoBehaviour
         get => currentMap;
         set
         {
-            if(value != currentMap)                    // 맵이 변경이 될 때만
+            if (value != currentMap)                    // 맵이 변경이 될 때만
             {
                 currentMap = value;                    // 실제로 변경
                 onMapMoved?.Invoke(currentMap);        // 델리게이트로 변경 되었음을 알림
@@ -184,12 +184,16 @@ public class Player : MonoBehaviour
     private void Start()
     {
         mapManager = GameManager.Inst.MapManager;       // 맵매니저 가져오기
+        lifeTime = maxLifeTime;
     }
 
     private void Update()
     {
-        totalPlayTime += Time.deltaTime;
-        LifeTime -= Time.deltaTime;
+        if (!isDead)
+        {
+            totalPlayTime += Time.deltaTime;
+            LifeTime -= Time.deltaTime;
+        }
 
         currentAttackCoolTime -= Time.deltaTime;        // 아무 조건 없이 계속 감소 && 공격 쿨타임 감소
 
@@ -205,7 +209,8 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         rigid.MovePosition(rigid.position + speed * Time.fixedDeltaTime * dir);     // 이동처리
-        CurrentMap = mapManager.WorldToGrid(transform.position);               // 이동후에 어떤 맵에 있는지 표시
+        if (mapManager != null)
+            CurrentMap = mapManager.WorldToGrid(transform.position);               // 이동후에 어떤 맵에 있는지 표시
     }
 
     private void OnEnable()
