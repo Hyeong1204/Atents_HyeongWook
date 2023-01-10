@@ -17,6 +17,9 @@ public class MapManager : MonoBehaviour
     const float mapHeightLength = 20.0f;
     const float mapWidthtLength = 20.0f;
 
+    /// <summary>
+    /// 전채 맵의 왼쪽 아래 끝지점
+    /// </summary>
     readonly Vector2 totalOrigin = new Vector2(-mapWidthtLength * widthCount * 0.5f, -mapHeightLength * heightCount * 0.5f);    // 맵 전체 길이의 절반
 
     const string SceneNameBase = "Seamless_";
@@ -39,6 +42,26 @@ public class MapManager : MonoBehaviour
     SceneLoadState[] sceneLoadState;
 
     /// <summary>
+    /// 모든 씬이 언로드 되었음을 확인하기 위한 프로퍼티. true면 모든 씬이 Unload 상태. false면 하나 이상의 씬이 Loaded 상태
+    /// </summary>
+    public bool IsUnloadAll
+    {
+        get
+        {
+            bool result = true;
+            foreach (var state in sceneLoadState)
+            {
+                if (state != SceneLoadState.UnLoad)          // 하나라도 unload가 아니면 모든 씬이 언로드 되지 않았다.
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+    }
+
+    /// <summary>
     /// 초기화 함수 (단 한번만 실행)
     /// </summary>
     public void Initialize()
@@ -56,12 +79,29 @@ public class MapManager : MonoBehaviour
                 sceneLoadState[index] = SceneLoadState.UnLoad;      // 각 씬의 로딩 상태 초기화
             }
         }
+    }
+
+    /// <summary>
+    /// 무조건 초기화가 다 된 이후에 실행
+    /// </summary>
+    public void MapDataReset()
+    {
+        // 모든 씬의 로딩 상태 초기화
+        for (int y = 0; y < heightCount; y++)
+        {
+            for (int x = 0; x < widthCount; x++)
+            {
+                int index = GetIndex(x, y);
+                sceneNames[index] = $"{SceneNameBase}{y}_{x}";      // 각 신의 이름 설정
+                sceneLoadState[index] = SceneLoadState.UnLoad;      // 각 씬의 로딩 상태 초기화
+            }
+        }
 
         Player player = GameManager.Inst.Player;
         player.onMapMoved += (position) => RefreshScenes(position.x, position.y);
         Vector2Int grid = WorldToGrid(player.transform.position);
         RequestAsyncSceneLoad(grid.x, grid.y);                      // 플레이어가 존재하는 맵이 최우선적으로 처리하기 위해 실행
-        RefreshScenes(grid.x, grid.y);
+        RefreshScenes(grid.x, grid.y);                              // 플레이어 주변 맵들을 로딩
     }
 
     /// <summary>
@@ -159,7 +199,7 @@ public class MapManager : MonoBehaviour
         {
             for (int _y = startY; _y < endY; _y++)
             {
-                RequestAsyncSceneLoad(_x, _y);                      // 로딩한 곳들 로딩 됴청
+                RequestAsyncSceneLoad(_x, _y);                      // 로딩한 곳들 로딩 요청
                 openList.Add(new(_x, _y));                         // 로딩한 지역 기록
             }
         }
@@ -212,6 +252,20 @@ public class MapManager : MonoBehaviour
     bool IsValidMapGrid(int x, int y)
     {
         return 0 <= x && x < widthCount && 0 <= y && y < heightCount;
+    }
+
+    /// <summary>
+    /// 모든 씬을 언로드 하기
+    /// </summary>
+    public void UnloadAllScene()
+    {
+        for (int y = 0; y < heightCount; y++)
+        {
+            for (int x = 0; x < widthCount; x++)
+            {
+                RequestAsyncSceneUnLoad(x, y);    // 이미 언로드 될 것은 다시 처리하지 않으니 그냥 전부 언로드 시도
+            }
+        }
     }
 
     // 테스트 용

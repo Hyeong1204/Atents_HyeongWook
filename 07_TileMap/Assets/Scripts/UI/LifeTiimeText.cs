@@ -17,7 +17,7 @@ public class LifeTiimeText : MonoBehaviour
     {
         Player player = GameManager.Inst.Player;
         player.onLifeTimeChange += RefreshText;
-        lifeText.text = $"{player.maxLifeTime:f2}";
+        lifeText.text = $"{player.maxLifeTime:f2}";         // 남은 시간을 소수 두 번째 자리 까지 표현
     }
 
     private void RefreshText(float time, float _)

@@ -21,6 +21,17 @@ public class Singleton<T> : MonoBehaviour where T : Component
     /// 초기화를 한번만 진행하기 위한 플래그
     /// </summary>
     private bool initialized = false;
+
+    /// <summary>
+    /// 설정이 안되었다는 것을 표시하기 위한 인덱스
+    /// </summary>
+    const int NoT_SET = -1;
+
+    /// <summary>
+    /// 게임의 주 씬의 인덱스 (Seamless_Base의 인덱스)
+    /// </summary>
+    private int mainSceneIndex = NoT_SET;
+
     private static bool isShutDown = false;
     private static T _instance = null;
     public static T Inst
@@ -115,15 +126,19 @@ public class Singleton<T> : MonoBehaviour where T : Component
 #if PRINT_DEBUG_INFO
         //Debug.Log($"Singleton({this.gameObject.name}) : SceneLoaded");
 #endif
-        ResetData();
         if (!initialized)   // 이전에 초기화 된 적이 있으면 다시 초기화 하지는 않는다.
         {
             Initialize();   // 씬이 로드 되면 초기화 함수 따로 실행
         }
+
+        if (scene.buildIndex == mainSceneIndex)     // 자신이 처음 존재하던 씬이 로드되었을 때만 데이터 리셋하기
+        {
+            ManagerDataReset();     // 자신이 처음 존재하던 씬이 로드 될 때마다 초기화 해야할 것드 초기화
+        }
     }
 
     /// <summary>
-    /// 게임 메니저가 새로 만들어지거나 씬이 로드 되었을 때 실행될 초기화 함수
+    /// 게임 메니저가 새로 만들어지거나 씬이 로드 되었을 때 실행될 초기화 함수 (게임 전체 수명주기에서 한번만 실행될 초기화 함수)
     /// </summary>
     protected virtual void Initialize()
     {
@@ -131,12 +146,14 @@ public class Singleton<T> : MonoBehaviour where T : Component
         //Debug.Log($"Singleton({this.gameObject.name}) : Initialize");
 #endif
         initialized = true;  // 초기화 되었다고 표시
+        Scene active = SceneManager.GetActiveScene();       // 자신이 처음 존재하던 씬 가져오기
+        mainSceneIndex = active.buildIndex;
     }
 
     /// <summary>
-    /// 해당 싱글톤이 미리 찾아놓아야 하는 데이터들을 다시 찾기
+    /// 씬이 로드 되었을 때 새롭게 초기화 해야할 일을 처리하는 함수(이 오브젝트가 있던 씬이 로드 될 때마다 실행될 초기화 함수)
     /// </summary>
-    protected virtual void ResetData()
+    protected virtual void ManagerDataReset()
     {
 
     }

@@ -23,6 +23,6 @@ public class LifeTimeGauge : MonoBehaviour
 
     private void OnLifeTimeChange(float time, float maxTime)
     {
-        slider.value = time / maxTime;
+        slider.value = time / maxTime;                  // 
     }
 }

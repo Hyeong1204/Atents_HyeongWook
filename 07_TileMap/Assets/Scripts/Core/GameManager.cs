@@ -16,17 +16,18 @@ public class GameManager : Singleton<GameManager>
 
     protected override void Initialize()
     {
-        mapManager = GetComponent<MapManager>();    // 맵 매니저 찾아서
-
-        if (mapManager != null)
-            mapManager.Initialize();                    // 초기화 하기
-
         base.Initialize();
+        mapManager = GetComponent<MapManager>();    // 맵 매니저 찾아서
+        mapManager.Initialize();                    // 초기화 하기
     }
 
-    protected override void ResetData()
+    /// <summary>
+    /// 씬이 로드 될 때마다 반복적으로 다시 설정해야 할 것들
+    /// </summary>
+    protected override void ManagerDataReset()
     {
-        base.ResetData();
-        player = FindObjectOfType<Player>();
+        base.ManagerDataReset();
+        player = FindObjectOfType<Player>();        // 씬을 나가면 플레이어가 사라지니 다시 찾기
+        mapManager.MapDataReset();                  // 플레이어 주변맵 로딩하기
     }
 }
