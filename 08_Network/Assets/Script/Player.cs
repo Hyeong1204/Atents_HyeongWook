@@ -63,10 +63,7 @@ public class Player : MonoBehaviour
     private void OnMoveInput(InputAction.CallbackContext context)
     {
         Vector2 moveInput = context.ReadValue<Vector2>();
-        //movedelta = moveInput.y * moveSpeed * transform.forward;    // 회전 입력 저정하기
-        movedelta.x = moveInput.x;
-        movedelta.y = 0.0f;
-        movedelta.z = moveInput.y;
+        movedelta = moveInput.y * moveSpeed * transform.forward;    // 회전 입력 저정하기
 
         rotateDelta = moveInput.x * rotateSpeed;                    // 회전 입력 저장하기
     }
